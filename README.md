@@ -6,27 +6,33 @@ A Puppet Module to install Homebrew and manage Homebrew packages on Mac OS X.
 
 Use the Homebrew package provider like this:
 
-    class hightower::packages {
-      pkglist = ['postgresql', 'nginx', 'git', 'tmux']
+```puppet
+class hightower::packages {
+  pkglist = ['postgresql', 'nginx', 'git', 'tmux']
 
-      package { $pkglist:
-        ensure   => installed,
-        provider => brew,
-      }
-    }
+  package { $pkglist:
+    ensure   => installed,
+    provider => brew,
+  }
+}
+```
 
 To install homebrew on a node (with a compiler already present!):
 
-    class { 'homebrew':
-      user => 'hightower',    # Defaults to 'root'
-    }
+```puppet
+class { 'homebrew':
+  user => 'hightower',    # Defaults to 'root'
+}
+```
 
 To install homebrew and a compiler (on Lion or later):
 
-    class { 'homebrew':
-      command_line_tools_package => 'command_line_tools_for_xcode_os_x_lion_aug_2012.dmg',
-      command_line_tools_source  => 'http://puppet/command_line_tools_for_xcode_os_x_lion_aug_2012',
-    }
+```puppet
+class { 'homebrew':
+  command_line_tools_package => 'command_line_tools_for_xcode_os_x_lion_aug_2012.dmg',
+  command_line_tools_source  => 'http://puppet/command_line_tools_for_xcode_os_x_lion_aug_2012',
+}
+```
 
 (Please read the fine manual ["Homebrew Installation"](https://github.com/mxcl/homebrew/wiki/Installation) for further epiphany).
 
