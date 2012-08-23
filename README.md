@@ -11,7 +11,7 @@ Use the Homebrew package provider like this:
 
       package { $pkglist:
         ensure   => installed,
-        provider => 'homebrew',
+        provider => brew,
       }
     }
 
