@@ -24,6 +24,13 @@ class homebrew::install {
                    '/usr/local/share/doc',
                    '/usr/local/share/aclocal' ]
 
+  $repository = [ '/usr/local/Library',
+                  '/usr/local/bin',
+                  '/usr/local/share',
+                  '/usr/local/README.md',
+                  '/usr/local/.git',
+                  '/usr/local/.gitignore' ]
+
   file { $directories:
     ensure => directory,
     owner  => $homebrew::user,
@@ -38,5 +45,13 @@ class homebrew::install {
     logoutput => on_failure,
     timeout   => 0,
     require   => File[$directories],
+  }
+
+  file { $repository:
+    owner     => $homebrew::user,
+    group     => 'admin',
+    mode      => 0775,
+    recurse   => true,
+    subscribe => Exec['install-homebrew'],
   }
 }
