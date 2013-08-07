@@ -7,7 +7,14 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
 
   has_feature :versionable
 
-  commands :brew => "/usr/local/bin/brew"
+  # Fix Puppet 3.0 #16779, pass $HOME to brew command.
+  if Puppet::Util::Package.versioncmp(Puppet.version, '3.0') >= 0
+    has_command(:brew, "/usr/local/bin/brew") do
+      environment({ 'HOME' => ENV['HOME'] })
+    end
+  else
+    commands :brew => "/usr/local/bin/brew"
+  end
 
   # Install packages, known as formulas, using brew.
   def install
@@ -47,14 +54,13 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
   end
 
   def self.package_list(options={})
-    brew_list_command = [command(:brew), "list", "--versions"]
-
-    if name = options[:justme]
-      brew_list_command << name
-    end
-
     begin
-      list = execute(brew_list_command).lines.map {|line| name_version_split(line) }
+      if name = options[:justme]
+        result = brew(:list, '--versions', name)
+      else 
+        result = brew(:list, '--versions')
+      end
+      list = result.lines.map {|line| name_version_split(line) }
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not list packages: #{detail}"
     end
