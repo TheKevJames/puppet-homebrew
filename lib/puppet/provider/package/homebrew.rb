@@ -34,10 +34,11 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
 
     output = brew(:install, package_name)
 
-    # Fail hard if there is no formula available.
+    # Fallback to brewcask
     if output =~ /Error: No available formula/
       output = brewcask(:install, package_name)
 
+      # Fail hard if there is no formula available.
       if output =~ /Error: No available formula/
         raise Puppet::ExecutionFailure, "Could not find package #{@resource[:name]}"
       end
