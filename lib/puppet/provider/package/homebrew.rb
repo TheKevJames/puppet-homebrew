@@ -67,11 +67,11 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
       if name = options[:justme]
         result = brew(:list, '--versions', name)
         unless result.include? name
-          result = brewcask(:list, name).lines.map {|line| line.strip + " latest"}
+          result = brewcask(:list, name).lines.map {|line| line.strip + " latest"}.map {|k| "#{k}\n"}.join("")
         end
       else
         result = brew(:list, '--versions')
-        result = brewcask(:list).lines.map {|line| line.strip + " latest"}
+        # result = brewcask(:list).lines.map {|line| line.strip + " latest"}.map {|k| "#{k}\n"}.join("")
       end
       list = result.lines.map {|line| name_version_split(line) }
     rescue Puppet::ExecutionFailure => detail
