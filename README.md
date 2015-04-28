@@ -17,6 +17,8 @@ class hightower::packages {
 }
 ```
 
+You can also use `provider => brewcask`.
+
 To install homebrew on a node (with a compiler already present!):
 
 ```puppet
