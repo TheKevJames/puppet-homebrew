@@ -66,10 +66,10 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
     begin
       if name = options[:justme]
         result = brew(:list, '--versions', name)
-        result = brewcask(:list, '--versions', name)
+        result = Hash[brewcask(:list, name).map {|k| [k, "latest"]}]
       else
         result = brew(:list, '--versions')
-        result = brewcask(:list, '--versions')
+        result = Hash[brewcask(:list).map {|k| [k, "latest"]}]
       end
       list = result.lines.map {|line| name_version_split(line) }
     rescue Puppet::ExecutionFailure => detail
