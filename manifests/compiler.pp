@@ -1,8 +1,8 @@
 class homebrew::compiler {
-  if $has_compiler == 'true' {
+  if $::has_compiler == true {
     $package = [ ]
   }
-  elsif versioncmp($macosx_productversion_major, '10.7') < 0 {
+  elsif versioncmp($::macosx_productversion_major, '10.7') < 0 {
     warn('Please install the Command Line Tools bundled with XCode manually!')
     $package = [ ]
   }

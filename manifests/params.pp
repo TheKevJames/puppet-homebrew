@@ -1,5 +1,5 @@
 class homebrew::params {
-  if $operatingsystem != 'Darwin' {
+  if $::operatingsystem != 'Darwin' {
     err('This Module works on Mac OS X only!')
     fail('Exit')
   }
