@@ -64,7 +64,7 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
       if name = options[:justme]
         result = brew(:list, '--versions', name)
         unless result.include? name
-          result = brewcask(:list, name).lines.map {|line| line.strip + " latest"}.map {|k| "#{k}\n"}.join("")
+          result = brew(:"cask list", name).lines.map {|line| line.strip + " latest"}.map {|k| "#{k}\n"}.join("")
         end
       else
         result = brew(:list, '--versions')
