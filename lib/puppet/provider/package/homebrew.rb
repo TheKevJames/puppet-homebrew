@@ -32,7 +32,7 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
 
     # Fallback to brewcask
     if output =~ /Error: No available formula/
-      output = brew(:"cask install", package_name)
+      output = brew(:cask, :install, package_name)
 
       # Fail hard if there is no formula available.
       if output =~ /Error: No available formula/
@@ -43,7 +43,7 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
 
   def uninstall
     brew(:uninstall, @resource[:name])
-    brew(:"cask uninstall", @resource[:name])
+    brew(:cask, :uninstall, @resource[:name])
   end
 
   def update
@@ -64,11 +64,11 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
       if name = options[:justme]
         result = brew(:list, '--versions', name)
         unless result.include? name
-          result = brew(:"cask list", name).lines.map {|line| line.strip + " latest"}.map {|k| "#{k}\n"}.join("")
+          result = brew(:cask, :list, name).lines.map {|line| line.strip + " latest"}.map {|k| "#{k}\n"}.join("")
         end
       else
         result = brew(:list, '--versions')
-        # result = brew(:"cask list").lines.map {|line| line.strip + " latest"}.map {|k| "#{k}\n"}.join("")
+        # result = brew(:cask, :list).lines.map {|line| line.strip + " latest"}.map {|k| "#{k}\n"}.join("")
       end
       list = result.lines.map {|line| name_version_split(line) }
     rescue Puppet::ExecutionFailure => detail
