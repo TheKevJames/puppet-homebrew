@@ -12,12 +12,8 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
     has_command(:brew, "/usr/local/bin/brew") do
       environment({ 'HOME' => ENV['HOME'] })
     end
-    has_command(:brewcask, "/usr/local/bin/brew-cask") do
-      environment({ 'HOME' => ENV['HOME'] })
-    end
   else
     commands :brew => "/usr/local/bin/brew"
-    commands :brewcask => "/usr/local/bin/brew-cask"
   end
 
   # Install packages, known as formulas, using brew.
@@ -36,7 +32,7 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
 
     # Fallback to brewcask
     if output =~ /Error: No available formula/
-      output = brewcask(:install, package_name)
+      output = brew(:"cask install", package_name)
 
       # Fail hard if there is no formula available.
       if output =~ /Error: No available formula/
@@ -47,7 +43,7 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
 
   def uninstall
     brew(:uninstall, @resource[:name])
-    brewcask(:uninstall, @resource[:name])
+    brew(:"cask uninstall", @resource[:name])
   end
 
   def update
@@ -72,7 +68,7 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
         end
       else
         result = brew(:list, '--versions')
-        # result = brewcask(:list).lines.map {|line| line.strip + " latest"}.map {|k| "#{k}\n"}.join("")
+        # result = brew(:"cask list").lines.map {|line| line.strip + " latest"}.map {|k| "#{k}\n"}.join("")
       end
       list = result.lines.map {|line| name_version_split(line) }
     rescue Puppet::ExecutionFailure => detail
