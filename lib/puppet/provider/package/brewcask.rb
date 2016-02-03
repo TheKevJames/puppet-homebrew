@@ -54,11 +54,15 @@ Puppet::Type.type(:package).provide(:brewcask,
   def self.package_list(options={})
     begin
       if name = options[:justme]
-        result = brew(:cask, :list, '--versions', name)
+        # Of course brew-cask has a different --versions format than brew when
+        # getting the version of a single package
+        result = brew(:cask, :list, '--versions')
+        result = Hash[result.lines.map {|line| line.split}]
+        result = name + ' ' + result[name]
       else
         result = brew(:cask, :list, '--versions')
       end
-      list = result.lines.map {|line| name_version_split(line) }
+      list = result.lines.map {|line| name_version_split(line)}
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not list packages: #{detail}"
     end

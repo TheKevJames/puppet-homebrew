@@ -62,14 +62,18 @@ Puppet::Type.type(:package).provide(:homebrew,
     begin
       if name = options[:justme]
         result = brew(:list, '--versions', name)
-        unless result.include? name
-          result = brew(:cask, :list, name).lines.map {|line| line.strip + " latest"}.map {|k| "#{k}\n"}.join("")
+        unless result
+          # Of course brew-cask has a different --versions format than brew when
+          # getting the version of a single package
+          result = brew(:cask, :list, '--versions')
+          result = Hash[result.lines.map {|line| line.split}]
+          result = name + ' ' + result[name]
         end
       else
         result = brew(:list, '--versions')
         result += brew(:cask, :list, '--versions')
       end
-      list = result.lines.map {|line| name_version_split(line) }
+      list = result.lines.map {|line| name_version_split(line)}
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not list packages: #{detail}"
     end
