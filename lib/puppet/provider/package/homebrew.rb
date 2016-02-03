@@ -62,7 +62,7 @@ Puppet::Type.type(:package).provide(:homebrew,
     begin
       if name = options[:justme]
         result = brew(:list, '--versions', name)
-        unless result
+        unless result.include? name
           # Of course brew-cask has a different --versions format than brew when
           # getting the version of a single package
           result = brew(:cask, :list, '--versions')
