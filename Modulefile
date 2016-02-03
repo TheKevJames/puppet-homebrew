@@ -1,8 +1,0 @@
-name         'thekevjames-homebrew'
-version      '1.0.0'
-source       'https://github.com/thekevjames/puppet-homebrew'
-author       'thekevjames'
-license      'APACHE2'
-summary      'Homebrew + brewcask package provider'
-description  'Homebrew + brewcask package provider'
-project_page 'https://github.com/thekevjames/puppet-homebrew'

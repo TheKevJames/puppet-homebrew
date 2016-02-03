@@ -1,4 +1,4 @@
-class { 'homebrew': }
+include homebrew
 
 package { 'git':
   ensure   => present,
