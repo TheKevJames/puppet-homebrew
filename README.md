@@ -1,8 +1,11 @@
 # puppet-homebrew
 
 A Puppet Module to install Homebrew and manage Homebrew packages on Mac OS X.
-This module can install using either homebrew or brewcask, aloong with a
+This module can install using either homebrew or brewcask, along with a
 fallback mode which attempts both.
+
+puppet-homebrew is available on the
+[Puppet Forge](https://forge.puppetlabs.com/thekevjames/homebrew).
 
 ## Usage
 
