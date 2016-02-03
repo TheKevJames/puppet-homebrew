@@ -1,8 +1,8 @@
 require 'puppet/provider/package'
 
-Puppet::Type.type(:package).provide(:homebrew,
+Puppet::Type.type(:package).provide(:brew,
                                     :parent => Puppet::Provider::Package) do
-  desc 'Package management using HomeBrew (+ casks!) on OS X'
+  desc 'Package management using HomeBrew on OS X'
 
   confine  :operatingsystem => :darwin
 
@@ -29,20 +29,13 @@ Puppet::Type.type(:package).provide(:homebrew,
 
     output = brew(:install, package_name)
 
-    # Fallback to brewcask
     if output =~ /Error: No available formula/
-      output = brew(:cask, :install, package_name)
-
-      # Fail hard if there is no formula available.
-      if output =~ /Error: No available formula/
-        raise Puppet::ExecutionFailure, "Could not find package #{package_name}"
-      end
+      raise Puppet::ExecutionFailure, "Could not find package #{package_name}"
     end
   end
 
   def uninstall
     brew(:uninstall, @resource[:name])
-    brew(:cask, :uninstall, @resource[:name])
   end
 
   def update
@@ -62,12 +55,8 @@ Puppet::Type.type(:package).provide(:homebrew,
     begin
       if name = options[:justme]
         result = brew(:list, '--versions', name)
-        unless result.include? name
-          result = brew(:cask, :list, name).lines.map {|line| line.strip + " latest"}.map {|k| "#{k}\n"}.join("")
-        end
       else
         result = brew(:list, '--versions')
-        result += brew(:cask, :list, '--versions')
       end
       list = result.lines.map {|line| name_version_split(line) }
     rescue Puppet::ExecutionFailure => detail
@@ -86,7 +75,7 @@ Puppet::Type.type(:package).provide(:homebrew,
       {
         :name     => $1,
         :ensure   => $2,
-        :provider => :homebrew
+        :provider => :brew
       }
     else
       Puppet.warning "Could not match #{line}"
