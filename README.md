@@ -46,7 +46,8 @@ class { 'homebrew':
 
 N.B. the author of this module does not maintain a mirror to command_line_tools.
 You may need to search for a copy if you use this method. At the time of this
-writing, downlaoding the command line tools requires an Apple ID. Sorry, dude!
+writing, downloading the command line tools something requires an Apple ID.
+Sorry, dude!
 
 ## Original Author
 
