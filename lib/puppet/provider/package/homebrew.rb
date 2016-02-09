@@ -4,16 +4,7 @@ Puppet::Type.type(:package).provide(:homebrew,
   desc 'Package management using HomeBrew (+ casks!) on OS X'
 
   def install
-    name = @resource[:name]
-    should = @resource[:ensure]
-
-    case should
-    when true, false, Symbol
-      # pass
-    else
-      name += "-#{should}"
-    end
-
+    name = self.build_name
     output = brew(:install, name, *install_options)
     if output =~ /Error: No available formula/
       # Fallback to brewcask

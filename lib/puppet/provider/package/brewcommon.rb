@@ -6,7 +6,9 @@ Puppet::Type.type(:package).provide(:brewcommon,
 
   confine  :operatingsystem => :darwin
 
-  has_feature :install_options
+  has_feature :installable, :install_options
+  has_feature :uninstallable
+  has_feature :upgradeable
   has_feature :versionable
 
   if Puppet::Util::Package.versioncmp(Puppet.version, '3.0') >= 0
@@ -52,5 +54,19 @@ Puppet::Type.type(:package).provide(:brewcommon,
 
   def self.instances(justme = false)
     package_list.collect { |hash| new(hash) }
+  end
+
+  def self.build_name
+    name = @resource[:name]
+    should = @resource[:ensure]
+
+    case should
+    when true, false, Symbol
+      # pass
+    else
+      name += "-#{should}"
+    end
+
+    name
   end
 end
