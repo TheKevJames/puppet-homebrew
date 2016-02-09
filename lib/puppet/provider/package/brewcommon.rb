@@ -6,6 +6,7 @@ Puppet::Type.type(:package).provide(:brewcommon,
 
   confine  :operatingsystem => :darwin
 
+  has_feature :install_options
   has_feature :versionable
 
   if Puppet::Util::Package.versioncmp(Puppet.version, '3.0') >= 0
@@ -18,6 +19,10 @@ Puppet::Type.type(:package).provide(:brewcommon,
 
   def install
     raise Puppet::ExecutionFailure, 'Use brew provider.'
+  end
+
+  def install_options
+    Array(resource[:install_options]).flatten.compact
   end
 
   def uninstall

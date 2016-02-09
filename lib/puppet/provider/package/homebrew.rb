@@ -14,11 +14,19 @@ Puppet::Type.type(:package).provide(:homebrew,
       name += "-#{should}"
     end
 
-    output = brew(:install, name)
+    if install_options.any?
+      output = brew(:install, name, *install_options)
+    else
+      output = brew(:install, name)
+    end
 
     # Fallback to brewcask
     if output =~ /Error: No available formula/
-      output = brew(:cask, :install, name)
+      if install_options.any?
+        output = brew(:cask, :install, name, *install_options)
+      else
+        output = brew(:cask, :install, name)
+      end
 
       # Fail hard if there is no formula available.
       if output =~ /Error: No available formula/

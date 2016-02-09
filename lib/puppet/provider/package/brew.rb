@@ -14,7 +14,11 @@ Puppet::Type.type(:package).provide(:brew,
       name += "-#{should}"
     end
 
-    output = brew(:install, name)
+    if install_options.any?
+      output = brew(:install, name, *install_options)
+    else
+      output = brew(:install, name)
+    end
 
     if output =~ /Error: No available formula/
       raise Puppet::ExecutionFailure, "Could not find package #{name}"
