@@ -1,41 +1,28 @@
-require 'puppet/provider/package'
-
 Puppet::Type.type(:package).provide(:homebrew,
-                                    :parent => Puppet::Provider::Package) do
+                                    :parent => :brewcommon,
+                                    :source => :brewcommon) do
   desc 'Package management using HomeBrew (+ casks!) on OS X'
 
-  confine  :operatingsystem => :darwin
-
-  has_feature :versionable
-
-  if Puppet::Util::Package.versioncmp(Puppet.version, '3.0') >= 0
-    has_command(:brew, '/usr/local/bin/brew') do
-      environment({ 'HOME' => ENV['HOME'] })
-    end
-  else
-    commands :brew => '/usr/local/bin/brew'
-  end
-
   def install
+    name = @resource[:name]
     should = @resource[:ensure]
 
-    package_name = @resource[:name]
     case should
     when true, false, Symbol
       # pass
     else
-      package_name += "-#{should}"
+      name += "-#{should}"
     end
 
-    output = brew(:install, package_name)
+    output = brew(:install, name)
 
     # Fallback to brewcask
     if output =~ /Error: No available formula/
-      output = brew(:cask, :install, package_name)
+      output = brew(:cask, :install, name)
 
       # Fail hard if there is no formula available.
       if output =~ /Error: No available formula/
-        raise Puppet::ExecutionFailure, "Could not find package #{package_name}"
+        raise Puppet::ExecutionFailure, "Could not find package #{name}"
       end
     end
   end
@@ -46,16 +33,10 @@ Puppet::Type.type(:package).provide(:homebrew,
   end
 
   def update
-    self.install
-  end
-
-  def query
-    self.class.package_list(:justme => resource[:name])
-  end
-
-  def latest
-    hash = self.class.package_list(:justme => resource[:name])
-    hash[:ensure]
+    # Since brew-cask has no upgrade feature built-in, we simply need to
+    # uninstall and reinstall
+    uninstall
+    install
   end
 
   def self.package_list(options={})
@@ -63,8 +44,8 @@ Puppet::Type.type(:package).provide(:homebrew,
       if name = options[:justme]
         result = brew(:list, '--versions', name)
         unless result.include? name
-          # Of course brew-cask has a different --versions format than brew when
-          # getting the version of a single package
+          # Of course brew-cask has a different --versions format than brew
+          # when getting the version of a single package
           result = brew(:cask, :list, '--versions')
           result = Hash[result.lines.map {|line| line.split}]
           result = name + ' ' + result[name]
@@ -96,9 +77,5 @@ Puppet::Type.type(:package).provide(:homebrew,
       Puppet.warning "Could not match #{line}"
       nil
     end
-  end
-
-  def self.instances(justme = false)
-    package_list.collect { |hash| new(hash) }
   end
 end
