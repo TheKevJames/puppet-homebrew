@@ -4,7 +4,7 @@ Puppet::Type.type(:package).provide(:homebrew,
   desc 'Package management using HomeBrew (+ casks!) on OS X'
 
   def install
-    name = self.build_name
+    name = install_name
     output = brew(:install, name, *install_options)
     if output =~ /Error: No available formula/
       # Fallback to brewcask
@@ -22,9 +22,6 @@ Puppet::Type.type(:package).provide(:homebrew,
   end
 
   def update
-    # Since brew-cask has no upgrade feature built-in, we simply need to
-    # uninstall and reinstall
-    uninstall
     install
   end
 
@@ -37,7 +34,7 @@ Puppet::Type.type(:package).provide(:homebrew,
           # when getting the version of a single package
           result = brew(:cask, :list, '--versions')
           result = Hash[result.lines.map {|line| line.split}]
-          result = name + ' ' + result[name]
+          result = result[name] ? name + ' ' + result[name] : ''
         end
       else
         result = brew(:list, '--versions')

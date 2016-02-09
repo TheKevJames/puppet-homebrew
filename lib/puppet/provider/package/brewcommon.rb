@@ -23,6 +23,18 @@ Puppet::Type.type(:package).provide(:brewcommon,
     raise Puppet::ExecutionFailure, 'Use brew provider.'
   end
 
+  def install_name
+    name = @resource[:name]
+    should = @resource[:ensure]
+
+    case should
+    when true, false, Symbol
+      name
+    else
+      name + "-#{should}"
+    end
+  end
+
   def install_options
     Array(resource[:install_options]).flatten.compact
   end
@@ -54,19 +66,5 @@ Puppet::Type.type(:package).provide(:brewcommon,
 
   def self.instances(justme = false)
     package_list.collect { |hash| new(hash) }
-  end
-
-  def self.build_name
-    name = @resource[:name]
-    should = @resource[:ensure]
-
-    case should
-    when true, false, Symbol
-      # pass
-    else
-      name += "-#{should}"
-    end
-
-    name
   end
 end

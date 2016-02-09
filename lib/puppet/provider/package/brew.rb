@@ -4,7 +4,7 @@ Puppet::Type.type(:package).provide(:brew,
   desc 'Package management using HomeBrew on OS X'
 
   def install
-    name = self.build_name
+    name = install_name
     output = brew(:install, name, *install_options)
     if output =~ /Error: No available formula/
       raise Puppet::ExecutionFailure, "Could not find package #{name}"

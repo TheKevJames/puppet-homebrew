@@ -4,7 +4,7 @@ Puppet::Type.type(:package).provide(:brewcask,
   desc "Package management using HomeBrew casks on OS X"
 
   def install
-    name = self.build_name
+    name = install_name
     output = brew(:cask, :install, name, *install_options)
     if output =~ /Error: No available formula/
       raise Puppet::ExecutionFailure, "Could not find package #{name}"
@@ -16,7 +16,6 @@ Puppet::Type.type(:package).provide(:brewcask,
   end
 
   def update
-    uninstall
     install
   end
 
@@ -35,6 +34,7 @@ Puppet::Type.type(:package).provide(:brewcask,
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not list packages: #{detail}"
     end
+
 
     if options[:justme]
       return list.shift
