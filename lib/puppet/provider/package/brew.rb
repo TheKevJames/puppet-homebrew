@@ -5,26 +5,26 @@ Puppet::Type.type(:package).provide(:brew,
 
   def install
     name = install_name
-    output = brew(:install, name, *install_options)
+    output = execute([command(:brew), :install, name, *install_options])
     if output =~ /Error: No available formula/
       raise Puppet::ExecutionFailure, "Could not find package #{name}"
     end
   end
 
   def uninstall
-    brew(:uninstall, @resource[:name])
+    execute([command(:brew), :uninstall, @resource[:name]])
   end
 
   def update
-    brew(:upgrade, @resource[:name])
+    execute([command(:brew), :upgrade, @resource[:name]])
   end
 
   def self.package_list(options={})
     begin
       if name = options[:justme]
-        result = brew(:list, '--versions', name)
+        result = execute([command(:brew), :list, '--versions', name])
       else
-        result = brew(:list, '--versions')
+        result = execute([command(:brew), :list, '--versions'])
       end
       list = result.lines.map {|line| name_version_split(line)}
     rescue Puppet::ExecutionFailure => detail

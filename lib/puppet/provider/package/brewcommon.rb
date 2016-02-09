@@ -11,14 +11,20 @@ Puppet::Type.type(:package).provide(:brewcommon,
   has_feature :upgradeable
   has_feature :versionable
 
-  if Puppet::Util::Package.versioncmp(Puppet.version, '3.0') >= 0
-    commands :stat => '/usr/bin/stat'
+  commands :brew => '/usr/local/bin/brew'
+  commands :stat => '/usr/bin/stat'
+
+  def self.execute(cmd)
     owner = stat('-nf', '%Uu', '/usr/local/bin/brew').to_i
-    has_command(:brew, '/usr/local/bin/brew') do
-      environment({ 'HOME' => Etc.getpwuid(owner).dir })
-    end
-  else
-    commands :brew => '/usr/local/bin/brew'
+    group = stat('-nf', '%Ug', '/usr/local/bin/brew').to_i
+    home  = Etc.getpwuid(owner).dir
+
+    super(cmd, :uid => owner, :gid => group,
+          :custom_environment => { 'HOME' => home })
+  end
+
+  def execute(*args)
+    self.class.execute(*args)
   end
 
   def install

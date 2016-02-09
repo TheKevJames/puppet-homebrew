@@ -5,14 +5,14 @@ Puppet::Type.type(:package).provide(:brewcask,
 
   def install
     name = install_name
-    output = brew(:cask, :install, name, *install_options)
+    output = execute([command(:brew), :cask, :install, name, *install_options])
     if output =~ /Error: No available formula/
       raise Puppet::ExecutionFailure, "Could not find package #{name}"
     end
   end
 
   def uninstall
-    brew(:cask, :uninstall, @resource[:name])
+    execute([command(:brew), :cask, :uninstall, @resource[:name]])
   end
 
   def update
@@ -24,11 +24,11 @@ Puppet::Type.type(:package).provide(:brewcask,
       if name = options[:justme]
         # Of course brew-cask has a different --versions format than brew when
         # getting the version of a single package
-        result = brew(:cask, :list, '--versions')
+        result = execute([command(:brew), :cask, :list, '--versions'])
         result = Hash[result.lines.map {|line| line.split}]
         result = name + ' ' + result[name]
       else
-        result = brew(:cask, :list, '--versions')
+        result = execute([command(:brew), :cask, :list, '--versions'])
       end
       list = result.lines.map {|line| name_version_split(line)}
     rescue Puppet::ExecutionFailure => detail
