@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 1.1.1
+- bugfix: ensure brew is called with correct user
+
 ## 1.1.0
 - feature: add install_options
 - feature: add upgradeable
