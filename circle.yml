@@ -3,4 +3,5 @@ test:
     - bundle exec rake validate
     - bundle exec puppet module build
     - bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
-    - bundle exec puppet apply --noop tests
+    # Only works on OSX
+    # - bundle exec puppet apply --noop tests
