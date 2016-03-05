@@ -1,4 +1,6 @@
 test:
   override:
     - bundle exec rake validate
-    - bundle exec puppet apply --noop .
+    - bundle exec puppet module build
+    - bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+    - bundle exec puppet apply --noop tests
