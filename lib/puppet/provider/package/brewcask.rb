@@ -22,11 +22,7 @@ Puppet::Type.type(:package).provide(:brewcask,
   def self.package_list(options={})
     begin
       if name = options[:justme]
-        # Of course brew-cask has a different --versions format than brew when
-        # getting the version of a single package
-        result = execute([command(:brew), :cask, :list, '--versions'])
-        result = Hash[result.lines.map {|line| line.split}]
-        result = name + ' ' + result[name]
+        result = execute([command(:brew), :cask, :list, '--versions', name])
       else
         result = execute([command(:brew), :cask, :list, '--versions'])
       end

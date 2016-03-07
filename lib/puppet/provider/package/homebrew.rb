@@ -34,7 +34,6 @@ Puppet::Type.type(:package).provide(:homebrew,
           # when getting the version of a single package
           result = execute([command(:brew), :cask, :list, '--versions'])
           result = Hash[result.lines.map {|line| line.split}]
-          result = result[name] ? name + ' ' + result[name] : ''
         end
       else
         result = execute([command(:brew), :list, '--versions'])
