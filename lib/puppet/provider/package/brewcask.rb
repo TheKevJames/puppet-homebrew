@@ -6,7 +6,10 @@ Puppet::Type.type(:package).provide(:brewcask,
   def install
     name = install_name
     output = execute([command(:brew), :cask, :install, name, *install_options])
-    if output =~ /Error: No available formula/
+    # brewcask includes some funky beer characters that f*ck with encoding
+    output = output.encode('UTF-8', :invalid => :replace, :undef => :replace)
+
+    if output.empty?
       raise Puppet::ExecutionFailure, "Could not find package #{name}"
     end
   end
@@ -25,8 +28,10 @@ Puppet::Type.type(:package).provide(:brewcask,
         # Of course brew-cask has a different --versions format than brew when
         # getting the version of a single package
         result = execute([command(:brew), :cask, :list, '--versions'])
-        result = Hash[result.lines.map {|line| line.split}]
-        result = name + ' ' + result[name]
+        unless result.empty?
+          result = Hash[result.lines.map {|line| line.split}]
+          result = result[name] ? name + ' ' + result[name] : ''
+        end
       else
         result = execute([command(:brew), :cask, :list, '--versions'])
       end

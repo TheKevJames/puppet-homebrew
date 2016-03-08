@@ -6,7 +6,8 @@ Puppet::Type.type(:package).provide(:brew,
   def install
     name = install_name
     output = execute([command(:brew), :install, name, *install_options])
-    if output =~ /Error: No available formula/
+
+    if output =~ /Searching taps/
       raise Puppet::ExecutionFailure, "Could not find package #{name}"
     end
   end
