@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.2.0
+- bugfix: set directory permissions to brew defaults
+- bugfix: fix brewcask parsing
+- meta: enable auto-testing
+
 ## 1.1.1
 - bugfix: ensure brew is called with correct user
 
