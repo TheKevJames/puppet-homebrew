@@ -28,7 +28,7 @@ class homebrew::install {
     ensure => directory,
     owner  => $homebrew::user,
     group  => 'admin',
-    mode   => '0775',
+    mode   => '0755',
   }
 
   exec { 'install-homebrew':
