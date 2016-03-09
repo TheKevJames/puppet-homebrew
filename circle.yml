@@ -1,7 +1,11 @@
+dependencies:
+  override:
+    - bundle install
+    - bundle exec puppet module build
+    - bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+
 test:
   override:
     - bundle exec rake validate
-    - bundle exec puppet module build
-    - bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
     # Only works on OSX
     # - bundle exec puppet apply --noop tests
