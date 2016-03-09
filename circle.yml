@@ -1,6 +1,5 @@
 dependencies:
-  override:
-    - bundle install
+  post:
     - bundle exec puppet module build
     - bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
 
