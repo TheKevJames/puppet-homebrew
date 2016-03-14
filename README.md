@@ -52,6 +52,19 @@ You may need to search for a copy if you use this method. At the time of this
 writing, downloading the command line tools sometimes requires an Apple ID.
 Sorry, dude!
 
+## Tapping repositories
+
+To tap into new Github repositories, simply use the tap provider:
+
+```puppet
+package {'homebrew/binaries':
+  ensure   => present,
+  provider => tap,
+}
+```
+
+You can untap a repository by setting ensure to absent.
+
 ## Original Author
 
 Original credit for this module goes to
