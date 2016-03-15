@@ -1,0 +1,29 @@
+language: ruby
+
+os:
+  - osx
+
+rvm:
+  - 1.9.3
+  # - 2.2.3  # TODO: figure out why this fails
+
+env:
+  - PUPPET_VERSION="~> 4.0" STRICT_VARIABLES="yes"
+  - PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+  - PUPPET_VERSION="~> 3.0"
+
+cache: bundler
+bundler_args: --without system_tests
+
+install:
+  - brew update >/dev/null
+  - brew cask update >/dev/null
+  - sudo bundle install
+  - sudo bundle exec puppet module build
+  - sudo bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+script:
+  - sudo bundle exec rake validate
+  - sudo bundle exec puppet apply --detailed-exitcodes tests || [ $? -eq 2 ]
+
+notifications:
+  email: false

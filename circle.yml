@@ -6,5 +6,3 @@ dependencies:
 test:
   override:
     - bundle exec rake validate
-    # Only works on OSX
-    # - bundle exec puppet apply --noop tests
