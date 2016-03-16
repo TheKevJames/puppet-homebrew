@@ -74,3 +74,11 @@ Sorry, dude!
 Original credit for this module goes to
 [kelseyhightower](https://github.com/kelseyhightower). This module was forked
 to provide brewcask integration.
+
+Credit for logic involved in tapping repositories goes to
+[gildas](https://github.com/gildas/puppet-homebrew).
+
+## Contributers
+
+- Jordi Garcia <Jordi@jordigarcia.net>
+- Kevin James <KevinJames@thekev.in>
