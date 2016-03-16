@@ -9,6 +9,8 @@ puppet-homebrew is available on the
 
 ## Usage
 
+### Installing packages
+
 Use the Homebrew package provider like this:
 
 ```puppet
@@ -29,6 +31,21 @@ brewcask.
 brewcask.
 * `provider => homebrew`: attempt to install using `brew install <module>`. On
 failure, use `brew cask install <module>`
+
+### Tapping repositories
+
+To tap into new Github repositories, simply use the tap provider:
+
+```puppet
+package { 'neovim/neovim':
+  ensure   => present,
+  provider => tap,
+}
+```
+
+You can untap a repository by setting ensure to `absent`.
+
+### Installing brew
 
 To install homebrew on a node (with a compiler already present!):
 
@@ -51,19 +68,6 @@ N.B. the author of this module does not maintain a mirror to command_line_tools.
 You may need to search for a copy if you use this method. At the time of this
 writing, downloading the command line tools sometimes requires an Apple ID.
 Sorry, dude!
-
-## Tapping repositories
-
-To tap into new Github repositories, simply use the tap provider:
-
-```puppet
-package {'homebrew/binaries':
-  ensure   => present,
-  provider => tap,
-}
-```
-
-You can untap a repository by setting ensure to absent.
 
 ## Original Author
 
