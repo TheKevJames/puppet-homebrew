@@ -6,3 +6,8 @@ package { 'neovim':
   ensure   => present,
   provider => homebrew,
 }
+
+package { 'homebrew/versions':
+  ensure   => absent,
+  provider => tap,
+}

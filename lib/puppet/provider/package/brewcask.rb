@@ -40,7 +40,6 @@ Puppet::Type.type(:package).provide(:brewcask,
       raise Puppet::Error, "Could not list packages: #{detail}"
     end
 
-
     if options[:justme]
       return list.shift
     else

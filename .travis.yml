@@ -23,7 +23,7 @@ install:
   - sudo bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
 script:
   - sudo bundle exec rake validate
-  - sudo bundle exec puppet apply --detailed-exitcodes tests || [ $? -eq 2 ]
+  - sudo bundle exec puppet apply --detailed-exitcodes --debug tests || [ $? -eq 2 ]
 
 notifications:
   email: false
