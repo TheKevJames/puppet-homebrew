@@ -1,12 +1,15 @@
 {
   "name": "thekevjames-homebrew",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": "thekevjames",
-  "summary": "Homebrew (+ brewcask!) package installer and provider",
+  "summary": "Homebrew (+brewcask! +taps!) package installer and provider",
   "license": "Apache-2.0",
   "source": "https://github.com/TheKevJames/puppet-homebrew",
   "project_page": "https://github.com/TheKevJames/puppet-homebrew",
   "issues_url": "https://github.com/TheKevJames/puppet-homebrew/issues",
-  "dependencies": [],
-  "data_provider": null
+  "dependencies": [ ],
+  "data_provider": null,
+  "operatingsystem_support": [
+    { "operatingsystem": "Darwin" }
+  ]
 }

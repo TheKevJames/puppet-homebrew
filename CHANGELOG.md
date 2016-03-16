@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.3.0
+- feature: allow users to manage taps
+- meta: better testing, OSX-specific tests on Travis
+- meta: fix typos, add contributer list
+
 ## 1.2.0
 - bugfix: set directory permissions to brew defaults
 - bugfix: fix brewcask parsing
