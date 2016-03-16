@@ -9,6 +9,8 @@ puppet-homebrew is available on the
 
 ## Usage
 
+### Installing packages
+
 Use the Homebrew package provider like this:
 
 ```puppet
@@ -29,6 +31,21 @@ brewcask.
 brewcask.
 * `provider => homebrew`: attempt to install using `brew install <module>`. On
 failure, use `brew cask install <module>`
+
+### Tapping repositories
+
+To tap into new Github repositories, simply use the tap provider:
+
+```puppet
+package { 'neovim/neovim':
+  ensure   => present,
+  provider => tap,
+}
+```
+
+You can untap a repository by setting ensure to `absent`.
+
+### Installing brew
 
 To install homebrew on a node (with a compiler already present!):
 
@@ -57,3 +74,11 @@ Sorry, dude!
 Original credit for this module goes to
 [kelseyhightower](https://github.com/kelseyhightower). This module was forked
 to provide brewcask integration.
+
+Credit for logic involved in tapping repositories goes to
+[gildas](https://github.com/gildas/puppet-homebrew).
+
+## Contributers
+
+- Jordi Garcia <Jordi@jordigarcia.net>
+- Kevin James <KevinJames@thekev.in>
