@@ -4,7 +4,7 @@ Puppet::Type.type(:package).provide(:brewcommon,
                                     :parent => Puppet::Provider::Package) do
   desc 'Base class for brew package management'
 
-  confine  :operatingsystem => :darwin
+  confine :operatingsystem => :darwin
 
   has_feature :installable, :install_options
   has_feature :uninstallable
