@@ -5,7 +5,7 @@ class homebrew::compiler {
     warn('Please install the Command Line Tools bundled with XCode manually!')
   } else {
 
-    if $homebrew::command_line_tools_package != undef && $homebrew::command_line_tools_source != undef {
+    if ($homebrew::command_line_tools_package and $homebrew::command_line_tools_source) {
 
       notice('Installing Command Line Tools.')
 
