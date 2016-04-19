@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.3.1
+- bugfix: only download CLI tools if values are set
+- meta: move away from params class
+
 ## 1.3.0
 - feature: allow users to manage taps
 - meta: better testing, OSX-specific tests on Travis
