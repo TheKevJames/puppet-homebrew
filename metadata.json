@@ -11,5 +11,8 @@
   "data_provider": null,
   "operatingsystem_support": [
     { "operatingsystem": "Darwin" }
+  ],
+  "requirements": [
+    { "name": "puppet", "version_requirement": ">= 3.0.0 < 5.0.0" }
   ]
 }

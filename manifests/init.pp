@@ -1,6 +1,6 @@
 class homebrew (
-  $command_line_tools_package = 'command_line_tools_for_xcode_os_x_lion_aug_2013.dmg',
-  $command_line_tools_source  = 'http://puppet/command_line_tools_for_xcode_os_x_lion_aug_2013.dmg',
+  $command_line_tools_package = undef,
+  $command_line_tools_source  = undef,
   $user                       = 'root'
 ) {
   if $::operatingsystem != 'Darwin' {
