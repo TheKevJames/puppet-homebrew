@@ -1,8 +1,12 @@
 class homebrew (
-  $command_line_tools_package = $homebrew::params::command_line_tools_package,
-  $command_line_tools_source  = $homebrew::params::command_line_tools_source,
-  $user                       = $homebrew::params::user
-) inherits homebrew::params {
+  $command_line_tools_package = 'command_line_tools_for_xcode_os_x_lion_aug_2013.dmg',
+  $command_line_tools_source  = 'http://puppet/command_line_tools_for_xcode_os_x_lion_aug_2013.dmg',
+  $user                       = 'root'
+) {
+  if $::operatingsystem != 'Darwin' {
+    err('This Module works on Mac OS X only!')
+    fail('Exit')
+  }
 
   include homebrew::compiler
   include homebrew::install
