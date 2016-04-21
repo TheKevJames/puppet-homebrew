@@ -1,14 +1,14 @@
 Facter.add(:has_compiler) do
   setcode do
-    warn('Unsupported OS.')
-    nil
+    err('This Module works on Mac OS X only!')
+    "nil"
   end
 end
 
 Facter.add(:has_compiler) do
   confine :operatingsystem => :darwin
   setcode do
-    File.exists?('/usr/bin/cc') || system('/usr/bin/xcrun -find cc >/dev/null 2>&1')
+    File.exists?('/usr/bin/cc') or system('/usr/bin/xcrun -find cc >/dev/null 2>&1') ? "true" : "false"
   end
 end
 
@@ -17,6 +17,6 @@ Facter.add(:has_compiler) do
   confine :operatingsystem => :darwin, :macosx_productversion_major => '10.9'
   setcode do
     (File.exists?('/Applications/Xcode.app') or File.exists?('/Library/Developer/CommandLineTools/')) and
-    (File.exists?('/usr/bin/cc') || system('/usr/bin/xcrun -find cc >/dev/null 2>&1'))
+        (File.exists?('/usr/bin/cc') or system('/usr/bin/xcrun -find cc >/dev/null 2>&1')) ? "true" : "false"
   end
 end
