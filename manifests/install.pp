@@ -27,7 +27,7 @@ class homebrew::install {
   file { $directories:
     ensure => directory,
     owner  => $homebrew::user,
-    group  => 'admin',
+    group  => $homebrew::group,
     mode   => '0755',
   }
 
@@ -42,7 +42,7 @@ class homebrew::install {
 
   file { '/usr/local/bin/brew':
     owner   => $homebrew::user,
-    group   => 'admin',
+    group   => $homebrew::group,
     mode    => '0775',
     require => Exec['install-homebrew'],
   }
