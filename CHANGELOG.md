@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.3.2
+- bugfix: fix compat issues for facter booleans
+- bugfix: use puppet warning over ruby warn
+
 ## 1.3.1
 - bugfix: only download CLI tools if values are set
 - meta: move away from params class
