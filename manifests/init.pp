@@ -1,7 +1,8 @@
 class homebrew (
   $command_line_tools_package = undef,
   $command_line_tools_source  = undef,
-  $user                       = 'root'
+  $user,
+  $group = 'admin'
 ) {
 
   if $::operatingsystem != 'Darwin' {

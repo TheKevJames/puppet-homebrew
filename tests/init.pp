@@ -1,1 +1,4 @@
-class { 'homebrew': }
+class { 'homebrew':
+  user  => 'root',
+  group => 'admin',
+}

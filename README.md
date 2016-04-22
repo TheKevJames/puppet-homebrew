@@ -51,7 +51,8 @@ To install homebrew on a node (with a compiler already present!):
 
 ```puppet
 class { 'homebrew':
-  user => 'hightower',    # Defaults to 'root'
+  user  => 'hightower',
+  group => 'developers',  # defaults to 'admin'
 }
 ```
 
@@ -59,6 +60,7 @@ To install homebrew and a compiler (on Lion or later), eg.:
 
 ```puppet
 class { 'homebrew':
+  user                       => 'kevin',
   command_line_tools_package => 'command_line_tools_for_xcode_os_x_lion_april_2013.dmg',
   command_line_tools_source  => 'http://devimages.apple.com/downloads/xcode/command_line_tools_for_xcode_os_x_lion_april_2013.dmg',
 }
