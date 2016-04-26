@@ -12,6 +12,11 @@ Puppet::Type.type(:package).provide(:brewcask,
     if output.empty?
       raise Puppet::ExecutionFailure, "Could not find package #{name}"
     end
+
+    if output =~ /sha256 checksum/
+      mismatched = output.match(/Already downloaded: (.*)/).captures
+      fix_checksum(mismatched)
+    end
   end
 
   def uninstall
