@@ -3,6 +3,8 @@ Puppet::Type.type(:package).provide(:homebrew,
                                     :source => :brewcommon) do
   desc 'Package management using HomeBrew (+ casks!) on OS X'
 
+  has_feature :install_options
+
   def install
     name = install_name
     output = execute([command(:brew), :install, name, *install_options])

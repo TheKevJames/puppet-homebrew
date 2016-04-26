@@ -3,6 +3,8 @@ Puppet::Type.type(:package).provide(:tap,
                                     :source => :brewcommon) do
   desc 'Tap management using HomeBrew on OS X'
 
+  has_feature :install_options
+
   def install
     name = @resource[:name]
     Puppet.debug "Tapping #{name}"
