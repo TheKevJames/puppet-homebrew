@@ -1,6 +1,5 @@
 Facter.add(:has_compiler) do
   setcode do
-    err('This Module works on Mac OS X only!')
     "nil"
   end
 end
