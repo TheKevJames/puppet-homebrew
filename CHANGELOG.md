@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.3.3
+- bugfix: remove `err` from facter code
+- feature: allow user/group override
+
 ## 1.3.2
 - bugfix: fix compat issues for facter booleans
 - bugfix: use puppet warning over ruby warn
