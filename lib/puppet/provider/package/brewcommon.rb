@@ -6,6 +6,7 @@ Puppet::Type.type(:package).provide(:brewcommon,
 
   confine :operatingsystem => :darwin
 
+  # N.B. feature :install_options is not inheritable
   has_feature :installable, :install_options
   has_feature :uninstallable
   has_feature :upgradeable
