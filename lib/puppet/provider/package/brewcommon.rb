@@ -20,11 +20,13 @@ Puppet::Type.type(:package).provide(:brewcommon,
     group = stat('-nf', '%Ug', '/usr/local/bin/brew').to_i
     home  = Etc.getpwuid(owner).dir
 
-    super(cmd, :uid => owner, :gid => group,
+    super(cmd, :uid => owner, :gid => group, :combine => true,
           :custom_environment => { 'HOME' => home })
   end
 
   def execute(*args)
+    # This does not return exit codes in puppet <3.4.0
+    # See https://projects.puppetlabs.com/issues/2538
     self.class.execute(*args)
   end
 
@@ -75,5 +77,16 @@ Puppet::Type.type(:package).provide(:brewcommon,
 
   def self.instances(justme = false)
     package_list.collect { |hash| new(hash) }
+  end
+
+  def fix_checksum(files)
+    begin
+      for file in files
+        File.delete(file)
+      end
+    rescue Errno::ENOENT
+      Puppet.warning "Could not remove mismatched checksum files #{files}"
+    end
+    raise Puppet::ExecutionFailure, "Checksum error for package #{name} in files #{files}"
   end
 end
