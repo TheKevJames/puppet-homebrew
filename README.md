@@ -45,6 +45,33 @@ package { 'neovim/neovim':
 
 You can untap a repository by setting ensure to `absent`.
 
+#### Ordering taps
+
+When both tapping a repo and installing a package from that repository, it is
+important to make sure the former happends first. This can be accomplished in a
+few different ways: either by doing so on a per-package basis:
+
+```puppet
+package { 'neovim/neovim':
+  ensure   => present,
+  provider => tap,
+} ->
+package { 'neovim':
+  ensure   => present,
+  provider => homebrew,
+}
+```
+
+or by setting all taps to occur before all other usages of this package with
+[Resource Collectors](https://docs.puppet.com/puppet/latest/reference/lang_collectors.html):
+
+```puppet
+# pick whichever provider(s) are relevant
+Package <| provider == tap |> -> Package <| provider == homebrew |>
+Package <| provider == tap |> -> Package <| provider == brew |>
+Package <| provider == tap |> -> Package <| provider == brewcask |>
+```
+
 ### Installing brew
 
 To install homebrew on a node (with a compiler already present!):
