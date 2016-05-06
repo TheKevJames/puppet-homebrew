@@ -48,7 +48,7 @@ You can untap a repository by setting ensure to `absent`.
 #### Ordering taps
 
 When both tapping a repo and installing a package from that repository, it is
-important to make sure the former happends first. This can be accomplished in a
+important to make sure the former happens first. This can be accomplished in a
 few different ways: either by doing so on a per-package basis:
 
 ```puppet
