@@ -1,5 +1,6 @@
 class homebrew::install {
-  file { '/usr/local':
+
+  file { ['/usr/local', '/Library/Caches/Homebrew']:
     ensure  => directory,
     owner   => $homebrew::user,
     group   => $homebrew::group,
@@ -13,13 +14,12 @@ class homebrew::install {
     creates   => '/usr/local/bin/brew',
     logoutput => on_failure,
     timeout   => 0,
-    require   => File[$directories],
-  }
-
+    require   => File['/usr/local'],
+  } ~>
   file { '/usr/local/bin/brew':
     owner   => $homebrew::user,
     group   => $homebrew::group,
     mode    => '0775',
-    require => Exec['install-homebrew'],
   }
+
 }
