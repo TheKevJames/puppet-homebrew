@@ -83,6 +83,14 @@ class { 'homebrew':
 }
 ```
 
+Though homebrew itself recommends you do not install homebrew as a root user,
+it will work in that configuration and this may be more convenient for your
+setup. Though this is not officially supported by puppet-homebrew, there is no
+reason why this should not work and users have reported success in running
+`class { 'homebrew': user => root, group => wheel }`. Feel free to report
+issues if this does not work for you, but please mention that you were running
+as root.
+
 To install homebrew and a compiler (on Lion or later), eg.:
 
 ```puppet
