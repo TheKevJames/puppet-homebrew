@@ -4,7 +4,7 @@ class homebrew::install {
     ensure  => directory,
     owner   => $homebrew::user,
     group   => $homebrew::group,
-    mode    => '0755',
+    mode    => '0775',
     recurse => true,
   }
 

@@ -23,7 +23,7 @@ install:
   - sudo bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
 before_script:
   - sudo chown -R travis:admin /usr/local
-  - sudo chmod -R 0755 /usr/local
+  - sudo chmod -R 0775 /usr/local
 script:
   - sudo bundle exec rake validate
   - sudo bundle exec puppet apply --detailed-exitcodes --debug tests || [ $? -eq 2 ]
