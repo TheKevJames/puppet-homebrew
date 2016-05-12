@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 1.4.1
+- feature: allow usage by any member of homebrew group
+
 ## 1.4.0
 - bugfix: ensure `install_options` propgates correctly
 - bugfix: detect and fail properly on checksum errors
