@@ -1,16 +1,21 @@
 language: ruby
-
-os:
-  - osx
-
 rvm:
   - 1.9.3
   # - 2.2.3  # TODO: figure out why this fails
 
-env:
-  - PUPPET_VERSION="~> 4.0" STRICT_VARIABLES="yes"
-  - PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
-  - PUPPET_VERSION="~> 3.0"
+env: TRAVIS_DEFAULT_JOBS_SUCK="true"
+
+os: osx
+matrix:
+  include:
+    - osx_image: beta-xcode6.1  # 10.9
+      env: PUPPET_VERSION="~> 3.0"
+    - osx_image: beta-xcode6.1  # 10.9
+      env: PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+    - osx_image: beta-xcode6.1  # 10.9
+      env: PUPPET_VERSION="~> 4.0"
+  exclude:
+    - env: TRAVIS_DEFAULT_JOBS_SUCK="true"
 
 cache: bundler
 bundler_args: --without system_tests
@@ -18,12 +23,16 @@ bundler_args: --without system_tests
 install:
   - brew update >/dev/null
   - brew cask update >/dev/null
+
   - sudo bundle install
+
   - sudo bundle exec puppet module build
   - sudo bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+
 before_script:
   - sudo chown -R travis:admin /usr/local
   - sudo chmod -R 0775 /usr/local
+
 script:
   - sudo bundle exec rake validate
   - sudo bundle exec puppet apply --detailed-exitcodes --debug tests || [ $? -eq 2 ]
