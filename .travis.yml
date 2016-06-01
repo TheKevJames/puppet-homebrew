@@ -35,7 +35,24 @@ before_script:
 
 script:
   - sudo bundle exec rake validate
-  - sudo bundle exec puppet apply --detailed-exitcodes --debug tests || [ $? -eq 2 ]
+
+  - sudo bundle exec puppet apply --detailed-exitcodes tests/init.pp || [ $? -eq 2 ]
+  - which brew
+
+  - sudo bundle exec puppet apply --detailed-exitcodes --debug tests/install_options.pp || [ $? -eq 2 ]
+  - which ack
+
+  - sudo bundle exec puppet apply --detailed-exitcodes --debug tests/packages.pp || [ $? -eq 2 ]
+  - which clementine
+  - which git
+  - which google-chrome
+  - which tmux
+
+  - sudo bundle exec puppet apply --detailed-exitcodes --debug tests/tap.pp || [ $? -eq 2 ]
+  - which gc2qif
+
+  - sudo bundle exec puppet apply --detailed-exitcodes --debug tests/tap_priority.pp || [ $? -eq 2 ]
+  - which nvim
 
 notifications:
   email: false
