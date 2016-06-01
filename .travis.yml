@@ -36,22 +36,22 @@ before_script:
 script:
   - sudo STRICT_VARIABLES="yes" bundle exec rake validate
 
-  - sudo bundle exec puppet apply --detailed-exitcodes tests/init.pp || [ $? -eq 2 ]
+  - sudo FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes tests/init.pp || [ $? -eq 2 ]
   - which brew
 
-  - sudo bundle exec puppet apply --detailed-exitcodes --debug tests/install_options.pp || [ $? -eq 2 ]
+  - sudo FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/install_options.pp || [ $? -eq 2 ]
   - which ack
 
-  - sudo bundle exec puppet apply --detailed-exitcodes --debug tests/packages.pp || [ $? -eq 2 ]
+  - sudo FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/packages.pp || [ $? -eq 2 ]
   - which clementine
   - which git
   - which google-chrome
   - which tmux
 
-  - sudo bundle exec puppet apply --detailed-exitcodes --debug tests/tap.pp || [ $? -eq 2 ]
+  - sudo FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/tap.pp || [ $? -eq 2 ]
   - which gc2qif
 
-  - sudo bundle exec puppet apply --detailed-exitcodes --debug tests/tap_priority.pp || [ $? -eq 2 ]
+  - sudo FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/tap_priority.pp || [ $? -eq 2 ]
   - which nvim
 
 notifications:
