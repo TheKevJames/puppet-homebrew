@@ -24,7 +24,7 @@ install:
   - brew update >/dev/null
   - brew cask update >/dev/null
 
-  - sudo bundle install
+  - sudo PUPPET_VERSION="$PUPPET_VERSION" bundle install
 
   - sudo bundle exec puppet module build
   - sudo bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
