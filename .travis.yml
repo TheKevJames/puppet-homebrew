@@ -34,7 +34,7 @@ before_script:
   - sudo chmod -R 0775 /usr/local
 
 script:
-  - sudo bundle exec rake validate
+  - sudo STRICT_VARIABLES="yes" bundle exec rake validate
 
   - sudo bundle exec puppet apply --detailed-exitcodes tests/init.pp || [ $? -eq 2 ]
   - which brew
