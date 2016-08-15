@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 1.4.1
+- feature: allow usage by any member of homebrew group
+
+## 1.4.0
+- bugfix: ensure `install_options` propgates correctly
+- bugfix: detect and fail properly on checksum errors
+- feature: remove files with invalid checksums for easier retrying
+- meta: include README section on ordering taps/packages
+
 ## 1.3.3
 - bugfix: remove `err` from facter code
 - feature: allow user/group override

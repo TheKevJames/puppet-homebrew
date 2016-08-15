@@ -45,6 +45,33 @@ package { 'neovim/neovim':
 
 You can untap a repository by setting ensure to `absent`.
 
+#### Ordering taps
+
+When both tapping a repo and installing a package from that repository, it is
+important to make sure the former happens first. This can be accomplished in a
+few different ways: either by doing so on a per-package basis:
+
+```puppet
+package { 'neovim/neovim':
+  ensure   => present,
+  provider => tap,
+} ->
+package { 'neovim':
+  ensure   => present,
+  provider => homebrew,
+}
+```
+
+or by setting all taps to occur before all other usages of this package with
+[Resource Collectors](https://docs.puppet.com/puppet/latest/reference/lang_collectors.html):
+
+```puppet
+# pick whichever provider(s) are relevant
+Package <| provider == tap |> -> Package <| provider == homebrew |>
+Package <| provider == tap |> -> Package <| provider == brew |>
+Package <| provider == tap |> -> Package <| provider == brewcask |>
+```
+
 ### Installing brew
 
 To install homebrew on a node (with a compiler already present!):
@@ -55,6 +82,14 @@ class { 'homebrew':
   group => 'developers',  # defaults to 'admin'
 }
 ```
+
+Though homebrew itself recommends you do not install homebrew as a root user,
+it will work in that configuration and this may be more convenient for your
+setup. Though this is not officially supported by puppet-homebrew, there is no
+reason why this should not work and users have reported success in running
+`class { 'homebrew': user => root, group => wheel }`. Feel free to report
+issues if this does not work for you, but please mention that you were running
+as root.
 
 To install homebrew and a compiler (on Lion or later), eg.:
 

@@ -1,8 +1,8 @@
-package { 'neovim/neovim':
+package { 'meanbee/tap':
   ensure   => present,
   provider => tap,
 } ->
-package { 'neovim':
+package { 'gc2qif':
   ensure   => present,
   provider => homebrew,
 }
