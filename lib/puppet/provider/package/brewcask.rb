@@ -31,16 +31,15 @@ Puppet::Type.type(:package).provide(:brewcask,
 
   def self.package_list(options={})
     begin
+      result = execute([command(:brew), :cask, :list, '--versions'])
+      result = "" if result.include?("Warning: nothing to list")
       if name = options[:justme]
         # Of course brew-cask has a different --versions format than brew when
         # getting the version of a single package
-        result = execute([command(:brew), :cask, :list, '--versions'])
         unless result.empty?
           result = Hash[result.lines.map {|line| line.split}]
           result = result[name] ? name + ' ' + result[name] : ''
         end
-      else
-        result = execute([command(:brew), :cask, :list, '--versions'])
       end
       list = result.lines.map {|line| name_version_split(line)}
     rescue Puppet::ExecutionFailure => detail
