@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.4.2
+- bugfix: fixed bug where brew-cask provider didn't work the first time
+- meta: updated to new homebrew install location
+
 ## 1.4.1
 - feature: allow usage by any member of homebrew group
 
