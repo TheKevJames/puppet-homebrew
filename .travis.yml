@@ -1,7 +1,4 @@
 language: ruby
-rvm:
-  - 1.9.3
-  # - 2.2.3  # TODO: figure out why this fails
 
 env: TRAVIS_DEFAULT_JOBS_SUCK="true"
 
@@ -10,10 +7,23 @@ matrix:
   include:
     - osx_image: beta-xcode6.1  # 10.9
       env: PUPPET_VERSION="~> 3.0"
+      rvm: 1.9.3
     - osx_image: beta-xcode6.1  # 10.9
       env: PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+      rvm: 1.9.3
     - osx_image: beta-xcode6.1  # 10.9
       env: PUPPET_VERSION="~> 4.0"
+      rvm: 1.9.3
+
+    - osx_image: beta-xcode6.1  # 10.9
+      env: PUPPET_VERSION="~> 3.0"
+      rvm: 2.2.3
+    - osx_image: beta-xcode6.1  # 10.9
+      env: PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+      rvm: 2.2.3
+    - osx_image: beta-xcode6.1  # 10.9
+      env: PUPPET_VERSION="~> 4.0"
+      rvm: 2.2.3
   exclude:
     - env: TRAVIS_DEFAULT_JOBS_SUCK="true"
 
