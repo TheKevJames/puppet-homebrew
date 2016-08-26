@@ -7,10 +7,12 @@ Puppet::Type.type(:package).provide(:homebrew,
 
   def install
     name = install_name
+
+    Puppet.debug "Installing #{name}"
     output = execute([command(:brew), :install, name, *install_options])
 
     if output =~ /Searching taps/
-      # Fallback to brewcask
+      Puppet.debug "Falling back to brew-cask (still installing #{name}"
       output = execute([command(:brew), :cask, :install, name, *install_options])
       # brewcask includes some funky beer characters that f*ck with encoding
       output = output.encode('UTF-8', :invalid => :replace, :undef => :replace)
@@ -21,21 +23,29 @@ Puppet::Type.type(:package).provide(:homebrew,
     end
 
     if output =~ /sha256 checksum/
+      Puppet.debug "Fixing checksum error..."
       mismatched = output.match(/Already downloaded: (.*)/).captures
       fix_checksum(mismatched)
     end
   end
 
   def uninstall
-    execute([command(:brew), :uninstall, @resource[:name]])
-    execute([command(:brew), :cask, :uninstall, @resource[:name]])
+    name = @resource[:name].downcase
+
+    Puppet.debug "Uninstalling #{name}"
+    execute([command(:brew), :uninstall, name])
+    execute([command(:brew), :cask, :uninstall, name])
   end
 
   def update
+    name = @resource[:name].downcase
+
+    Puppet.debug "Updating #{name}"
     install
   end
 
   def self.package_list(options={})
+    Puppet.debug "Listing installed packages"
     begin
       if name = options[:justme]
         result = execute([command(:brew), :list, '--versions', name])

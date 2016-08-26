@@ -35,8 +35,8 @@ Puppet::Type.type(:package).provide(:brewcommon,
   end
 
   def install_name
-    name = @resource[:name]
-    should = @resource[:ensure]
+    name = @resource[:name].downcase
+    should = @resource[:ensure].downcase
 
     case should
     when true, false, Symbol
@@ -59,11 +59,11 @@ Puppet::Type.type(:package).provide(:brewcommon,
   end
 
   def query
-    self.class.package_list(:justme => resource[:name])
+    self.class.package_list(:justme => resource[:name].downcase)
   end
 
   def latest
-    hash = self.class.package_list(:justme => resource[:name])
+    hash = self.class.package_list(:justme => resource[:name].downcase)
     hash[:ensure]
   end
 

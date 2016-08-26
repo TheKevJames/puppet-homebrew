@@ -6,7 +6,8 @@ Puppet::Type.type(:package).provide(:tap,
   has_feature :install_options
 
   def install
-    name = @resource[:name]
+    name = @resource[:name].downcase
+
     Puppet.debug "Tapping #{name}"
     output = execute([command(:brew), :tap, name, *install_options])
 
@@ -16,23 +17,27 @@ Puppet::Type.type(:package).provide(:tap,
   end
 
   def uninstall
-    name = @resource[:name]
+    name = @resource[:name].downcase
+
     Puppet.debug "Untapping #{name}"
     execute([command(:brew), :untap, name])
   end
 
   def update
-    raise Puppet::Error, "Can not re-tap #{@resource[:name]}"
+    name = @resource[:name].downcase
+
+    raise Puppet::Error, "Can not re-tap #{name}"
   end
 
   def query
-    name = @resource[:name]
+    name = @resource[:name].downcase
+
     Puppet.debug "Querying tap #{name}"
     begin
       output = execute([command(:brew), :tap])
       output.each_line do |line|
         line.chomp!
-        return { :name => line, :ensure => 'present', :provider => 'tap' } if line == name
+        return { :name => line, :ensure => 'present', :provider => 'tap' } if line.downcase == name
       end
     rescue Puppet::ExecutionFailure => detail
       Puppet.Err "Could not query tap: #{detail}"
