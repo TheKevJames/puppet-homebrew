@@ -13,7 +13,7 @@ class homebrew::compiler {
       source   => $homebrew::command_line_tools_source,
     }
   } else {
-    warning('No Command Line Tools detected and no download source set. If Command Line Tools is installed, this may be a false positive. If not, please set download sources or install manually.')
+    warning('No Command Line Tools detected and no download source set. Please set download sources or install manually.')
   }
 
 }
