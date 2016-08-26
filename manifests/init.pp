@@ -1,7 +1,7 @@
 class homebrew (
+  $user,
   $command_line_tools_package = undef,
   $command_line_tools_source  = undef,
-  $user,
   $group = 'admin'
 ) {
 
