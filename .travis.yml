@@ -5,15 +5,15 @@ env: TRAVIS_DEFAULT_JOBS_SUCK="true"
 os: osx
 matrix:
   include:
-    - osx_image: beta-xcode6.1  # 10.9
-      env: PUPPET_VERSION="~> 3.0"
-      rvm: 1.9.3
-    - osx_image: beta-xcode6.1  # 10.9
-      env: PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
-      rvm: 1.9.3
-    - osx_image: beta-xcode6.1  # 10.9
-      env: PUPPET_VERSION="~> 4.0"
-      rvm: 1.9.3
+    # - osx_image: beta-xcode6.1  # 10.9
+    #   env: PUPPET_VERSION="~> 3.0"
+    #   rvm: 1.9.3
+    # - osx_image: beta-xcode6.1  # 10.9
+    #   env: PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+    #   rvm: 1.9.3
+    # - osx_image: beta-xcode6.1  # 10.9
+    #   env: PUPPET_VERSION="~> 4.0"
+    #   rvm: 1.9.3
 
     - osx_image: beta-xcode6.1  # 10.9
       env: PUPPET_VERSION="~> 3.0"
