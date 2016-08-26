@@ -20,8 +20,10 @@ Puppet::Type.type(:package).provide(:brewcommon,
     group = stat('-nf', '%Ug', '/usr/local/bin/brew').to_i
     home  = Etc.getpwuid(owner).dir
 
-    super(cmd, :uid => owner, :gid => group, :combine => true,
-          :custom_environment => { 'HOME' => home })
+    ret = super(cmd, :uid => owner, :gid => group, :combine => true,
+                :custom_environment => { 'HOME' => home })
+    Puppet.debug "Calling command #{cmd}. Got return value: #{ret}"
+    ret
   end
 
   def execute(*args)

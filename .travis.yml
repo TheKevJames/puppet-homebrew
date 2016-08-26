@@ -1,16 +1,31 @@
 language: ruby
 
-os:
-  - osx
+env: TRAVIS_DEFAULT_JOBS_SUCK="true"
 
-rvm:
-  - 1.9.3
-  # - 2.2.3  # TODO: figure out why this fails
+os: osx
+matrix:
+  include:
+    # - osx_image: beta-xcode6.1  # 10.9
+    #   env: PUPPET_VERSION="~> 3.0"
+    #   rvm: 1.9.3
+    # - osx_image: beta-xcode6.1  # 10.9
+    #   env: PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+    #   rvm: 1.9.3
+    # - osx_image: beta-xcode6.1  # 10.9
+    #   env: PUPPET_VERSION="~> 4.0"
+    #   rvm: 1.9.3
 
-env:
-  - PUPPET_VERSION="~> 4.0" STRICT_VARIABLES="yes"
-  - PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
-  - PUPPET_VERSION="~> 3.0"
+    - osx_image: beta-xcode6.1  # 10.9
+      env: PUPPET_VERSION="~> 3.0"
+      rvm: 2.2.3
+    - osx_image: beta-xcode6.1  # 10.9
+      env: PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+      rvm: 2.2.3
+    - osx_image: beta-xcode6.1  # 10.9
+      env: PUPPET_VERSION="~> 4.0"
+      rvm: 2.2.3
+  exclude:
+    - env: TRAVIS_DEFAULT_JOBS_SUCK="true"
 
 cache: bundler
 bundler_args: --without system_tests
@@ -18,15 +33,36 @@ bundler_args: --without system_tests
 install:
   - brew update >/dev/null
   - brew cask update >/dev/null
-  - sudo bundle install
+
+  - sudo PUPPET_VERSION="$PUPPET_VERSION" bundle install
+
   - sudo bundle exec puppet module build
   - sudo bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+
 before_script:
   - sudo chown -R travis:admin /usr/local
   - sudo chmod -R 0775 /usr/local
+
 script:
-  - sudo bundle exec rake validate
-  - sudo bundle exec puppet apply --detailed-exitcodes --debug tests || [ $? -eq 2 ]
+  - sudo STRICT_VARIABLES="yes" bundle exec rake validate
+
+  - sudo FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes tests/init.pp || [ $? -eq 2 ]
+  - which brew
+
+  - sudo FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/install_options.pp || [ $? -eq 2 ]
+  - which ack
+
+  - sudo FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/packages.pp || [ $? -eq 2 ]
+  - which clementine
+  - which git
+  - which google-chrome
+  - which tmux
+
+  - sudo FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/tap.pp || [ $? -eq 2 ]
+  - which gc2qif
+
+  - sudo FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/tap_priority.pp || [ $? -eq 2 ]
+  - which nvim
 
 notifications:
   email: false
