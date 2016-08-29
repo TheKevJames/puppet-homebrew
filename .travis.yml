@@ -55,25 +55,25 @@ script:
 
   - echo 'Test apply install_options.pp...' && echo -en 'travis_fold:start:script.test.install_options\\r'
   - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/install_options.pp || [ $? -eq 2 ]
-  - which ack
+  - which ack || (brew info ack; echo "=> Files"; brew list ack)
   - echo -en 'travis_fold:end:script.test.install_options\\r'
 
   - echo 'Test apply packages.pp...' && echo -en 'travis_fold:start:script.test.packages\\r'
   - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/packages.pp || [ $? -eq 2 ]
-  - which clementine
-  - which git
-  - which google-chrome
-  - which tmux
+  - which clementine || (brew cask info clementine; echo "=> Files"; brew cask list clementine)
+  - which git || (brew info git; echo "=> Files"; brew list git)
+  - which google-chrome || (brew cask info google-chrome; echo "=> Files"; brew cask list google-chrome)
+  - which tmux || (brew info tmux; echo "=> Files"; brew list tmux)
   - echo -en 'travis_fold:end:script.test.packages\\r'
 
   - echo 'Test apply tap.pp...' && echo -en 'travis_fold:start:script.test.tap\\r'
   - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/tap.pp || [ $? -eq 2 ]
-  - which gc2qif
+  - which gc2qif || (brew info gc2qif; echo "=> Files"; brew list gc2qif)
   - echo -en 'travis_fold:end:script.test.tap\\r'
 
   - echo 'Test apply tap_priority.pp...' && echo -en 'travis_fold:start:script.test.tap_priority\\r'
   - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/tap_priority.pp || [ $? -eq 2 ]
-  - which nvim
+  - which nvim || (brew info nvim; echo "=> Files"; brew list nvim)
   - echo -en 'travis_fold:end:script.test.tap_priority\\r'
 
 notifications:
