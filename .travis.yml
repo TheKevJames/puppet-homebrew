@@ -60,9 +60,9 @@ script:
 
   - echo 'Test apply packages.pp...' && echo -en 'travis_fold:start:script.test.packages\\r'
   - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/packages.pp || [ $? -eq 2 ]
-  - which clementine || (brew cask info clementine; echo "=> Files"; brew cask list clementine)
+  - stat /Applications/clementine.app/Contents/MacOS/clementine || (brew cask info clementine; echo "=> Files"; brew cask list clementine)
   - which git || (brew info git; echo "=> Files"; brew list git)
-  - which google-chrome || (brew cask info google-chrome; echo "=> Files"; brew cask list google-chrome)
+  - stat "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" || (brew cask info google-chrome; echo "=> Files"; brew cask list google-chrome)
   - which tmux || (brew info tmux; echo "=> Files"; brew list tmux)
   - echo -en 'travis_fold:end:script.test.packages\\r'
 
