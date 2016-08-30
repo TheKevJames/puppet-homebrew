@@ -39,12 +39,12 @@ install:
   - sudo BUNDLE_GEMFILE="$GEMFILE" bundle exec puppet module build
   - sudo BUNDLE_GEMFILE="$GEMFILE" bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
 
-  - brew list --versions
-  - brew cask list --versions
-
 before_script:
   - sudo chown -R travis:admin /usr/local
   - sudo chmod -R 0775 /usr/local
+
+  - brew list --versions
+  - brew cask list --versions
 
 script:
   - echo 'Validate...' && echo -en 'travis_fold:start:script.validate\\r'
