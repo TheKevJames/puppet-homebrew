@@ -43,6 +43,8 @@ before_script:
   - sudo chown -R travis:admin /usr/local
   - sudo chmod -R 0775 /usr/local
 
+  - sudo gem list rake
+
   - brew list --versions
   - brew cask list --versions
 
