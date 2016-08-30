@@ -43,15 +43,17 @@ before_script:
   - sudo chown -R travis:admin /usr/local
   - sudo chmod -R 0775 /usr/local
 
-  - sudo gem list rake
-
   - brew list --versions
   - brew cask list --versions
 
 script:
-  - echo 'Validate...' && echo -en 'travis_fold:start:script.validate\\r'
-  - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec rake validate
-  - echo -en 'travis_fold:end:script.validate\\r'
+  - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+  - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+  - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+
+  - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/init.pp
+  - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/install.pp
+  - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/compiler.pp
 
   - echo 'Test apply init.pp...' && echo -en 'travis_fold:start:script.test.init\\r'
   - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/init.pp || [ $? -eq 2 ]

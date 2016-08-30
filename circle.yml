@@ -9,4 +9,10 @@ dependencies:
 
 test:
   override:
-    - bundle exec rake validate
+    - STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+    - STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+    - STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+
+    - STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/init.pp
+    - STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/install.pp
+    - STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/compiler.pp
