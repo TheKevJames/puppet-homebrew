@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
-# syck removed from ruby 2, safe_yaml updated to fix this eventually, puppet~>3 uses older safe_yaml
-gem 'safe_yaml', '>= 1.0.4'
+# json and json_pure~>2 only compatible with ruby 2
+gem 'json', '~> 1.0'
+gem 'json_pure', '~> 1.0'
 
 gem 'facter', '>= 1.7.0'
 gem 'metadata-json-lint', '>= 0.0.11'
