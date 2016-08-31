@@ -7,6 +7,8 @@ Puppet::Type.type(:package).provide(:brew,
 
   def install
     name = install_name
+
+    Puppet.debug "Installing #{name}"
     output = execute([command(:brew), :install, name, *install_options])
 
     if output =~ /Searching taps/
@@ -14,20 +16,28 @@ Puppet::Type.type(:package).provide(:brew,
     end
 
     if output =~ /sha256 checksum/
+      Puppet.debug "Fixing checksum error..."
       mismatched = output.match(/Already downloaded: (.*)/).captures
       fix_checksum(mismatched)
     end
   end
 
   def uninstall
-    execute([command(:brew), :uninstall, @resource[:name]])
+    name = @resource[:name].downcase
+
+    Puppet.debug "Uninstalling #{name}"
+    execute([command(:brew), :uninstall, name])
   end
 
   def update
-    execute([command(:brew), :upgrade, @resource[:name]])
+    name = @resource[:name].downcase
+
+    Puppet.debug "Upgrading #{name}"
+    execute([command(:brew), :upgrade, name])
   end
 
   def self.package_list(options={})
+    Puppet.debug "Listing installed packages"
     begin
       if name = options[:justme]
         result = execute([command(:brew), :list, '--versions', name])
