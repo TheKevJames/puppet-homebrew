@@ -4,7 +4,7 @@ class homebrew::install {
     ensure  => directory,
     owner   => $homebrew::user,
     group   => $homebrew::group,
-    mode    => '0644',
+    mode    => '0664',
     recurse => true,
   } ->
   file { '/usr/local/Library': ensure => directory } ->
@@ -21,7 +21,7 @@ class homebrew::install {
           '/usr/local/bin',
           '/usr/local/Cellar']:
     ensure  => directory,
-    mode    => '0755',
+    mode    => '0775',
     recurse => true,
     require => [File['/usr/local/Library/Homebrew/cask'],
                 File['/usr/local/Library/Homebrew/shims']],
