@@ -57,7 +57,7 @@ script:
   - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/compiler.pp
 
   - echo 'Test apply init.pp...' && echo -en 'travis_fold:start:script.test.init\\r'
-  - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/init.pp || [ $? -eq 2 ]
+  - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes tests/init.pp || [ $? -eq 2 ]
   - which brew
   - echo -en 'travis_fold:end:script.test.init\\r'
 
