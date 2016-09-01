@@ -83,13 +83,20 @@ class { 'homebrew':
 }
 ```
 
-Though homebrew itself recommends you do not install homebrew as a root user,
-it will work in that configuration and this may be more convenient for your
-setup. Though this is not officially supported by puppet-homebrew, there is no
-reason why this should not work and users have reported success in running
-`class { 'homebrew': user => root, group => wheel }`. Feel free to report
-issues if this does not work for you, but please mention that you were running
-as root.
+As of late 2016, installing homebrew as the root user is deprecated, slated for
+removal by brew maintainers in November 2016. It is highly recommended to
+install brew as a standard (non-root) user.
+
+Note that some users have reported confusion between the *puppet* user and the
+*homebrew* user -- it is perfectly fine to run puppet as root, in fact this is
+encouraged, but the homebrew user should be non-root (generally, the system's
+main user account).
+
+If you run puppet as a non-root user and set the `homebrew::user` to a
+*different* non-root user, you may run into issues; namely, since this module
+requires the puppet user act as the homebrew user, you may get a password
+prompt on each run. This can be fixed by allowing the puppet user passwordless
+sudo privileges to the homebrew user.
 
 To install homebrew and a compiler (on Lion or later), eg.:
 
