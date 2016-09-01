@@ -41,8 +41,11 @@ install:
   - sudo BUNDLE_GEMFILE="$GEMFILE" bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
 
 before_script:
+  # Significantly reduces log output from running test/init.pp. It'd be great to remove this
+  # but Travis dies if there are >10000 log lines.
   - sudo chown -R travis:admin /usr/local
-  - sudo chmod -R 0775 /usr/local
+  - sudo chmod -R 0664 /usr/local
+  - sudo chmod -R 0775 /usr/local/bin
 
   - brew list --versions
   - brew cask list --versions
