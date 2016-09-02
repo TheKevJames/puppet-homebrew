@@ -113,6 +113,28 @@ You may need to search for a copy if you use this method. At the time of this
 writing, downloading the command line tools sometimes requires an Apple ID.
 Sorry, dude!
 
+#### Adding a Github Token
+
+Homebrew uses a Github token in your environment to make your experience better
+by:
+
+- Reducing the rate limit on `brew search` commands
+- Letting you tap your private repositories
+- Allowing you to upload Gists of brew installation errors
+
+To enable this feature, you can include:
+
+```puppet
+class { 'homebrew':
+  user         => 'kevin',
+  github_token => 'MyT0k3n!',
+}
+```
+
+Click
+[here](https://github.com/settings/tokens/new?scopes=&description=Homebrew) to
+create a personal access token for Github.
+
 ## Original Author
 
 Original credit for this module goes to
