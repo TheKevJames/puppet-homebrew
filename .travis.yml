@@ -46,6 +46,9 @@ before_script:
   - sudo chown -R travis:admin /usr/local
   - sudo chmod -R 0664 /usr/local
   - sudo chmod -R 0775 /usr/local/bin
+  - ls -la /usr/local/bin | grep brew
+  - stat `which brew`
+  - stat /usr/local/bin/brew
 
   - brew list --versions
   - brew cask list --versions
