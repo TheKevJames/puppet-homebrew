@@ -18,7 +18,7 @@ class homebrew (
   include homebrew::compiler
   include homebrew::install
 
-  if ${homebrew::github_token} {
+  if $homebrew::github_token {
     file { '/etc/environment': ensure => present } ->
     file_line { 'homebrew-github-api-token':
       path  => '/etc/environment',
