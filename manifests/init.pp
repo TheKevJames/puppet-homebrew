@@ -19,8 +19,11 @@ class homebrew (
   include homebrew::install
 
   if ${homebrew::github_token} {
-    file { '/etc/environment':
-      content => inline_template("HOMEBREW_GITHUB_API_TOKEN=${homebrew::github_token}")
+    file { '/etc/environment': ensure => present } ->
+    file_line { 'homebrew-github-api-token':
+      path  => '/etc/environment',
+      line  => "HOMEBREW_GITHUB_API_TOKEN=${homebrew::github_token}",
+      match => '^HOMEBREW_GITHUB_API_TOKEN',
     }
   }
 
