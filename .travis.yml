@@ -43,12 +43,16 @@ install:
 before_script:
   # Significantly reduces log output from running test/init.pp. It'd be great to remove this
   # but Travis dies if there are >10000 log lines.
+  # BEGIN gross permissions hack
   - sudo chown -R travis:admin /usr/local
-  - sudo chmod -R 0664 /usr/local
-  - sudo chmod -R 0775 /usr/local/bin
-  - ls -la /usr/local/bin | grep brew
-  - stat `which brew`
-  - stat /usr/local/bin/brew
+  - find /usr/local -type d -print0 | xargs -0 chmod 775
+  - find /usr/local -type f -print0 | xargs -0 chmod 664
+  - find /usr/local/bin -type f -print0 | xargs -0 chmod 775
+  - find /usr/local/Cellar -type f -print0 | xargs -0 chmod 775
+  - find /usr/local/Library/Homebrew/cask/cmd -type f -print0 | xargs -0 chmod 775
+  - find /usr/local/Library/Homebrew/shims/scm -type f -print0 | xargs -0 chmod 775
+  - find /usr/local/Library/Homebrew/shims/super -type f -print0 | xargs -0 chmod 775
+  # END gross permissions hack
 
   - brew list --versions
   - brew cask list --versions
@@ -62,10 +66,10 @@ script:
   - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/install.pp
   - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/compiler.pp
 
-  - echo 'Test apply init.pp...' && echo -en 'travis_fold:start:script.test.init'
-  - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes tests/init.pp || [ $? -eq 2 ]
+  - echo 'Test apply init.pp...' && echo -en 'travis_fold:start:script.test.init\\r'
+  - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/init.pp || [ $? -eq 2 ]
   - which brew
-  - echo -en 'travis_fold:end:script.test.init'
+  - echo -en 'travis_fold:end:script.test.init\\r'
 
   - echo 'Test apply install_options.pp...' && echo -en 'travis_fold:start:script.test.install_options\\r'
   - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/install_options.pp || [ $? -eq 2 ]
