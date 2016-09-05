@@ -9,7 +9,7 @@ Puppet::Type.type(:package).provide(:tap,
     name = @resource[:name].downcase
 
     Puppet.debug "Tapping #{name}"
-    output = execute([command(:brew), :tap, name, *install_options])
+    output = execute([command(:brew), :tap, name, *install_options, "2> /dev/null"])
 
     if output =~ /Error: Invalid tap name/
       raise Puppet::Error, "Could not find tap #{name}"
@@ -20,7 +20,7 @@ Puppet::Type.type(:package).provide(:tap,
     name = @resource[:name].downcase
 
     Puppet.debug "Untapping #{name}"
-    execute([command(:brew), :untap, name])
+    execute([command(:brew), :untap, name, "2> /dev/null"])
   end
 
   def update
@@ -34,7 +34,7 @@ Puppet::Type.type(:package).provide(:tap,
 
     Puppet.debug "Querying tap #{name}"
     begin
-      output = execute([command(:brew), :tap])
+      output = execute([command(:brew), :tap, "2> /dev/null"])
       output.each_line do |line|
         line.chomp!
         return { :name => line, :ensure => 'present', :provider => 'tap' } if line.downcase == name
@@ -49,7 +49,7 @@ Puppet::Type.type(:package).provide(:tap,
     Puppet.debug "Listing currently tapped repositories"
     taps = []
     begin
-      output = execute([command(:brew), :tap])
+      output = execute([command(:brew), :tap, "2> /dev/null"])
       output.each_line do |line|
         line.chomp!
         next if line.empty?

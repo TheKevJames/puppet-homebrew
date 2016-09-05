@@ -9,11 +9,11 @@ Puppet::Type.type(:package).provide(:homebrew,
     name = install_name
 
     Puppet.debug "Installing #{name}"
-    output = execute([command(:brew), :install, name, *install_options])
+    output = execute([command(:brew), :install, name, *install_options, "2> /dev/null"])
 
     if output =~ /Searching taps/
       Puppet.debug "Falling back to brew-cask (still installing #{name}"
-      output = execute([command(:brew), :cask, :install, name, *install_options])
+      output = execute([command(:brew), :cask, :install, name, *install_options, "2> /dev/null"])
       # brewcask includes some funky beer characters that f*ck with encoding
       output = output.encode('UTF-8', :invalid => :replace, :undef => :replace)
 
@@ -48,15 +48,9 @@ Puppet::Type.type(:package).provide(:homebrew,
     Puppet.debug "Listing installed packages"
     begin
       if name = options[:justme]
-        result = execute([command(:brew), :list, '--versions', name])
+        result = execute([command(:brew), :list, '--versions', name, "2> /dev/null"])
         unless result.include? name
-          # Of course brew-cask has a different --versions format than brew
-          # when getting the version of a single package
-          result = execute([command(:brew), :cask, :list, '--versions'])
-          unless result.empty?
-            result = Hash[result.lines.map {|line| line.split}]
-            result = result[name] ? name + ' ' + result[name] : ''
-          end
+          result = execute([command(:brew), :cask, :list, '--versions', "2> /dev/null"])
         end
       else
         result = execute([command(:brew), :list, '--versions'])
