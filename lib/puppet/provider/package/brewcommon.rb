@@ -20,6 +20,8 @@ Puppet::Type.type(:package).provide(:brewcommon,
     group = stat('-nf', '%Ug', '/usr/local/bin/brew').to_i
     home  = Etc.getpwuid(owner).dir
 
+    warn('Homebrew will be dropping support for root-owned homebrew by November 2016. Though this module will not prevent you from running homebrew as root, you may run into unexpected issues. Please migrate your installation to a user account -- this module will enforce this once homebrew has officially dropped support for root-owned installations.') if owner == 0
+
     super(cmd, :uid => owner, :gid => group, :combine => true,
           :custom_environment => { 'HOME' => home })
   end
@@ -35,8 +37,8 @@ Puppet::Type.type(:package).provide(:brewcommon,
   end
 
   def install_name
-    name = @resource[:name]
-    should = @resource[:ensure]
+    name = @resource[:name].downcase
+    should = @resource[:ensure].downcase
 
     case should
     when true, false, Symbol
@@ -59,11 +61,11 @@ Puppet::Type.type(:package).provide(:brewcommon,
   end
 
   def query
-    self.class.package_list(:justme => resource[:name])
+    self.class.package_list(:justme => resource[:name].downcase)
   end
 
   def latest
-    hash = self.class.package_list(:justme => resource[:name])
+    hash = self.class.package_list(:justme => resource[:name].downcase)
     hash[:ensure]
   end
 
