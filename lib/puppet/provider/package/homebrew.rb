@@ -33,8 +33,8 @@ Puppet::Type.type(:package).provide(:homebrew,
     name = @resource[:name].downcase
 
     Puppet.debug "Uninstalling #{name}"
-    execute([command(:brew), :uninstall, name])
-    execute([command(:brew), :cask, :uninstall, name])
+    execute([command(:brew), :uninstall, name, "2> /dev/null"])
+    execute([command(:brew), :cask, :uninstall, name, "2> /dev/null"])
   end
 
   def update
@@ -53,8 +53,8 @@ Puppet::Type.type(:package).provide(:homebrew,
           result = execute([command(:brew), :cask, :list, '--versions', "2> /dev/null"])
         end
       else
-        result = execute([command(:brew), :list, '--versions'])
-        result += execute([command(:brew), :cask, :list, '--versions'])
+        result = execute([command(:brew), :list, '--versions', "2> /dev/null"])
+        result += execute([command(:brew), :cask, :list, '--versions', "2> /dev/null"])
       end
       Puppet.debug "Found packages #{result}"
       list = result.lines.map {|line| name_version_split(line)}
