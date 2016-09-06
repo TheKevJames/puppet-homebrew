@@ -1,6 +1,10 @@
+# == Class homebrew::compiler
+# 
+# Installs Command Line Tools from user provided package if OS version > 10.7
+# 
 class homebrew::compiler {
 
-  if $::has_compiler == "true" {
+  if $::has_compiler == true {
   } elsif versioncmp($::macosx_productversion_major, '10.7') < 0 {
     warning('Please install the Command Line Tools bundled with XCode manually!')
   } elsif ($homebrew::command_line_tools_package and $homebrew::command_line_tools_source) {
