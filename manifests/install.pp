@@ -1,3 +1,7 @@
+# == Class homebrew::install
+# 
+# Installs and keeps track of permissions for brew-owned folders and files
+# 
 class homebrew::install {
 
   file { ['/usr/local', '/Library/Caches/Homebrew']:

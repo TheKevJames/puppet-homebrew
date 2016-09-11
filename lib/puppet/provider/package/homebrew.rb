@@ -50,13 +50,7 @@ Puppet::Type.type(:package).provide(:homebrew,
       if name = options[:justme]
         result = execute([command(:brew), :list, '--versions', name])
         unless result.include? name
-          # Of course brew-cask has a different --versions format than brew
-          # when getting the version of a single package
           result = execute([command(:brew), :cask, :list, '--versions'])
-          unless result.empty?
-            result = Hash[result.lines.map {|line| line.split}]
-            result = result[name] ? name + ' ' + result[name] : ''
-          end
         end
       else
         result = execute([command(:brew), :list, '--versions'])
