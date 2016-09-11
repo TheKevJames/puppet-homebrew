@@ -9,7 +9,7 @@ Puppet::Type.type(:package).provide(:brew,
     name = install_name
 
     Puppet.debug "Installing #{name}"
-    output = execute([command(:brew), :install, name, *install_options])
+    output = execute([command(:brew), :install, name, *install_options, "2> /dev/null"])
 
     if output =~ /Searching taps/
       raise Puppet::ExecutionFailure, "Could not find package #{name}"
@@ -26,23 +26,23 @@ Puppet::Type.type(:package).provide(:brew,
     name = @resource[:name].downcase
 
     Puppet.debug "Uninstalling #{name}"
-    execute([command(:brew), :uninstall, name])
+    execute([command(:brew), :uninstall, name, "2> /dev/null"])
   end
 
   def update
     name = @resource[:name].downcase
 
     Puppet.debug "Upgrading #{name}"
-    execute([command(:brew), :upgrade, name])
+    execute([command(:brew), :upgrade, name, "2> /dev/null"])
   end
 
   def self.package_list(options={})
     Puppet.debug "Listing installed packages"
     begin
       if name = options[:justme]
-        result = execute([command(:brew), :list, '--versions', name])
+        result = execute([command(:brew), :list, '--versions', name, "2> /dev/null"])
       else
-        result = execute([command(:brew), :list, '--versions'])
+        result = execute([command(:brew), :list, '--versions', "2> /dev/null"])
       end
       Puppet.debug "Found packages #{result}"
       list = result.lines.map {|line| name_version_split(line)}

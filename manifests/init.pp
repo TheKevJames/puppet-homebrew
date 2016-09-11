@@ -1,23 +1,24 @@
 # == Class: homebrew
 #
-# This class is able to install and configure homebrew and brew cask on node.
+# This class is able to install and configure homebrew and brew cask.
 #
 # === Parameters
 #
 # [*user*]
 #   User owner of the brew files and folders.
-#   Defaults to nothing.
+#   Defaults to `undef`.
 #
 # [*group*]
 #   Group owner of the brew files
-#   Defaults to `undef`.
+#   Defaults to `admin`.
 #
 # [*command_line_tools_package*]
-#   Url where to download the command line tools package.
+#   URL for the command line tools package.
 #   Defaults to `undef`.
 #
 # [*command_line_tools_source*]
-#   name of the dmg file containing the installed for the command line tools package.
+#   name of the dmg file containing the installer for the command line tools
+#   package.
 #   Defaults to `undef`.
 #
 # === Original Author
