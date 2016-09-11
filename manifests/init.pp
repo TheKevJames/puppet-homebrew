@@ -6,7 +6,7 @@
 #
 # [*user*]
 #   User owner of the brew files and folders.
-#   Defaults to `undef`.
+#   Defaults to nothing.
 #
 # [*group*]
 #   Group owner of the brew files

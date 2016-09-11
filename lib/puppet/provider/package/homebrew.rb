@@ -9,11 +9,11 @@ Puppet::Type.type(:package).provide(:homebrew,
     name = install_name
 
     Puppet.debug "Installing #{name}"
-    output = execute([command(:brew), :install, name, *install_options, "2> /dev/null"])
+    output = execute([command(:brew), :install, name, *install_options])
 
     if output =~ /Searching taps/
       Puppet.debug "Falling back to brew-cask (still installing #{name}"
-      output = execute([command(:brew), :cask, :install, name, *install_options, "2> /dev/null"])
+      output = execute([command(:brew), :cask, :install, name, *install_options])
       # brewcask includes some funky beer characters that f*ck with encoding
       output = output.encode('UTF-8', :invalid => :replace, :undef => :replace)
 
@@ -33,8 +33,8 @@ Puppet::Type.type(:package).provide(:homebrew,
     name = @resource[:name].downcase
 
     Puppet.debug "Uninstalling #{name}"
-    execute([command(:brew), :uninstall, name, "2> /dev/null"])
-    execute([command(:brew), :cask, :uninstall, name, "2> /dev/null"])
+    execute([command(:brew), :uninstall, name])
+    execute([command(:brew), :cask, :uninstall, name])
   end
 
   def update
@@ -48,13 +48,13 @@ Puppet::Type.type(:package).provide(:homebrew,
     Puppet.debug "Listing installed packages"
     begin
       if name = options[:justme]
-        result = execute([command(:brew), :list, '--versions', name, "2> /dev/null"])
+        result = execute([command(:brew), :list, '--versions', name])
         unless result.include? name
           result = execute([command(:brew), :cask, :list, '--versions'])
         end
       else
-        result = execute([command(:brew), :list, '--versions', "2> /dev/null"])
-        result += execute([command(:brew), :cask, :list, '--versions', "2> /dev/null"])
+        result = execute([command(:brew), :list, '--versions'])
+        result += execute([command(:brew), :cask, :list, '--versions'])
       end
       Puppet.debug "Found packages #{result}"
       list = result.lines.map {|line| name_version_split(line)}
