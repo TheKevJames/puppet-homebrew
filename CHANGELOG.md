@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.4.3
+- bugfix: manage objects (packages, taps, etc) case-insensitively
+- meta: deprecate root-owned homebrew
+- meta: clean up tests
+
 ## 1.4.2
 - bugfix: fixed bug where brew-cask provider didn't work the first time
 - meta: updated to new homebrew install location
@@ -8,14 +13,14 @@
 - feature: allow usage by any member of homebrew group
 
 ## 1.4.0
+- feature: remove files with invalid checksums for easier retrying
 - bugfix: ensure `install_options` propgates correctly
 - bugfix: detect and fail properly on checksum errors
-- feature: remove files with invalid checksums for easier retrying
 - meta: include README section on ordering taps/packages
 
 ## 1.3.3
-- bugfix: remove `err` from facter code
 - feature: allow user/group override
+- bugfix: remove `err` from facter code
 
 ## 1.3.2
 - bugfix: fix compat issues for facter booleans
