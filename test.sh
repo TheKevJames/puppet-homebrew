@@ -17,6 +17,14 @@ if [ -n "$SLOW_TESTS" ]; then
     apply tests/init.pp
     check which brew
     echo -en 'travis_fold:end:script.test.init\\r'
+
+
+    echo 'Test apply token.pp...'
+
+    echo -en 'travis_fold:start:script.test.token\\r'
+    apply tests/token.pp
+    check cat /etc/environment | grep HOMEBREW_GITHUB_API_TOKEN
+    echo -en 'travis_fold:end:script.test.token\\r'
 else
     echo 'Apply install_options.pp...'
 
