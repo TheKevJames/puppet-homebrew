@@ -13,10 +13,6 @@ Puppet::Type.type(:package).provide(:brewcask,
     # brewcask includes some funky beer characters that f*ck with encoding
     output = output.encode('UTF-8', :invalid => :replace, :undef => :replace)
 
-    if output.empty?
-      raise Puppet::ExecutionFailure, "Could not find package #{name}"
-    end
-
     if output =~ /sha256 checksum/
       Puppet.debug "Fixing checksum error..."
       mismatched = output.match(/Already downloaded: (.*)/).captures

@@ -16,10 +16,6 @@ Puppet::Type.type(:package).provide(:homebrew,
       output = execute([command(:brew), :cask, :install, name, *install_options])
       # brewcask includes some funky beer characters that f*ck with encoding
       output = output.encode('UTF-8', :invalid => :replace, :undef => :replace)
-
-      if output.empty?
-        raise Puppet::ExecutionFailure, "Could not find package #{name}"
-      end
     end
 
     if output =~ /sha256 checksum/
