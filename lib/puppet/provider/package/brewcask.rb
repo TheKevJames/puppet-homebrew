@@ -36,14 +36,14 @@ Puppet::Type.type(:package).provide(:brewcask,
 
   def self.package_list(options={})
     Puppet.debug "Listing installed packages"
+    list = []
     begin
       if name = options[:justme]
-        result = execute([command(:brew), :cask, :list, '--versions', name])
+        result = execute([command(:brew), :cask, :info, name])
       else
         result = execute([command(:brew), :list, '--versions'])
+        list = result.lines.map {|line| name_version_split(line)}
       end
-      Puppet.debug "Found packages #{result}"
-      list = result.lines.map {|line| name_version_split(line)}
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not list packages: #{detail}"
     end
