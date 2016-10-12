@@ -46,7 +46,6 @@ Puppet::Type.type(:package).provide(:brewcask,
       else
         result = execute([command(:brew), :list, '--versions'])
       end
-      Puppet.debug "Found packages #{result}"
       list = result.lines.map {|line| name_version_split(line)}
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not list packages: #{detail}"
