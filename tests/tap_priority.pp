@@ -1,11 +1,11 @@
 Package <| provider == tap |> -> Package <| provider == homebrew |>
 
-package { 'neovim/neovim':
+package { 'homebrew/science':
   ensure   => present,
   provider => tap,
 }
 
-package { 'neovim':
+package { 'ncl':
   ensure   => present,
   provider => homebrew,
 }
