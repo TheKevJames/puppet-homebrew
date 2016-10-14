@@ -8,12 +8,15 @@ Puppet::Type.type(:package).provide(:brew,
   def install
     name = install_name
 
-    Puppet.debug "Installing #{name}"
-    output = execute([command(:brew), :install, name, *install_options])
-
-    if output =~ /Searching taps/
-      raise Puppet::ExecutionFailure, "Could not find package #{name}"
+    begin
+      Puppet.debug "Looking for #{name} package..."
+      output = execute([command(:brew), :info, name], failonfail: true)
+    rescue Puppet::ExecutionFailure => detail
+      raise Puppet::Error, "Could not find package: #{name}"
     end
+
+    Puppet.debug "Package found, installing..."
+    output = execute([command(:brew), :install, name, *install_options])
 
     if output =~ /sha256 checksum/
       Puppet.debug "Fixing checksum error..."
@@ -38,41 +41,19 @@ Puppet::Type.type(:package).provide(:brew,
 
   def self.package_list(options={})
     Puppet.debug "Listing installed packages"
-    list = []
     begin
       if name = options[:justme]
-        result = execute([command(:brew), :info, name])
-      else
-        result = execute([command(:brew), :list, '--versions'])
-        list = result.lines.map {|line| name_version_split(line)}
-      end
-    rescue Puppet::ExecutionFailure => detail
-      raise Puppet::Error, "Could not list packages: #{detail}"
-    end
-
-    if options[:justme]
-      return list.shift
-    else
-      return list
-    end
-  end
-
-  def self.package_list(options={})
-    Puppet.debug "Listing installed packages"
-    list = []
-    begin
-      if name = options[:justme]
-        result = execute([command(:brew), :info, name])
-        unless result.include? name
-          result += execute([command(:brew), :cask, :info, name])
+        result = execute([command(:brew), :list, '--version', name])
+        if result.empty?
+          Puppet.debug "Package #{result} not installed"
+        else
+          Puppet.debug "Found package #{result}"
         end
-        Puppet.debug "Found package #{result.lines.first}"
       else
         result = execute([command(:brew), :list, '--versions'])
-        result += execute([command(:brew), :cask, :list, '--versions'])
         Puppet.debug "Found packages #{result}"
-        list = result.lines.map {|line| name_version_split(line)}
       end
+      list = result.lines.map {|line| name_version_split(line)}
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not list packages: #{detail}"
     end

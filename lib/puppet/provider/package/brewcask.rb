@@ -8,10 +8,15 @@ Puppet::Type.type(:package).provide(:brewcask,
   def install
     name = install_name
 
-    Puppet.debug "Installing #{name}"
+    begin
+      Puppet.debug "Looking for #{name} package..."
+      output = execute([command(:brew), :cask, :info, name], failonfail: true)
+    rescue Puppet::ExecutionFailure => detail
+      raise Puppet::Error, "Could not find package: #{name}"
+    end
+
+    Puppet.debug "Package found, installing..."
     output = execute([command(:brew), :cask, :install, name, *install_options])
-    # brewcask includes some funky beer characters that f*ck with encoding
-    output = output.encode('UTF-8', :invalid => :replace, :undef => :replace)
 
     if output =~ /sha256 checksum/
       Puppet.debug "Fixing checksum error..."
@@ -36,14 +41,19 @@ Puppet::Type.type(:package).provide(:brewcask,
 
   def self.package_list(options={})
     Puppet.debug "Listing installed packages"
-    list = []
     begin
       if name = options[:justme]
-        result = execute([command(:brew), :cask, :info, name])
+        result = execute([command(:brew), :cask, :list, '--versions', name])
+        if result.empty?
+          Puppet.debug "Package #{result} not installed"
+        else
+          Puppet.debug "Found package #{result}"
+        end
       else
         result = execute([command(:brew), :list, '--versions'])
-        list = result.lines.map {|line| name_version_split(line)}
+        Puppet.debug "Found packages #{result}"
       end
+      list = result.lines.map {|line| name_version_split(line)}
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not list packages: #{detail}"
     end
