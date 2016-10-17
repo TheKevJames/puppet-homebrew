@@ -12,7 +12,7 @@ Puppet::Type.type(:package).provide(:homebrew,
       Puppet.debug "Looking for #{name} package on brew..."
       output = execute([command(:brew), :info, name])
       if output.empty?
-         Puppet.debug "Package #{name} not found on Brew. Trying brewcask..."
+         Puppet.debug "Package #{name} not found on Brew. Trying BrewCask..."
          output = execute([command(:brew), :cask, :info, name], failonfail: true)
          Puppet.debug "Package found on brewcask, installing..."
          output = execute([command(:brew), :cask, :install, name, *install_options], failonfail: true)
