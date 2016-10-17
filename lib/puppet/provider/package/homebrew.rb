@@ -9,14 +9,20 @@ Puppet::Type.type(:package).provide(:homebrew,
     name = install_name
 
     begin
-      Puppet.debug "Looking for #{name} package..."
-      output = execute([command(:brew), :info, name], failonfail: true)
+      Puppet.debug "Looking for #{name} package on brew..."
+      output = execute([command(:brew), :info, name])
+      if output.empty?
+         Puppet.debug "Package #{name} not found on Brew. Trying BrewCask..."
+         output = execute([command(:brew), :cask, :info, name], failonfail: true)
+         Puppet.debug "Package found on brewcask, installing..."
+         output = execute([command(:brew), :cask, :install, name, *install_options])
+      else
+        Puppet.debug "Package found, installing..."
+        output = execute([command(:brew), :install, name, *install_options], failonfail: true)
+      end
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not find package: #{name}"
     end
-
-    Puppet.debug "Package found, installing..."
-    output = execute([command(:brew), :install, name, *install_options])
 
     if output =~ /sha256 checksum/
       Puppet.debug "Fixing checksum error..."
