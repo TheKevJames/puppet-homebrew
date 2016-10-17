@@ -12,22 +12,21 @@ Puppet::Type.type(:package).provide(:homebrew,
       Puppet.debug "Looking for #{name} package on brew..."
       output = execute([command(:brew), :info, name])
       if output.empty?
-         Puppet.debug "Package #{name} not found on Brew. Trying BrewCask..."
+         Puppet.debug "Package #{name} not found on Brew. Trying brewcask..."
          output = execute([command(:brew), :cask, :info, name], failonfail: true)
          Puppet.debug "Package found on brewcask, installing..."
-         output = execute([command(:brew), :cask, :install, name, *install_options])
+         output = execute([command(:brew), :cask, :install, name, *install_options], failonfail: true)
       else
         Puppet.debug "Package found, installing..."
         output = execute([command(:brew), :install, name, *install_options], failonfail: true)
+        if output =~ /sha256 checksum/
+          Puppet.debug "Fixing checksum error..."
+          mismatched = output.match(/Already downloaded: (.*)/).captures
+          fix_checksum(mismatched)
+        end
       end
     rescue Puppet::ExecutionFailure => detail
-      raise Puppet::Error, "Could not find package: #{name}"
-    end
-
-    if output =~ /sha256 checksum/
-      Puppet.debug "Fixing checksum error..."
-      mismatched = output.match(/Already downloaded: (.*)/).captures
-      fix_checksum(mismatched)
+      raise Puppet::Error, "Could not install package: #{detail}"
     end
   end
 
@@ -62,7 +61,6 @@ Puppet::Type.type(:package).provide(:homebrew,
       else
         result = execute([command(:brew), :list, '--versions'])
         result += execute([command(:brew), :cask, :list, '--versions'])
-        Puppet.debug "Found packages #{result}"
       end
       list = result.lines.map {|line| name_version_split(line)}
     rescue Puppet::ExecutionFailure => detail

@@ -15,14 +15,19 @@ Puppet::Type.type(:package).provide(:brew,
       raise Puppet::Error, "Could not find package: #{name}"
     end
 
-    Puppet.debug "Package found, installing..."
-    output = execute([command(:brew), :install, name, *install_options])
+    begin
+      Puppet.debug "Package found, installing..."
+      output = execute([command(:brew), :install, name, *install_options], failonfail: true)
 
-    if output =~ /sha256 checksum/
-      Puppet.debug "Fixing checksum error..."
-      mismatched = output.match(/Already downloaded: (.*)/).captures
-      fix_checksum(mismatched)
+      if output =~ /sha256 checksum/
+        Puppet.debug "Fixing checksum error..."
+        mismatched = output.match(/Already downloaded: (.*)/).captures
+        fix_checksum(mismatched)
+      end
+    rescue Puppet::ExecutionFailure => detail
+      raise Puppet::Error, "Could not install package: #{detail}"
     end
+
   end
 
   def uninstall
@@ -43,7 +48,7 @@ Puppet::Type.type(:package).provide(:brew,
     Puppet.debug "Listing installed packages"
     begin
       if name = options[:justme]
-        result = execute([command(:brew), :list, '--version', name])
+        result = execute([command(:brew), :list, '--versions', name])
         if result.empty?
           Puppet.debug "Package #{result} not installed"
         else
@@ -51,7 +56,6 @@ Puppet::Type.type(:package).provide(:brew,
         end
       else
         result = execute([command(:brew), :list, '--versions'])
-        Puppet.debug "Found packages #{result}"
       end
       list = result.lines.map {|line| name_version_split(line)}
     rescue Puppet::ExecutionFailure => detail
