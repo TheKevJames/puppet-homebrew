@@ -3,7 +3,7 @@ package { 'git':  # in brew
   provider => brew,
 }
 
-package { 'tmux':  # in brew
+package { 'bazaar':  # in brew
   ensure   => present,
   provider => homebrew,
 }

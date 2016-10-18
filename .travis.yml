@@ -81,7 +81,7 @@ script:
   - stat /Applications/clementine.app/Contents/MacOS/clementine || (brew cask info clementine; echo "=> Files"; brew cask list clementine)
   - which git || (brew info git; echo "=> Files"; brew list git)
   - stat "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" || (brew cask info google-chrome; echo "=> Files"; brew cask list google-chrome)
-  - which tmux || (brew info tmux; echo "=> Files"; brew list tmux)
+  - which bzr || (brew info bazaar; echo "=> Files"; brew list bazaar)
   - echo -en 'travis_fold:end:script.test.packages\\r'
 
   - echo 'Test apply tap.pp...' && echo -en 'travis_fold:start:script.test.tap\\r'
@@ -91,7 +91,7 @@ script:
 
   - echo 'Test apply tap_priority.pp...' && echo -en 'travis_fold:start:script.test.tap_priority\\r'
   - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/tap_priority.pp || [ $? -eq 2 ]
-  - which nvim || (brew info nvim; echo "=> Files"; brew list nvim)
+  - which ncl || (brew info ncl; echo "=> Files"; brew list ncl)
   - echo -en 'travis_fold:end:script.test.tap_priority\\r'
 
 notifications:
