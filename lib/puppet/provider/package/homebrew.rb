@@ -8,24 +8,25 @@ Puppet::Type.type(:package).provide(:homebrew,
   def install
     name = install_name
 
-    Puppet.debug "Installing #{name}"
-    output = execute([command(:brew), :install, name, *install_options])
-
-    if output =~ /Searching taps/
-      Puppet.debug "Falling back to brew-cask (still installing #{name}"
-      output = execute([command(:brew), :cask, :install, name, *install_options])
-      # brewcask includes some funky beer characters that f*ck with encoding
-      output = output.encode('UTF-8', :invalid => :replace, :undef => :replace)
-
+    begin
+      Puppet.debug "Looking for #{name} package on brew..."
+      output = execute([command(:brew), :info, name])
       if output.empty?
-        raise Puppet::ExecutionFailure, "Could not find package #{name}"
+         Puppet.debug "Package #{name} not found on Brew. Trying BrewCask..."
+         output = execute([command(:brew), :cask, :info, name], failonfail: true)
+         Puppet.debug "Package found on brewcask, installing..."
+         output = execute([command(:brew), :cask, :install, name, *install_options], failonfail: true)
+      else
+        Puppet.debug "Package found, installing..."
+        output = execute([command(:brew), :install, name, *install_options], failonfail: true)
+        if output =~ /sha256 checksum/
+          Puppet.debug "Fixing checksum error..."
+          mismatched = output.match(/Already downloaded: (.*)/).captures
+          fix_checksum(mismatched)
+        end
       end
-    end
-
-    if output =~ /sha256 checksum/
-      Puppet.debug "Fixing checksum error..."
-      mismatched = output.match(/Already downloaded: (.*)/).captures
-      fix_checksum(mismatched)
+    rescue Puppet::ExecutionFailure => detail
+      raise Puppet::Error, "Could not install package: #{detail}"
     end
   end
 
@@ -51,6 +52,11 @@ Puppet::Type.type(:package).provide(:homebrew,
         result = execute([command(:brew), :list, '--versions', name])
         unless result.include? name
           result += execute([command(:brew), :cask, :list, '--versions', name])
+        end
+        if result.empty?
+          Puppet.debug "Package #{result} not installed"
+        else
+          Puppet.debug "Found package #{result}"
         end
       else
         result = execute([command(:brew), :list, '--versions'])
