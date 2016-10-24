@@ -15,7 +15,10 @@ matrix:
       env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 4.0"
       rvm: 1.9.3
     - osx_image: beta-xcode6.1  # 10.9
-      env: GEMFILE="$PWD/Gemfile-1.9.3" SLOW_TESTS="true" PUPPET_VERSION="~> 4.0"
+      env: GEMFILE="$PWD/Gemfile-1.9.3" SLOW_TESTS="init.pp" PUPPET_VERSION="~> 4.0"
+      rvm: 1.9.3
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile-1.9.3" SLOW_TESTS="token.pp" PUPPET_VERSION="~> 4.0"
       rvm: 1.9.3
 
     # TODO: why do these tests fail??
