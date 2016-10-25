@@ -14,6 +14,15 @@ matrix:
     - osx_image: beta-xcode6.1  # 10.9
       env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 4.0"
       rvm: 1.9.3
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="true"
+      rvm: 1.9.3
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="true" FUTURE_PARSER="yes"
+      rvm: 1.9.3
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 4.0" SLOW_TESTS="true"
+      rvm: 1.9.3
 
     # TODO: why do these tests fail??
     # - osx_image: beta-xcode6.1  # 10.9
@@ -58,41 +67,7 @@ before_script:
   - brew cask list --versions
 
 script:
-  - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-  - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-  - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-
-  - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/init.pp
-  - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/install.pp
-  - sudo BUNDLE_GEMFILE="$GEMFILE" STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/compiler.pp
-
-  - echo 'Test apply init.pp...' && echo -en 'travis_fold:start:script.test.init\\r'
-  - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/init.pp || [ $? -eq 2 ]
-  - which brew
-  - echo -en 'travis_fold:end:script.test.init\\r'
-
-  - echo 'Test apply install_options.pp...' && echo -en 'travis_fold:start:script.test.install_options\\r'
-  - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/install_options.pp || [ $? -eq 2 ]
-  - which ack || (brew info ack; echo "=> Files"; brew list ack)
-  - echo -en 'travis_fold:end:script.test.install_options\\r'
-
-  - echo 'Test apply packages.pp...' && echo -en 'travis_fold:start:script.test.packages\\r'
-  - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/packages.pp || [ $? -eq 2 ]
-  - stat /Applications/clementine.app/Contents/MacOS/clementine || (brew cask info clementine; echo "=> Files"; brew cask list clementine)
-  - which git || (brew info git; echo "=> Files"; brew list git)
-  - stat "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" || (brew cask info google-chrome; echo "=> Files"; brew cask list google-chrome)
-  - which bzr || (brew info bazaar; echo "=> Files"; brew list bazaar)
-  - echo -en 'travis_fold:end:script.test.packages\\r'
-
-  - echo 'Test apply tap.pp...' && echo -en 'travis_fold:start:script.test.tap\\r'
-  - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/tap.pp || [ $? -eq 2 ]
-  - which gc2qif || (brew info gc2qif; echo "=> Files"; brew list gc2qif)
-  - echo -en 'travis_fold:end:script.test.tap\\r'
-
-  - echo 'Test apply tap_priority.pp...' && echo -en 'travis_fold:start:script.test.tap_priority\\r'
-  - sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug tests/tap_priority.pp || [ $? -eq 2 ]
-  - which ncl || (brew info ncl; echo "=> Files"; brew list ncl)
-  - echo -en 'travis_fold:end:script.test.tap_priority\\r'
+  - bash test.sh
 
 notifications:
   email: false
