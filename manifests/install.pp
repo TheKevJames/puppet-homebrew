@@ -7,7 +7,6 @@ class homebrew::install {
     ensure  => directory,
     owner   => $homebrew::user,
     group   => $homebrew::group,
-    mode    => '0775',
     recurse => true,
   } ->
   exec { 'install-homebrew':
