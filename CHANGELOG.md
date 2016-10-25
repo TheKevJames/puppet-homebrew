@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.5.0
+- feature: allow package to set HOMEBREW_GITHUB_API_TOKEN
+- feature/bugfix: stop parsing homebrew output, parse response codes instead
+- bugfix: manage /usr/local/Homebrew rather than parent directory
+- meta: speed up tests
+
 ## 1.4.3
 - bugfix: manage objects (packages, taps, etc) case-insensitively
 - meta: deprecate root-owned homebrew
