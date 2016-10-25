@@ -2,7 +2,8 @@ class homebrew (
   $user,
   $command_line_tools_package = undef,
   $command_line_tools_source  = undef,
-  $group = 'admin'
+  $github_token               = undef,
+  $group                      = 'admin'
 ) {
 
   if $::operatingsystem != 'Darwin' {
@@ -16,5 +17,14 @@ class homebrew (
 
   include homebrew::compiler
   include homebrew::install
+
+  if $homebrew::github_token {
+    file { '/etc/environment': ensure => present } ->
+    file_line { 'homebrew-github-api-token':
+      path  => '/etc/environment',
+      line  => "HOMEBREW_GITHUB_API_TOKEN=${homebrew::github_token}",
+      match => '^HOMEBREW_GITHUB_API_TOKEN',
+    }
+  }
 
 }

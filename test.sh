@@ -11,12 +11,23 @@ check() {
 }
 
 if [ -n "$SLOW_TESTS" ]; then
-    echo 'Apply init.pp...'
+    if [ "$SLOW_TESTS" = "init.pp" ]; then
+        echo 'Apply init.pp...'
 
-    echo -en 'travis_fold:start:script.test.init\\r'
-    apply tests/init.pp
-    check which brew
-    echo -en 'travis_fold:end:script.test.init\\r'
+        echo -en 'travis_fold:start:script.test.init\\r'
+        apply tests/init.pp
+        check which brew
+        echo -en 'travis_fold:end:script.test.init\\r'
+    fi
+
+    if [ "$SLOW_TESTS" = "token.pp" ]; then
+        echo 'Test apply token.pp...'
+
+        echo -en 'travis_fold:start:script.test.token\\r'
+        apply tests/token.pp
+        check cat /etc/environment | grep HOMEBREW_GITHUB_API_TOKEN
+        echo -en 'travis_fold:end:script.test.token\\r'
+    fi
 else
     echo 'Apply install_options.pp...'
 
