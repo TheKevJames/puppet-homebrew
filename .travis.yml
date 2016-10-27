@@ -35,6 +35,34 @@ matrix:
 
     - osx_image: beta-xcode6.1  # 10.9
       env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0"
+      rvm: 2.2.2
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+      rvm: 2.2.2
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0"
+      rvm: 2.2.2
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp"
+      rvm: 2.2.2
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp" FUTURE_PARSER="yes"
+      rvm: 2.2.2
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0" SLOW_TESTS="init.pp"
+      rvm: 2.2.2
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp"
+      rvm: 2.2.2
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp" FUTURE_PARSER="yes"
+      rvm: 2.2.2
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0" SLOW_TESTS="token.pp"
+      rvm: 2.2.2
+
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0"
       rvm: 2.2.3
     - osx_image: beta-xcode6.1  # 10.9
       env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
@@ -60,6 +88,62 @@ matrix:
     - osx_image: beta-xcode6.1  # 10.9
       env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0" SLOW_TESTS="token.pp"
       rvm: 2.2.3
+
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0"
+      rvm: 2.2.4
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+      rvm: 2.2.4
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0"
+      rvm: 2.2.4
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp"
+      rvm: 2.2.4
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp" FUTURE_PARSER="yes"
+      rvm: 2.2.4
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0" SLOW_TESTS="init.pp"
+      rvm: 2.2.4
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp"
+      rvm: 2.2.4
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp" FUTURE_PARSER="yes"
+      rvm: 2.2.4
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0" SLOW_TESTS="token.pp"
+      rvm: 2.2.4
+
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0"
+      rvm: 2.2.5
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+      rvm: 2.2.5
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0"
+      rvm: 2.2.5
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp"
+      rvm: 2.2.5
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp" FUTURE_PARSER="yes"
+      rvm: 2.2.5
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0" SLOW_TESTS="init.pp"
+      rvm: 2.2.5
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp"
+      rvm: 2.2.5
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp" FUTURE_PARSER="yes"
+      rvm: 2.2.5
+    - osx_image: beta-xcode6.1  # 10.9
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0" SLOW_TESTS="token.pp"
+      rvm: 2.2.5
   exclude:
     - env: TRAVIS_DEFAULT_JOBS_SUCK="true"
 
