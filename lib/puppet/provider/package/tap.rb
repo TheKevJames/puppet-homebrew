@@ -37,7 +37,7 @@ Puppet::Type.type(:package).provide(:tap,
       output = execute([command(:brew), :tap])
       output.each_line do |line|
         line.chomp!
-        return { :name => line, :ensure => 'present', :provider => 'tap' }  if line.downcase == name || line.downcase == name.gsub('homebrew-', '')
+        return { :name => line, :ensure => 'present', :provider => 'tap' } if [name, name.gsub('homebrew-', '')].include? line.downcase?
       end
     rescue Puppet::ExecutionFailure => detail
       Puppet.Err "Could not query tap: #{detail}"
