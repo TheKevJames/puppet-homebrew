@@ -18,9 +18,10 @@ Puppet::Type.type(:package).provide(:homebrew,
         mismatched = output.match(/Already downloaded: (.*)/).captures
         fix_checksum(mismatched)
       end
-    rescue Puppet::ExecutionFailure
+    rescue Puppet::ExecutionFailure => detail
       begin
         Puppet.debug "Package #{name} not found on brew. Trying brewcask..."
+        Puppet.debug "Failure details were: #{detail}"
         output = execute([command(:brew), :cask, :info, name], failonfail: true)
         Puppet.debug "Package found on brewcask, installing..."
         output = execute([command(:brew), :cask, :install, name, *install_options], failonfail: true)
