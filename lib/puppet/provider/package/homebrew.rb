@@ -59,7 +59,7 @@ Puppet::Type.type(:package).provide(:homebrew,
           result += execute([command(:brew), :cask, :list, '--versions', name])
         end
         if result.empty?
-          Puppet.debug "Package #{result} not installed"
+          Puppet.debug "Package #{name} not installed"
         else
           Puppet.debug "Found package #{result}"
         end

@@ -48,7 +48,7 @@ Puppet::Type.type(:package).provide(:brewcask,
       if name = options[:justme]
         result = execute([command(:brew), :cask, :list, '--versions', name])
         if result.empty?
-          Puppet.debug "Package #{result} not installed"
+          Puppet.debug "Package #{name} not installed"
         else
           Puppet.debug "Found package #{result}"
         end
