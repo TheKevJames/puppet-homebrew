@@ -22,6 +22,8 @@ Puppet::Type.type(:package).provide(:homebrew,
       begin
         Puppet.debug "Package #{name} not found on brew. Trying brewcask..."
         Puppet.debug "Failure details were: #{detail}"
+        output = execute([command(:brew), :info, name], combine: true)
+        Puppet.debug "Tried again, got: #{output}"
         output = execute([command(:brew), :cask, :info, name], failonfail: true)
         Puppet.debug "Package found on brewcask, installing..."
         output = execute([command(:brew), :cask, :install, name, *install_options], failonfail: true)
