@@ -60,7 +60,7 @@ else
 
     echo -en 'travis_fold:start:script.test.tap_priority\\r'
     apply tests/tap_priority.pp
-    check brew list jid
+    check brew list bact
     echo -en 'travis_fold:end:script.test.tap_priority\\r'
 fi
 

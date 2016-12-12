@@ -10,6 +10,7 @@ Puppet::Type.type(:package).provide(:tap,
 
     Puppet.debug "Tapping #{name}"
     output = execute([command(:brew), :tap, name, *install_options])
+    Puppet.debug "Got brew-tap output: #{output}"
 
     if output =~ /Error: Invalid tap name/
       raise Puppet::Error, "Could not find tap #{name}"
