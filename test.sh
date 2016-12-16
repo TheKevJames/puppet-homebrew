@@ -48,19 +48,19 @@ else
     echo -en 'travis_fold:end:script.test.packages\\r'
 
 
-    echo 'Apply tap.pp...'
+    # echo 'Apply tap.pp...'
 
-    echo -en 'travis_fold:start:script.test.tap\\r'
-    apply tests/tap.pp
-    check which gc2qif
-    echo -en 'travis_fold:end:script.test.tap\\r'
+    # echo -en 'travis_fold:start:script.test.tap\\r'
+    # apply tests/tap.pp
+    # check which gc2qif
+    # echo -en 'travis_fold:end:script.test.tap\\r'
 
 
     echo 'Apply tap_priority.pp...'
 
     echo -en 'travis_fold:start:script.test.tap_priority\\r'
     apply tests/tap_priority.pp
-    check brew list bact
+    check which gc2qif
     echo -en 'travis_fold:end:script.test.tap_priority\\r'
 fi
 
