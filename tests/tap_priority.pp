@@ -9,3 +9,4 @@ package { 'gc2qif':
   ensure   => present,
   provider => homebrew,
 }
+
