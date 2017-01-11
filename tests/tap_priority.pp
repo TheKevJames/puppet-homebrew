@@ -1,11 +1,12 @@
-Package <| provider == tap |> -> Package <| provider == homebrew |>
+# Package <| provider == tap |> -> Package <| provider == homebrew |>
 
-package { 'homebrew/science':
+package { 'meanbee/tap':
   ensure   => present,
   provider => tap,
-}
+} ->
 
-package { 'ncl':
+package { 'gc2qif':
   ensure   => present,
   provider => homebrew,
 }
+
