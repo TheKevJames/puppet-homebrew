@@ -1,58 +1,192 @@
 language: ruby
 
-env: TRAVIS_DEFAULT_JOBS_SUCK="true"
-
+# config
+bundler_args: --without system_tests
+cache: bundler
 os: osx
+notifications:
+  email: false
+
+# matrix
+env: TRAVIS_DEFAULT_JOBS_SUCK="true"
 matrix:
   include:
-    - osx_image: beta-xcode6.1  # 10.9
+    - osx_image: xcode6.4  # 10.10
       env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0"
       rvm: 1.9.3
-    - osx_image: beta-xcode6.1  # 10.9
+    - osx_image: xcode6.4  # 10.10
       env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
       rvm: 1.9.3
-    - osx_image: beta-xcode6.1  # 10.9
+    - osx_image: xcode6.4  # 10.10
       env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 4.0"
       rvm: 1.9.3
-    - osx_image: beta-xcode6.1  # 10.9
+    - osx_image: xcode6.4  # 10.10
       env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp"
       rvm: 1.9.3
-    - osx_image: beta-xcode6.1  # 10.9
+    - osx_image: xcode6.4  # 10.10
       env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp" FUTURE_PARSER="yes"
       rvm: 1.9.3
-    - osx_image: beta-xcode6.1  # 10.9
+    - osx_image: xcode6.4  # 10.10
       env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 4.0" SLOW_TESTS="init.pp"
       rvm: 1.9.3
-    - osx_image: beta-xcode6.1  # 10.9
+    - osx_image: xcode6.4  # 10.10
       env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp"
       rvm: 1.9.3
-    - osx_image: beta-xcode6.1  # 10.9
+    - osx_image: xcode6.4  # 10.10
       env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp" FUTURE_PARSER="yes"
       rvm: 1.9.3
-    - osx_image: beta-xcode6.1  # 10.9
+    - osx_image: xcode6.4  # 10.10
       env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 4.0" SLOW_TESTS="token.pp"
       rvm: 1.9.3
 
-    # TODO: why do these tests fail??
-    # - osx_image: beta-xcode6.1  # 10.9
-    #   env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0"
-    #   rvm: 2.2.3
-    # - osx_image: beta-xcode6.1  # 10.9
-    #   env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
-    #   rvm: 2.2.3
-    # - osx_image: beta-xcode6.1  # 10.9
-    #   env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0"
-    #   rvm: 2.2.3
+    - osx_image: xcode6.4  # 10.10
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0"
+      rvm: 2.2.5
+    - osx_image: xcode6.4  # 10.10
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+      rvm: 2.2.5
+    - osx_image: xcode6.4  # 10.10
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0"
+      rvm: 2.2.5
+    - osx_image: xcode6.4  # 10.10
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp"
+      rvm: 2.2.5
+    - osx_image: xcode6.4  # 10.10
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp" FUTURE_PARSER="yes"
+      rvm: 2.2.5
+    - osx_image: xcode6.4  # 10.10
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0" SLOW_TESTS="init.pp"
+      rvm: 2.2.5
+    - osx_image: xcode6.4  # 10.10
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp"
+      rvm: 2.2.5
+    - osx_image: xcode6.4  # 10.10
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp" FUTURE_PARSER="yes"
+      rvm: 2.2.5
+    - osx_image: xcode6.4  # 10.10
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0" SLOW_TESTS="token.pp"
+      rvm: 2.2.5
+
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0"
+      rvm: 1.9.3
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+      rvm: 1.9.3
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 4.0"
+      rvm: 1.9.3
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp"
+      rvm: 1.9.3
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp" FUTURE_PARSER="yes"
+      rvm: 1.9.3
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 4.0" SLOW_TESTS="init.pp"
+      rvm: 1.9.3
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp"
+      rvm: 1.9.3
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp" FUTURE_PARSER="yes"
+      rvm: 1.9.3
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 4.0" SLOW_TESTS="token.pp"
+      rvm: 1.9.3
+
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0"
+      rvm: 2.3.1
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+      rvm: 2.3.1
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0"
+      rvm: 2.3.1
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp"
+      rvm: 2.3.1
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp" FUTURE_PARSER="yes"
+      rvm: 2.3.1
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0" SLOW_TESTS="init.pp"
+      rvm: 2.3.1
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp"
+      rvm: 2.3.1
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp" FUTURE_PARSER="yes"
+      rvm: 2.3.1
+    - osx_image: xcode7.3  # 10.11
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0" SLOW_TESTS="token.pp"
+      rvm: 2.3.1
+
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0"
+      rvm: 1.9.3
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+      rvm: 1.9.3
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 4.0"
+      rvm: 1.9.3
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp"
+      rvm: 1.9.3
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp" FUTURE_PARSER="yes"
+      rvm: 1.9.3
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 4.0" SLOW_TESTS="init.pp"
+      rvm: 1.9.3
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp"
+      rvm: 1.9.3
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp" FUTURE_PARSER="yes"
+      rvm: 1.9.3
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 4.0" SLOW_TESTS="token.pp"
+      rvm: 1.9.3
+
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0"
+      rvm: 2.3.1
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+      rvm: 2.3.1
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0"
+      rvm: 2.3.1
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp"
+      rvm: 2.3.1
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp" FUTURE_PARSER="yes"
+      rvm: 2.3.1
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0" SLOW_TESTS="init.pp"
+      rvm: 2.3.1
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp"
+      rvm: 2.3.1
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp" FUTURE_PARSER="yes"
+      rvm: 2.3.1
+    - osx_image: xcode8.2  # 10.12
+      env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 4.0" SLOW_TESTS="token.pp"
+      rvm: 2.3.1
   exclude:
     - env: TRAVIS_DEFAULT_JOBS_SUCK="true"
 
-cache: bundler
-bundler_args: --without system_tests
-
+# runner
 install:
   - brew update >/dev/null
   - brew cask update >/dev/null
 
+  - sudo bundle --version || sudo gem install bundler
   - sudo PUPPET_VERSION="$PUPPET_VERSION" bundle install --gemfile="$GEMFILE"
 
   - sudo BUNDLE_GEMFILE="$GEMFILE" bundle exec puppet module build
@@ -67,6 +201,3 @@ before_script:
 
 script:
   - bash test.sh
-
-notifications:
-  email: false
