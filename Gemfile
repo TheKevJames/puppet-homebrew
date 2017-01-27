@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 
 # syck removed from ruby 2, safe_yaml updated to fix this eventually, puppet~>3 uses older safe_yaml
 gem 'safe_yaml', '>= 1.0.4'
