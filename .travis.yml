@@ -124,34 +124,6 @@ matrix:
       rvm: 2.3.1
 
     - osx_image: xcode8.2  # 10.12
-      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0"
-      rvm: 1.9.3
-    - osx_image: xcode8.2  # 10.12
-      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
-      rvm: 1.9.3
-    - osx_image: xcode8.2  # 10.12
-      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 4.0"
-      rvm: 1.9.3
-    - osx_image: xcode8.2  # 10.12
-      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp"
-      rvm: 1.9.3
-    - osx_image: xcode8.2  # 10.12
-      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="init.pp" FUTURE_PARSER="yes"
-      rvm: 1.9.3
-    - osx_image: xcode8.2  # 10.12
-      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 4.0" SLOW_TESTS="init.pp"
-      rvm: 1.9.3
-    - osx_image: xcode8.2  # 10.12
-      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp"
-      rvm: 1.9.3
-    - osx_image: xcode8.2  # 10.12
-      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 3.0" SLOW_TESTS="token.pp" FUTURE_PARSER="yes"
-      rvm: 1.9.3
-    - osx_image: xcode8.2  # 10.12
-      env: GEMFILE="$PWD/Gemfile-1.9.3" PUPPET_VERSION="~> 4.0" SLOW_TESTS="token.pp"
-      rvm: 1.9.3
-
-    - osx_image: xcode8.2  # 10.12
       env: GEMFILE="$PWD/Gemfile" PUPPET_VERSION="~> 3.0"
       rvm: 2.3.1
     - osx_image: xcode8.2  # 10.12
