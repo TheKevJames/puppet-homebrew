@@ -7,12 +7,11 @@ class homebrew (
 ) {
 
   if $::operatingsystem != 'Darwin' {
-    err('This Module works on Mac OS X only!')
-    fail('Exit')
+    fail('This Module works on Mac OSX only!')
   }
 
   if $homebrew::user == 'root' {
-    warning('Homebrew will be dropping support for root-owned brew by November 2016. Though this module will not prevent you from installing homebrew as root, you may run into unexpected issues. It is highly recommended you follow brew guidelines (install as a non-root user) -- this module will enforce this once homebrew has officially dropped support for root-owned installations.')
+    fail('Homebrew does not support installation as the "root" user.')
   }
 
   class { '::homebrew::compiler': } ->

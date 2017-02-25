@@ -83,14 +83,13 @@ class { 'homebrew':
 }
 ```
 
-As of late 2016, installing homebrew as the root user is deprecated, slated for
-removal by brew maintainers in November 2016. It is highly recommended to
-install brew as a standard (non-root) user.
+Installing homebrew as the root user is no longer supported (as of late 2016).
+Please ensure you install brew as a standard (non-root) user.
 
 Note that some users have reported confusion between the *puppet* user and the
 *homebrew* user -- it is perfectly fine to run puppet as root, in fact this is
-encouraged, but the homebrew user should be non-root (generally, the system's
-main user account).
+encouraged, but the homebrew user must be non-root (generally, the system's main
+user account).
 
 If you run puppet as a non-root user and set the `homebrew::user` to a
 *different* non-root user, you may run into issues; namely, since this module

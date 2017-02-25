@@ -20,7 +20,9 @@ Puppet::Type.type(:package).provide(:brewcommon,
     group = stat('-nf', '%Ug', '/usr/local/bin/brew').to_i
     home  = Etc.getpwuid(owner).dir
 
-    warn('Homebrew will be dropping support for root-owned homebrew by November 2016. Though this module will not prevent you from running homebrew as root, you may run into unexpected issues. Please migrate your installation to a user account -- this module will enforce this once homebrew has officially dropped support for root-owned installations.') if owner == 0
+    if owner == 0
+      raise Puppet::ExecutionFailure, 'Homebrew does not support installations owned by the "root" user. Please check the permissions of /usr/local/bin/brew'
+    end
 
     super(cmd, :uid => owner, :gid => group, :combine => combine,
           :custom_environment => { 'HOME' => home }, :failonfail => failonfail)
