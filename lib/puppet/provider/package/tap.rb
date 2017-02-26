@@ -1,58 +1,92 @@
-Puppet::Type.type(:package).provide(:tap,
-                                    :parent => :brewcommon,
-                                    :source => :brewcommon) do
-  desc 'Tap management using HomeBrew on OS X'
+require 'puppet/provider/package'
+
+Puppet::Type.type(:package).provide(:tap, :parent => Puppet::Provider::Package) do
+  desc 'Tap management using HomeBrew on OSX'
+
+  confine :operatingsystem => :darwin
+
+  has_feature :installable
+  has_feature :uninstallable
 
   has_feature :install_options
 
+  commands :brew => '/usr/local/bin/brew'
+  commands :stat => '/usr/bin/stat'
+
+  def self.execute(cmd, failonfail = false, combine = false)
+    owner = stat('-nf', '%Uu', '/usr/local/bin/brew').to_i
+    group = stat('-nf', '%Ug', '/usr/local/bin/brew').to_i
+    home  = Etc.getpwuid(owner).dir
+
+    if owner == 0
+      raise Puppet::ExecutionFailure, 'Homebrew does not support installations owned by the "root" user. Please check the permissions of /usr/local/bin/brew'
+    end
+
+    super(cmd, :uid => owner, :gid => group, :combine => combine,
+          :custom_environment => { 'HOME' => home }, :failonfail => failonfail)
+  end
+
+  def execute(*args)
+    # This does not return exit codes in puppet <3.4.0
+    # See https://projects.puppetlabs.com/issues/2538
+    self.class.execute(*args)
+  end
+
+  def install_options
+    Array(resource[:install_options]).flatten.compact
+  end
+
   def install
-    name = @resource[:name].downcase
+    resource_name = @resource[:name].downcase
 
-    Puppet.debug "Tapping #{name}"
-    output = execute([command(:brew), :tap, name, *install_options])
-
-    if output =~ /Error: Invalid tap name/
-      raise Puppet::Error, "Could not find tap #{name}"
+    begin
+      Puppet.debug "Tapping #{resource_name}"
+      execute([command(:brew), :tap, resource_name, *install_options], failonfail: true)
+    rescue Puppet::ExecutionFailure => detail
+      raise Puppet::Error, "Could not tap resource: #{detail}"
     end
   end
 
   def uninstall
-    name = @resource[:name].downcase
+    resource_name = @resource[:name].downcase
 
-    Puppet.debug "Untapping #{name}"
-    execute([command(:brew), :untap, name])
-  end
-
-  def update
-    name = @resource[:name].downcase
-
-    raise Puppet::Error, "Can not re-tap #{name}"
+    begin
+      Puppet.debug "Untapping #{resource_name}"
+      execute([command(:brew), :untap, resource_name], failonfail: true)
+    rescue Puppet::ExecutionFailure => detail
+      raise Puppet::Error, "Could not untap resource: #{detail}"
+    end
   end
 
   def query
-    name = @resource[:name].downcase
+    resource_name = @resource[:name].downcase
 
-    Puppet.debug "Querying tap #{name}"
     begin
+      Puppet.debug "Querying tap #{resource_name}"
       output = execute([command(:brew), :tap])
       output.each_line do |line|
         line.chomp!
-        return { :name => line, :ensure => 'present', :provider => 'tap' } if [name, name.gsub('homebrew-', '')].include?(line.downcase)
+        next unless [resource_name, resource_name.gsub('homebrew-', '')].include?(line.downcase)
+
+        return { :name => line, :ensure => 'present', :provider => 'tap' }
       end
     rescue Puppet::ExecutionFailure => detail
       Puppet.Err "Could not query tap: #{detail}"
     end
+
     nil
   end
 
   def self.instances
-    Puppet.debug "Listing currently tapped repositories"
     taps = []
+
     begin
+      Puppet.debug "Listing currently tapped repositories"
       output = execute([command(:brew), :tap])
       output.each_line do |line|
         line.chomp!
         next if line.empty?
+
         taps << new({ :name => line, :ensure => 'present', :provider => 'tap' })
       end
       taps
