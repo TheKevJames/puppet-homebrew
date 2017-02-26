@@ -145,5 +145,6 @@ Credit for logic involved in tapping repositories goes to
 
 ## Contributers
 
+- Chris Edester
 - Jordi Garcia <Jordi@jordigarcia.net>
 - Kevin James <KevinJames@thekev.in>

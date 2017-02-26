@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.6.0
+- feature: permission management more closely aligns to brew install
+- bugfix: ensure providers load regardless of configured puppet load order
+- bugfix: ensure facts work on all puppet versions
+- bugfix: ensure packages with 'homebrew-' prefix are not re-installed
+- bugfix: do not allow homebrew root install
+
 ## 1.5.0
 - feature: allow package to set HOMEBREW_GITHUB_API_TOKEN
 - feature/bugfix: stop parsing homebrew output, parse response codes instead
