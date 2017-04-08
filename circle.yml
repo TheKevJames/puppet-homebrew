@@ -3,18 +3,12 @@ machine:
     version: 2.2.3
 
 dependencies:
-  override:
-    - bundle install
-    - pip install pre-commit
-
   post:
     - bundle exec puppet module build
     - bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
 
 test:
   override:
-    - pre-commit run --all-files
-
     - STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
     - STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
     - STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
