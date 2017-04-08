@@ -1,0 +1,12 @@
+-   repo: git://github.com/pre-commit/pre-commit-hooks
+    sha: 5bf6c09bfa1297d3692cadd621ef95f1284e33c0
+    hooks:
+    -   id: check-case-conflict
+    -   id: check-json
+    -   id: check-merge-conflict
+    -   id: check-symlinks
+    -   id: check-xml
+    -   id: check-yaml
+    -   id: detect-private-key
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
