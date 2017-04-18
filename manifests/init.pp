@@ -1,3 +1,5 @@
+# Installs Homebrew
+
 class homebrew (
   $user,
   $command_line_tools_package = undef,
@@ -6,7 +8,7 @@ class homebrew (
   $group                      = 'admin'
 ) {
 
-  if $::operatingsystem != 'Darwin' {
+  if $facts['os']['family'] != 'Darwin' {
     fail('This Module works on Mac OSX only!')
   }
 
