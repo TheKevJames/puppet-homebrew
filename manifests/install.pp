@@ -1,26 +1,29 @@
+# Installs homebrew 
 class homebrew::install {
 
   $brew_folders = [
-                    '/usr/local',
-                    '/usr/local/bin',
-                    '/usr/local/Cellar',
-                    '/usr/local/etc',
-                    '/usr/local/Frameworks',
-                    '/usr/local/include',
-                    '/usr/local/lib',
-                    '/usr/local/lib/pkgconfig',
-                    '/usr/local/opt',
-                    '/usr/local/share',
-                    '/usr/local/share/doc',
-                    '/usr/local/share/man',
-                    '/usr/local/var',
-                  ]
+    '/usr/local',
+    '/usr/local/bin',
+    '/usr/local/Cellar',
+    '/usr/local/etc',
+    '/usr/local/Frameworks',
+    '/usr/local/include',
+    '/usr/local/lib',
+    '/usr/local/lib/pkgconfig',
+    '/usr/local/opt',
+    '/usr/local/share',
+    '/usr/local/share/doc',
+    '/usr/local/share/man',
+    '/usr/local/var',
+  ]
 
-  file { $brew_folders:
-    ensure => directory,
-    group  => $homebrew::group,
-    mode   => '0775',
-  } ->
+  $brew_folders.each |String $brew_folder| {
+    if !defined(File[$brew_folder]) {
+      file { $brew_folder:
+        ensure => directory,
+      }
+    }
+  }
   file { '/usr/local/Homebrew':
     ensure => directory,
     owner  => $homebrew::user,
