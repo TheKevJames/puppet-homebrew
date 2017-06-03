@@ -24,8 +24,24 @@ Puppet::Type.type(:package).provide(:homebrew, :parent => Puppet::Provider::Pack
       raise Puppet::ExecutionFailure, 'Homebrew does not support installations owned by the "root" user. Please check the permissions of /usr/local/bin/brew'
     end
 
-    super(cmd, :uid => owner, :gid => group, :combine => combine,
-          :custom_environment => { 'HOME' => home }, :failonfail => failonfail)
+    # the uid and gid can only be set if running as root
+    if Process.uid == 0
+      uid = owner
+      gid = group
+    else
+      uid = nil
+      gid = nil
+    end
+
+    if Puppet.features.bundled_environment?
+      Bundler.with_clean_env do
+        super(cmd, :uid => uid, :gid => gid, :combine => combine,
+              :custom_environment => { 'HOME' => home }, :failonfail => failonfail)
+      end
+    else
+      super(cmd, :uid => uid, :gid => gid, :combine => combine,
+            :custom_environment => { 'HOME' => home }, :failonfail => failonfail)
+    end
   end
 
   def self.instances(justme = false)
