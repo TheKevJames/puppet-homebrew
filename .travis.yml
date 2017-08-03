@@ -156,7 +156,6 @@ matrix:
 # runner
 install:
   - brew update >/dev/null
-  - brew cask update >/dev/null
 
   - sudo bundle --version || sudo gem install bundler
   - sudo PUPPET_VERSION="$PUPPET_VERSION" bundle install --gemfile="$GEMFILE"
