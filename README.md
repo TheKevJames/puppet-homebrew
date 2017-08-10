@@ -4,6 +4,9 @@ A Puppet Module to install Homebrew and manage Homebrew packages on Mac OSX.
 This module can install using either homebrew or brewcask, along with a
 fallback mode which attempts both.
 
+This module supports Puppet version 3 and greater running on Ruby version 1.9
+and greater.
+
 puppet-homebrew is available on the
 [Puppet Forge](https://forge.puppetlabs.com/thekevjames/homebrew).
 
