@@ -57,7 +57,7 @@ Puppet::Type.type(:package).provide(:tap, :parent => Puppet::Provider::Package) 
 
     begin
       Puppet.debug "Tapping #{resource_name}"
-      execute([command(:brew), :tap, resource_name, *install_options], failonfail: true)
+      execute([command(:brew), :tap, resource_name, *install_options], :failonfail => true)
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not tap resource: #{detail}"
     end
@@ -68,7 +68,7 @@ Puppet::Type.type(:package).provide(:tap, :parent => Puppet::Provider::Package) 
 
     begin
       Puppet.debug "Untapping #{resource_name}"
-      execute([command(:brew), :untap, resource_name], failonfail: true)
+      execute([command(:brew), :untap, resource_name], :failonfail => true)
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not untap resource: #{detail}"
     end

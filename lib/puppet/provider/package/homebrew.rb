@@ -97,10 +97,10 @@ Puppet::Type.type(:package).provide(:homebrew, :parent => Puppet::Provider::Pack
     begin
       begin
         Puppet.debug "Looking for #{resource_name} package on brew..."
-        output = execute([command(:brew), :info, resource_name], failonfail: true)
+        output = execute([command(:brew), :info, resource_name], :failonfail => true)
 
         Puppet.debug "Package found, installing..."
-        output = execute([command(:brew), :install, resource_name, *install_options], failonfail: true)
+        output = execute([command(:brew), :install, resource_name, *install_options], :failonfail => true)
 
         if output =~ /sha256 checksum/
           Puppet.debug "Fixing checksum error..."
@@ -109,10 +109,10 @@ Puppet::Type.type(:package).provide(:homebrew, :parent => Puppet::Provider::Pack
         end
       rescue Puppet::ExecutionFailure
         Puppet.debug "Package #{resource_name} not found on Brew. Trying BrewCask..."
-        execute([command(:brew), :cask, :info, resource_name], failonfail: true)
+        execute([command(:brew), :cask, :info, resource_name], :failonfail => true)
 
         Puppet.debug "Package found on brewcask, installing..."
-        output = execute([command(:brew), :cask, :install, resource_name, *install_options], failonfail: true)
+        output = execute([command(:brew), :cask, :install, resource_name, *install_options], :failonfail => true)
 
         if output =~ /sha256 checksum/
           Puppet.debug "Fixing checksum error..."
@@ -130,10 +130,10 @@ Puppet::Type.type(:package).provide(:homebrew, :parent => Puppet::Provider::Pack
 
     begin
       Puppet.debug "Uninstalling #{resource_name}"
-      execute([command(:brew), :uninstall, resource_name], failonfail: true)
+      execute([command(:brew), :uninstall, resource_name], :failonfail => true)
     rescue Puppet::ExecutionFailure
       begin
-        execute([command(:brew), :cask, :uninstall, resource_name], failonfail: true)
+        execute([command(:brew), :cask, :uninstall, resource_name], :failonfail => true)
       rescue Puppet::ExecutionFailure => detail
         raise Puppet::Error, "Could not uninstall package: #{detail}"
       end
