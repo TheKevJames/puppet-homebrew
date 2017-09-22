@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.7.0
+- feature: allow usage within non-brew and bundler environments
+- feature: support ruby 1.8.3 installations
+- meta: more and better linting
+
 ## 1.6.0
 - feature: permission management more closely aligns to brew install
 - bugfix: ensure providers load regardless of configured puppet load order

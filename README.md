@@ -145,9 +145,3 @@ to provide brewcask integration.
 
 Credit for logic involved in tapping repositories goes to
 [gildas](https://github.com/gildas/puppet-homebrew).
-
-## Contributers
-
-- Chris Edester
-- Jordi Garcia <Jordi@jordigarcia.net>
-- Kevin James <KevinJames@thekev.in>
