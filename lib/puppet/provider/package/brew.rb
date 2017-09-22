@@ -96,14 +96,14 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
 
     begin
       Puppet.debug "Looking for #{resource_name} package..."
-      execute([command(:brew), :info, resource_name], failonfail: true)
+      execute([command(:brew), :info, resource_name], :failonfail => true)
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not find package: #{resource_name}"
     end
 
     begin
       Puppet.debug "Package found, installing..."
-      output = execute([command(:brew), :install, resource_name, *install_options], failonfail: true)
+      output = execute([command(:brew), :install, resource_name, *install_options], :failonfail => true)
 
       if output =~ /sha256 checksum/
         Puppet.debug "Fixing checksum error..."
@@ -120,7 +120,7 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
 
     begin
       Puppet.debug "Uninstalling #{resource_name}"
-      execute([command(:brew), :uninstall, resource_name], failonfail: true)
+      execute([command(:brew), :uninstall, resource_name], :failonfail => true)
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not uninstall package: #{detail}"
     end
@@ -131,7 +131,7 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
 
     begin
       Puppet.debug "Upgrading #{resource_name}"
-      execute([command(:brew), :upgrade, resource_name], failonfail: true)
+      execute([command(:brew), :upgrade, resource_name], :failonfail => true)
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not upgrade package: #{detail}"
     end
