@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 1.7.1
+- fix: include ruby 1.8.3 in metadata.json
+
 ## 1.7.0
 - feature: allow usage within non-brew and bundler environments
 - feature: support ruby 1.8.3 installations
