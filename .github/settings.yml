@@ -26,3 +26,10 @@ labels:
     color: d93f0b
   - name: question
     color: cc317c
+
+  - name: backlog
+    color: ededed
+  - name: in-progress
+    color: 0052cc
+  - name: in-review
+    color: 5319e7
