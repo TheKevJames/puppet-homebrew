@@ -29,8 +29,13 @@ class homebrew::install {
   ]
   $brew_sys_chmod_folders.each | String $brew_sys_chmod_folder | {
     exec { "brew-chmod-sys-${brew_sys_chmod_folder}":
-      command => "/bin/chmod -R 775 ${brew_sys_chmod_folder}",
+      command => "/bin/chmod -R 775 ${brew_sys_chmod_folder}/*",
       unless  => "/usr/bin/stat -f '%OLp' ${brew_sys_chmod_folder} | /usr/bin/grep -w '775'",
+      notify  => Exec["set-${brew_sys_chmod_folder}-directory-inherit"],
+    }
+    exec { "set-${brew_sys_chmod_folder}-directory-inherit":
+      command     => "/bin/chmod -R +a '${homebrew::group}:allow list,add_file,search,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,readsecurity,file_inherit,directory_inherit' ${brew_sys_chmod_folder}",
+      refreshonly => true,
     }
   }
 
@@ -63,12 +68,12 @@ class homebrew::install {
 
     $brew_folders.each | String $brew_folder | {
       exec { "chmod-${brew_folder}":
-        command => "/bin/chmod -R 775 ${brew_folder}",
+        command => "/bin/chmod -R 775 ${brew_folder}/*",
         unless  => "/usr/bin/stat -f '%OLp' '${brew_folder}' | /usr/bin/grep -w '775'",
         notify  => Exec["set-${brew_folder}-directory-inherit"]
       }
       exec { "chown-${brew_folder}":
-        command => "/usr/sbin/chown -R :${homebrew::group} ${brew_folder}",
+        command => "/usr/sbin/chown -R :${homebrew::group} ${brew_folder}/*'",
         unless  => "/usr/bin/stat -f '%Sg' '${brew_folder}' | /usr/bin/grep -w '${homebrew::group}'",
       }
       exec { "set-${brew_folder}-directory-inherit":
