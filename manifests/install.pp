@@ -31,6 +31,11 @@ class homebrew::install {
     exec { "brew-chmod-sys-${brew_sys_chmod_folder}":
       command => "/bin/chmod -R 775 ${brew_sys_chmod_folder}",
       unless  => "/usr/bin/stat -f '%OLp' ${brew_sys_chmod_folder} | /usr/bin/grep -w '775'",
+      notify  => Exec["set-${brew_sys_chmod_folder}-directory-inherit"],
+    }
+    exec { "set-${brew_sys_chmod_folder}-directory-inherit":
+      command     => "/bin/chmod -R +a '${homebrew::group}:allow list,add_file,search,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,readsecurity,file_inherit,directory_inherit' ${brew_folder}",
+      refreshonly => true,
     }
   }
 
