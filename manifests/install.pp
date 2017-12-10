@@ -1,7 +1,7 @@
 class homebrew::install {
 
-  $brew_folders = [
-                    '/usr/local',
+  $brew_root = '/usr/local'
+  $brew_subfolders = [
                     '/usr/local/bin',
                     '/usr/local/Cellar',
                     '/usr/local/etc',
@@ -15,6 +15,13 @@ class homebrew::install {
                     '/usr/local/share/man',
                     '/usr/local/var',
                   ]
+
+  # High Sierra no longer allows us to set perms on /usr/local
+  if $facts['os']['macosx']['version']['major'] == '10.13' {
+    $brew_folders = $brew_subfolders
+  } else {
+    $brew_folders = concat([$brew_root], $brew_subfolders)
+  }
 
   file { $brew_folders:
     ensure => directory,
