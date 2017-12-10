@@ -58,6 +58,7 @@ class homebrew::install {
     '/usr/local/share/man7',
     '/usr/local/share/man8',
   ]
+
   file { $brew_folders:
     ensure => directory,
     owner  => $homebrew::user,
@@ -65,7 +66,6 @@ class homebrew::install {
   }
 
   if $homebrew::multiuser == true {
-
     $brew_folders.each | String $brew_folder | {
       exec { "chmod-${brew_folder}":
         command => "/bin/chmod -R 775 ${brew_folder}",
