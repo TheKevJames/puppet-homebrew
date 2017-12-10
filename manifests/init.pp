@@ -3,7 +3,8 @@ class homebrew (
   $command_line_tools_package = undef,
   $command_line_tools_source  = undef,
   $github_token               = undef,
-  $group                      = 'admin'
+  $group                      = 'admin',
+  $multiuser                  = false,
 ) {
 
   if $::operatingsystem != 'Darwin' {
