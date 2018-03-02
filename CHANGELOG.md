@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.8.0
+- feature: support multi-user environments with new `$multiuser` flag (#89)
+- fix: support for High Sierra
+
 ## 1.7.1
 - fix: include ruby 1.8.3 in metadata.json
 
