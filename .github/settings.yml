@@ -1,14 +1,15 @@
 repository:
   name: puppet-homebrew
-  description: Homebrew (+brewcask! +taps!) package installer and provider
+  description: homebrew (+brewcask! +taps!) package installer and provider
   homepage: https://forge.puppet.com/thekevjames/homebrew
   private: false
 
   has_issues: true
   has_projects: false
   has_wiki: false
+  has_downloads: false
 
-  allow_merge_commit: true
+  allow_merge_commit: false
   allow_rebase_merge: true
   allow_squash_merge: true
 
@@ -26,7 +27,6 @@ labels:
     color: d93f0b
   - name: question
     color: cc317c
-
   - name: backlog
     color: ededed
   - name: in-progress

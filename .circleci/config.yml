@@ -1,0 +1,35 @@
+version: 2
+
+jobs:
+  lint:
+    docker:
+      - image: python:3.6.4
+    steps:
+      - checkout
+      - run: pip install pre-commit
+      - run: pre-commit run --all-files
+
+  build:
+    docker:
+      - image: ruby:2.2.3
+    steps:
+      - checkout
+      - run: bundle install
+      - run:
+          name: lint
+          command: |
+            STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/init.pp
+            STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/install.pp
+            STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/compiler.pp
+      - run: bundle exec puppet module build
+      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+
+workflows:
+  version: 2
+  run-jobs:
+    jobs:
+      - lint
+      - build
