@@ -100,6 +100,17 @@ requires the puppet user act as the homebrew user, you may get a password
 prompt on each run. This can be fixed by allowing the puppet user passwordless
 sudo privileges to the homebrew user.
 
+If you are looking for a multi-user installation, please be sure to set the
+multi-user flag, eg.:
+
+```puppet
+class { 'homebrew':
+  user      => 'kevin',
+  group     => 'all-users',
+  multiuser => true,
+}
+```
+
 To install homebrew and a compiler (on Lion or later), eg.:
 
 ```puppet
