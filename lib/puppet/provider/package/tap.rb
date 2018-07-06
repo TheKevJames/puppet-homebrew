@@ -82,8 +82,6 @@ Puppet::Type.type(:package).provide(:tap, :parent => Puppet::Provider::Package) 
       output = execute([command(:brew), :tap])
       output.each_line do |line|
         line.chomp!
-        next unless [resource_name, resource_name.gsub('homebrew-', '')].include?(line.downcase)
-
         return { :name => line, :ensure => 'present', :provider => 'tap' }
       end
     rescue Puppet::ExecutionFailure => detail
