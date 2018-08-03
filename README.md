@@ -5,7 +5,8 @@ This module can install using either homebrew or brewcask, along with a
 fallback mode which attempts both.
 
 This module supports Puppet version 3 and greater running on Ruby version 1.8.3
-and greater.
+and greater. Note that versions of Ruby from 2.0.0 less than 2.3 may no longer
+be supported by Homebrew.
 
 puppet-homebrew is available on the
 [Puppet Forge](https://forge.puppetlabs.com/thekevjames/homebrew).
@@ -81,8 +82,9 @@ To install homebrew on a node (with a compiler already present!):
 
 ```puppet
 class { 'homebrew':
-  user  => 'hightower',
-  group => 'developers',  # defaults to 'admin'
+  user      => 'hightower',
+  group     => 'developers',  # defaults to 'admin'
+  multiuser => false,  # set to true to enable multiuser support for homebrew
 }
 ```
 
