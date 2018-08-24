@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 1.8.1
+- fix: fix installation of first-ever Brew package on machine (#98)
+
 ## 1.8.0
 - feature: support multi-user environments with new `$multiuser` flag (#89)
 - fix: support for High Sierra
