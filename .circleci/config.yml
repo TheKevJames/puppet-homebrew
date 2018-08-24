@@ -9,9 +9,9 @@ jobs:
       - run: pip install pre-commit
       - run: pre-commit run --all-files
 
-  build:
+  build-1.9.3:
     docker:
-      - image: ruby:2.2.3
+      - image: aptible/ruby:1.9.3
     steps:
       - checkout
       - run: bundle install
@@ -26,10 +26,91 @@ jobs:
             STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/compiler.pp
       - run: bundle exec puppet module build
       - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+      # - run: ./test.sh
+
+  build-2.2.10:
+    docker:
+      - image: ruby:2.2.10
+    steps:
+      - checkout
+      - run: bundle install
+      - run:
+          name: lint
+          command: |
+            STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/init.pp
+            STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/install.pp
+            STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/compiler.pp
+      - run: bundle exec puppet module build
+      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+      # - run: ./test.sh
+
+  build-2.3.7:
+    docker:
+      - image: ruby:2.3.7
+    steps:
+      - checkout
+      - run: bundle install
+      - run:
+          name: lint
+          command: |
+            STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/init.pp
+            STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/install.pp
+            STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/compiler.pp
+      - run: bundle exec puppet module build
+      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+      # - run: ./test.sh
+
+  build-2.4.4:
+    docker:
+      - image: ruby:2.4.4
+    steps:
+      - checkout
+      - run: bundle install
+      - run:
+          name: lint
+          command: |
+            STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/init.pp
+            STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/install.pp
+            STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/compiler.pp
+      - run: bundle exec puppet module build
+      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+      # - run: ./test.sh
+
+  build-2.5.1:
+    docker:
+      - image: ruby:2.5.1
+    steps:
+      - checkout
+      - run: bundle install
+      - run:
+          name: lint
+          command: |
+            STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            STRICT_VARIABLES="yes" bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/init.pp
+            STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/install.pp
+            STRICT_VARIABLES="yes" bundle exec puppet parser validate --noop manifests/compiler.pp
+      - run: bundle exec puppet module build
+      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+      # - run: ./test.sh
 
 workflows:
   version: 2
   run-jobs:
     jobs:
       - lint
-      - build
+      - build-1.9.3
+      - build-2.2.10
+      - build-2.3.7
+      - build-2.4.4
+      - build-2.5.1
