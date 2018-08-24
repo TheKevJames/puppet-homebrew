@@ -139,26 +139,41 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
 
   def self.package_list(options={})
     Puppet.debug "Listing installed packages"
+
+    cmd_line = [command(:brew), :list, '--versions']
+    if options[:justme]
+      cmd_line += [ options[:justme] ]
+    end
+
     begin
-      if resource_name = options[:justme]
-        result = execute([command(:brew), :list, '--versions', resource_name])
-        if result.empty?
-          Puppet.debug "Package #{resource_name} not installed"
-        else
-          Puppet.debug "Found package #{result}"
-        end
-      else
-        result = execute([command(:brew), :list, '--versions'])
-      end
-      list = result.lines.map {|line| name_version_split(line)}
+      cmd_output = execute(cmd_line)
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not list packages: #{detail}"
     end
 
+    # Exclude extraneous lines from stdout that interfere with the parsing
+    # logic below.  These look like they should be on stderr anyway based
+    # on comparison to other output on stderr.  homebrew bug?
+    re_excludes = Regexp.union([
+      /^==>.*/,
+      /^Tapped \d+ formulae.*/,
+      ])
+    lines = cmd_output.lines.delete_if { |line| line.match(re_excludes) }
+
     if options[:justme]
-      return list.shift
+      if lines.empty?
+        Puppet.debug "Package #{options[:justme]} not installed"
+        return nil
+      else
+        if lines.length > 1
+          Puppet.warning "Multiple matches for package #{options[:justme]} - using first one found"
+        end
+        line = lines.shift
+        Puppet.debug "Found package #{line}"
+        return name_version_split(line)
+      end
     else
-      return list
+      return lines.map{ |line| name_version_split(line) }
     end
   end
 
