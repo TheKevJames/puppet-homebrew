@@ -25,19 +25,18 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle install "puppet<4.0.0"
+      - run: gem install puppet-lint "puppet:<4.0.0"
       - run:
           name: lint
           command: |
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-            bundle exec puppet parser validate --noop manifests/init.pp
-            bundle exec puppet parser validate --noop manifests/install.pp
-            bundle exec puppet parser validate --noop manifests/compiler.pp
-      - run: bundle exec puppet module build
-      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            puppet parser validate --noop manifests/init.pp
+            puppet parser validate --noop manifests/install.pp
+            puppet parser validate --noop manifests/compiler.pp
+      - run: puppet module build
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
   build-ruby-1.9.3-puppet-4:
@@ -47,19 +46,18 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle install "puppet<5.0.0"
+      - run: gem install puppet-lint "puppet:<5.0.0"
       - run:
           name: lint
           command: |
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-            bundle exec puppet parser validate --noop manifests/init.pp
-            bundle exec puppet parser validate --noop manifests/install.pp
-            bundle exec puppet parser validate --noop manifests/compiler.pp
-      - run: bundle exec puppet module build
-      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            puppet parser validate --noop manifests/init.pp
+            puppet parser validate --noop manifests/install.pp
+            puppet parser validate --noop manifests/compiler.pp
+      - run: puppet module build
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
   build-ruby-1.9.3-puppet-5:
@@ -69,19 +67,18 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle install "puppet<6.0.0"
+      - run: gem install puppet-lint "puppet:<6.0.0"
       - run:
           name: lint
           command: |
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-            bundle exec puppet parser validate --noop manifests/init.pp
-            bundle exec puppet parser validate --noop manifests/install.pp
-            bundle exec puppet parser validate --noop manifests/compiler.pp
-      - run: bundle exec puppet module build
-      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            puppet parser validate --noop manifests/init.pp
+            puppet parser validate --noop manifests/install.pp
+            puppet parser validate --noop manifests/compiler.pp
+      - run: puppet module build
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
   build-ruby-2.2.10-puppet-3:
@@ -91,19 +88,18 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle install "puppet<4.0.0"
+      - run: gem install puppet-lint "puppet:<4.0.0"
       - run:
           name: lint
           command: |
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-            bundle exec puppet parser validate --noop manifests/init.pp
-            bundle exec puppet parser validate --noop manifests/install.pp
-            bundle exec puppet parser validate --noop manifests/compiler.pp
-      - run: bundle exec puppet module build
-      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            puppet parser validate --noop manifests/init.pp
+            puppet parser validate --noop manifests/install.pp
+            puppet parser validate --noop manifests/compiler.pp
+      - run: puppet module build
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
   build-ruby-2.2.10-puppet-4:
@@ -113,19 +109,18 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle install "puppet<5.0.0"
+      - run: gem install puppet-lint "puppet:<5.0.0"
       - run:
           name: lint
           command: |
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-            bundle exec puppet parser validate --noop manifests/init.pp
-            bundle exec puppet parser validate --noop manifests/install.pp
-            bundle exec puppet parser validate --noop manifests/compiler.pp
-      - run: bundle exec puppet module build
-      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            puppet parser validate --noop manifests/init.pp
+            puppet parser validate --noop manifests/install.pp
+            puppet parser validate --noop manifests/compiler.pp
+      - run: puppet module build
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
   build-ruby-2.2.10-puppet-5:
@@ -135,19 +130,18 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle install "puppet<6.0.0"
+      - run: gem install puppet-lint "puppet:<6.0.0"
       - run:
           name: lint
           command: |
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-            bundle exec puppet parser validate --noop manifests/init.pp
-            bundle exec puppet parser validate --noop manifests/install.pp
-            bundle exec puppet parser validate --noop manifests/compiler.pp
-      - run: bundle exec puppet module build
-      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            puppet parser validate --noop manifests/init.pp
+            puppet parser validate --noop manifests/install.pp
+            puppet parser validate --noop manifests/compiler.pp
+      - run: puppet module build
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
   build-ruby-2.3.7-puppet-3:
@@ -157,19 +151,18 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle install "puppet<4.0.0"
+      - run: gem install puppet-lint "puppet:<4.0.0"
       - run:
           name: lint
           command: |
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-            bundle exec puppet parser validate --noop manifests/init.pp
-            bundle exec puppet parser validate --noop manifests/install.pp
-            bundle exec puppet parser validate --noop manifests/compiler.pp
-      - run: bundle exec puppet module build
-      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            puppet parser validate --noop manifests/init.pp
+            puppet parser validate --noop manifests/install.pp
+            puppet parser validate --noop manifests/compiler.pp
+      - run: puppet module build
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
   build-ruby-2.3.7-puppet-4:
@@ -179,19 +172,18 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle install "puppet<5.0.0"
+      - run: gem install puppet-lint "puppet:<5.0.0"
       - run:
           name: lint
           command: |
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-            bundle exec puppet parser validate --noop manifests/init.pp
-            bundle exec puppet parser validate --noop manifests/install.pp
-            bundle exec puppet parser validate --noop manifests/compiler.pp
-      - run: bundle exec puppet module build
-      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            puppet parser validate --noop manifests/init.pp
+            puppet parser validate --noop manifests/install.pp
+            puppet parser validate --noop manifests/compiler.pp
+      - run: puppet module build
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
   build-ruby-2.3.7-puppet-5:
@@ -201,19 +193,18 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle install "puppet<6.0.0"
+      - run: gem install puppet-lint "puppet:<6.0.0"
       - run:
           name: lint
           command: |
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-            bundle exec puppet parser validate --noop manifests/init.pp
-            bundle exec puppet parser validate --noop manifests/install.pp
-            bundle exec puppet parser validate --noop manifests/compiler.pp
-      - run: bundle exec puppet module build
-      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            puppet parser validate --noop manifests/init.pp
+            puppet parser validate --noop manifests/install.pp
+            puppet parser validate --noop manifests/compiler.pp
+      - run: puppet module build
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
   build-ruby-2.4.4-puppet-3:
@@ -223,19 +214,18 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle install "puppet<4.0.0"
+      - run: gem install puppet-lint "puppet:<4.0.0"
       - run:
           name: lint
           command: |
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-            bundle exec puppet parser validate --noop manifests/init.pp
-            bundle exec puppet parser validate --noop manifests/install.pp
-            bundle exec puppet parser validate --noop manifests/compiler.pp
-      - run: bundle exec puppet module build
-      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            puppet parser validate --noop manifests/init.pp
+            puppet parser validate --noop manifests/install.pp
+            puppet parser validate --noop manifests/compiler.pp
+      - run: puppet module build
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
   build-ruby-2.4.4-puppet-4:
@@ -245,19 +235,18 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle install "puppet<5.0.0"
+      - run: gem install puppet-lint "puppet:<5.0.0"
       - run:
           name: lint
           command: |
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-            bundle exec puppet parser validate --noop manifests/init.pp
-            bundle exec puppet parser validate --noop manifests/install.pp
-            bundle exec puppet parser validate --noop manifests/compiler.pp
-      - run: bundle exec puppet module build
-      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            puppet parser validate --noop manifests/init.pp
+            puppet parser validate --noop manifests/install.pp
+            puppet parser validate --noop manifests/compiler.pp
+      - run: puppet module build
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
   build-ruby-2.4.4-puppet-5:
@@ -267,19 +256,18 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle install "puppet<6.0.0"
+      - run: gem install puppet-lint "puppet:<6.0.0"
       - run:
           name: lint
           command: |
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-            bundle exec puppet parser validate --noop manifests/init.pp
-            bundle exec puppet parser validate --noop manifests/install.pp
-            bundle exec puppet parser validate --noop manifests/compiler.pp
-      - run: bundle exec puppet module build
-      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            puppet parser validate --noop manifests/init.pp
+            puppet parser validate --noop manifests/install.pp
+            puppet parser validate --noop manifests/compiler.pp
+      - run: puppet module build
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
   build-ruby-2.5.1-puppet-3:
@@ -289,19 +277,18 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle install "puppet<4.0.0"
+      - run: gem install puppet-lint "puppet:<4.0.0"
       - run:
           name: lint
           command: |
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-            bundle exec puppet parser validate --noop manifests/init.pp
-            bundle exec puppet parser validate --noop manifests/install.pp
-            bundle exec puppet parser validate --noop manifests/compiler.pp
-      - run: bundle exec puppet module build
-      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            puppet parser validate --noop manifests/init.pp
+            puppet parser validate --noop manifests/install.pp
+            puppet parser validate --noop manifests/compiler.pp
+      - run: puppet module build
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
   build-ruby-2.5.1-puppet-4:
@@ -311,19 +298,18 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle install "puppet<5.0.0"
+      - run: gem install puppet-lint "puppet:<5.0.0"
       - run:
           name: lint
           command: |
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-            bundle exec puppet parser validate --noop manifests/init.pp
-            bundle exec puppet parser validate --noop manifests/install.pp
-            bundle exec puppet parser validate --noop manifests/compiler.pp
-      - run: bundle exec puppet module build
-      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            puppet parser validate --noop manifests/init.pp
+            puppet parser validate --noop manifests/install.pp
+            puppet parser validate --noop manifests/compiler.pp
+      - run: puppet module build
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
   build-ruby-2.5.1-puppet-5:
@@ -333,19 +319,18 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle install "puppet<6.0.0"
+      - run: gem install puppet-lint "puppet:<6.0.0"
       - run:
           name: lint
           command: |
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
-            bundle exec puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
-            bundle exec puppet parser validate --noop manifests/init.pp
-            bundle exec puppet parser validate --noop manifests/install.pp
-            bundle exec puppet parser validate --noop manifests/compiler.pp
-      - run: bundle exec puppet module build
-      - run: bundle exec puppet module install pkg/thekevjames-homebrew-*.tar.gz
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/init.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/install.pp
+            puppet-lint --no-documentation-check --no-autoloader_layout-check --no-80chars-check manifests/compiler.pp
+            puppet parser validate --noop manifests/init.pp
+            puppet parser validate --noop manifests/install.pp
+            puppet parser validate --noop manifests/compiler.pp
+      - run: puppet module build
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
 workflows:
