@@ -1,14 +1,19 @@
 # CHANGELOG
 
+## 1.8.2
+- compatibility: first release to officially support Puppet 5 (previous versions worked unofficially)
+
 ## 1.8.1
 - fix: fix installation of first-ever Brew package on machine (#98)
 
 ## 1.8.0
 - feature: support multi-user environments with new `$multiuser` flag (#89)
 - fix: support for High Sierra
+- compatibility: drop support for Puppet 3
 
 ## 1.7.1
 - fix: include ruby 1.8.3 in metadata.json
+- compatibility: last release to include Puppet 3 support
 
 ## 1.7.0
 - feature: allow usage within non-brew and bundler environments
