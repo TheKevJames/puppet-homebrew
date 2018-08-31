@@ -25,7 +25,7 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: gem install puppet-lint "puppet:<4.0.0"
+      - run: gem install --no-ri puppet-lint "puppet:<4.0.0"
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
@@ -43,7 +43,7 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: gem install puppet-lint "puppet:<5.0.0"
+      - run: gem install --no-ri puppet-lint "puppet:<5.0.0"
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
@@ -61,7 +61,8 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: gem install puppet-lint "puppet:<4.0.0" syck
+      # https://tickets.puppetlabs.com/browse/PUP-3796
+      - run: gem install --no-ri puppet-lint "puppet:<4.0.0" "safe_yaml:~>1.0.4"
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
@@ -79,7 +80,7 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: gem install puppet-lint "puppet:<5.0.0"
+      - run: gem install --no-ri puppet-lint "puppet:<5.0.0"
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
@@ -97,7 +98,7 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: gem install puppet-lint "puppet:<6.0.0"
+      - run: gem install --no-ri puppet-lint "puppet:<6.0.0"
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
@@ -115,7 +116,8 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: gem install puppet-lint "puppet:<4.0.0" syck
+      # https://tickets.puppetlabs.com/browse/PUP-3796
+      - run: gem install --no-ri puppet-lint "puppet:<4.0.0" "safe_yaml:~>1.0.4"
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
@@ -133,7 +135,7 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: gem install puppet-lint "puppet:<5.0.0"
+      - run: gem install --no-ri puppet-lint "puppet:<5.0.0"
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
@@ -151,7 +153,7 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: gem install puppet-lint "puppet:<6.0.0"
+      - run: gem install --no-ri puppet-lint "puppet:<6.0.0"
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
@@ -169,7 +171,7 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: gem install puppet-lint "puppet:<5.0.0"
+      - run: gem install --no-ri puppet-lint "puppet:<5.0.0"
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
@@ -187,7 +189,7 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: gem install puppet-lint "puppet:<6.0.0"
+      - run: gem install --no-ri puppet-lint "puppet:<6.0.0"
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
@@ -205,7 +207,7 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: gem install puppet-lint "puppet:<5.0.0"
+      - run: gem install --no-ri puppet-lint "puppet:<5.0.0"
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
@@ -223,7 +225,7 @@ jobs:
       STRICT_VARIABLES: "yes"
     steps:
       - checkout
-      - run: gem install puppet-lint "puppet:<6.0.0"
+      - run: gem install --no-ri puppet-lint "puppet:<6.0.0"
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
