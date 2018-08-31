@@ -18,23 +18,23 @@ jobs:
           paths:
             - ~/.cache/pre-commit
 
-  build-ruby-1.9.3-puppet-3:
-    docker:
-      - image: aptible/ruby:1.9.3
-    environment:
-      STRICT_VARIABLES: "yes"
-    steps:
-      - checkout
-      - run: gem install --no-ri puppet-lint "puppet:<4.0.0"
-      - run: puppet-lint manifests/init.pp
-      - run: puppet-lint manifests/install.pp
-      - run: puppet-lint manifests/compiler.pp
-      - run: puppet parser validate --noop manifests/init.pp
-      - run: puppet parser validate --noop manifests/install.pp
-      - run: puppet parser validate --noop manifests/compiler.pp
-      - run: puppet module build
-      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
-      # - run: ./test.sh
+  # build-ruby-1.9.3-puppet-3:
+  #   docker:
+  #     - image: aptible/ruby:1.9.3
+  #   environment:
+  #     STRICT_VARIABLES: "yes"
+  #   steps:
+  #     - checkout
+  #     - run: gem install --no-ri puppet-lint "puppet:<4.0.0"
+  #     - run: puppet-lint manifests/init.pp
+  #     - run: puppet-lint manifests/install.pp
+  #     - run: puppet-lint manifests/compiler.pp
+  #     - run: puppet parser validate --noop manifests/init.pp
+  #     - run: puppet parser validate --noop manifests/install.pp
+  #     - run: puppet parser validate --noop manifests/compiler.pp
+  #     - run: puppet module build
+  #     - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
+  #     # - run: ./test.sh
 
   build-ruby-1.9.3-puppet-4:
     docker:
@@ -54,24 +54,25 @@ jobs:
       - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
-  build-ruby-2.2.10-puppet-3:
-    docker:
-      - image: ruby:2.2.10
-    environment:
-      STRICT_VARIABLES: "yes"
-    steps:
-      - checkout
-      # https://tickets.puppetlabs.com/browse/PUP-3796
-      - run: gem install --no-ri puppet-lint "puppet:<4.0.0" "safe_yaml:~>1.0.4"
-      - run: puppet-lint manifests/init.pp
-      - run: puppet-lint manifests/install.pp
-      - run: puppet-lint manifests/compiler.pp
-      - run: puppet parser validate --noop manifests/init.pp
-      - run: puppet parser validate --noop manifests/install.pp
-      - run: puppet parser validate --noop manifests/compiler.pp
-      - run: puppet module build
-      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
-      # - run: ./test.sh
+  # build-ruby-2.2.10-puppet-3:
+  #   docker:
+  #     - image: ruby:2.2.10
+  #   environment:
+  #     STRICT_VARIABLES: "yes"
+  #   steps:
+  #     - checkout
+  #     # https://tickets.puppetlabs.com/browse/PUP-3796
+  #     - run: gem install --no-ri puppet-lint "puppet:<4.0.0" syck
+  #     - run: sed -i "1s/^/require 'syck'\n/" /usr/local/bundle/gems/puppet-3.8.7/lib/puppet.rb
+  #     - run: puppet-lint manifests/init.pp
+  #     - run: puppet-lint manifests/install.pp
+  #     - run: puppet-lint manifests/compiler.pp
+  #     - run: puppet parser validate --noop manifests/init.pp
+  #     - run: puppet parser validate --noop manifests/install.pp
+  #     - run: puppet parser validate --noop manifests/compiler.pp
+  #     - run: puppet module build
+  #     - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
+  #     # - run: ./test.sh
 
   build-ruby-2.2.10-puppet-4:
     docker:
@@ -109,24 +110,25 @@ jobs:
       - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
-  build-ruby-2.3.7-puppet-3:
-    docker:
-      - image: ruby:2.3.7
-    environment:
-      STRICT_VARIABLES: "yes"
-    steps:
-      - checkout
-      # https://tickets.puppetlabs.com/browse/PUP-3796
-      - run: gem install --no-ri puppet-lint "puppet:<4.0.0" "safe_yaml:~>1.0.4"
-      - run: puppet-lint manifests/init.pp
-      - run: puppet-lint manifests/install.pp
-      - run: puppet-lint manifests/compiler.pp
-      - run: puppet parser validate --noop manifests/init.pp
-      - run: puppet parser validate --noop manifests/install.pp
-      - run: puppet parser validate --noop manifests/compiler.pp
-      - run: puppet module build
-      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
-      # - run: ./test.sh
+  # build-ruby-2.3.7-puppet-3:
+  #   docker:
+  #     - image: ruby:2.3.7
+  #   environment:
+  #     STRICT_VARIABLES: "yes"
+  #   steps:
+  #     - checkout
+  #     # https://tickets.puppetlabs.com/browse/PUP-3796
+  #     - run: gem install --no-ri puppet-lint "puppet:<4.0.0" syck
+  #     - run: sed -i "1s/^/require 'syck'\n/" /usr/local/bundle/gems/puppet-3.8.7/lib/puppet.rb
+  #     - run: puppet-lint manifests/init.pp
+  #     - run: puppet-lint manifests/install.pp
+  #     - run: puppet-lint manifests/compiler.pp
+  #     - run: puppet parser validate --noop manifests/init.pp
+  #     - run: puppet parser validate --noop manifests/install.pp
+  #     - run: puppet parser validate --noop manifests/compiler.pp
+  #     - run: puppet module build
+  #     - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
+  #     # - run: ./test.sh
 
   build-ruby-2.3.7-puppet-4:
     docker:
@@ -242,14 +244,14 @@ workflows:
     jobs:
       - lint
 
-      - build-ruby-1.9.3-puppet-3
+      # - build-ruby-1.9.3-puppet-3
       - build-ruby-1.9.3-puppet-4
 
-      - build-ruby-2.2.10-puppet-3
+      # - build-ruby-2.2.10-puppet-3
       - build-ruby-2.2.10-puppet-4
       - build-ruby-2.2.10-puppet-5
 
-      - build-ruby-2.3.7-puppet-3
+      # - build-ruby-2.3.7-puppet-3
       - build-ruby-2.3.7-puppet-4
       - build-ruby-2.3.7-puppet-5
 

@@ -16,6 +16,6 @@
   ],
   "requirements": [
     { "name": "ruby", "version_requirement": ">= 1.8.3 < 3.0.0" },
-    { "name": "puppet", "version_requirement": ">= 3.0.0 < 6.0.0" }
+    { "name": "puppet", "version_requirement": ">= 4.0.0 < 6.0.0" }
   ]
 }
