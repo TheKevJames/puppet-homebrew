@@ -34,7 +34,7 @@ class homebrew::install {
       notify  => Exec["set-${brew_sys_chmod_folder}-directory-inherit"],
     }
     exec { "set-${brew_sys_chmod_folder}-directory-inherit":
-      command     => "/bin/chmod -R +a '${homebrew::group}:allow list,add_file,search,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,readsecurity,file_inherit,directory_inherit' ${brew_sys_chmod_folder}",
+      command     => "/bin/chmod -R +a '${homebrew::group}:allow list,add_file,search,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,readsecurity,file_inherit,directory_inherit' ${brew_sys_chmod_folder}", # lint:ignore:140chars
       refreshonly => true,
     }
   }
@@ -77,7 +77,7 @@ class homebrew::install {
         unless  => "/usr/bin/stat -f '%Sg' '${brew_folder}' | /usr/bin/grep -w '${homebrew::group}'",
       }
       exec { "set-${brew_folder}-directory-inherit":
-        command     => "/bin/chmod -R +a '${homebrew::group}:allow list,add_file,search,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,readsecurity,file_inherit,directory_inherit' ${brew_folder}",
+        command     => "/bin/chmod -R +a '${homebrew::group}:allow list,add_file,search,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,readsecurity,file_inherit,directory_inherit' ${brew_folder}",  # lint:ignore:140chars
         refreshonly => true,
       }
     }
@@ -89,8 +89,8 @@ class homebrew::install {
     creates   => '/usr/local/Homebrew/bin/brew',
     logoutput => on_failure,
     timeout   => 0,
-  } ~>
-  file { '/usr/local/bin/brew':
+  }
+  ~> file { '/usr/local/bin/brew':
     ensure => 'link',
     target => '/usr/local/Homebrew/bin/brew',
     owner  => $homebrew::user,
