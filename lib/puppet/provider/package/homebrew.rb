@@ -66,8 +66,15 @@ Puppet::Type.type(:package).provide(:homebrew, :parent => Puppet::Provider::Pack
     raise Puppet::ExecutionFailure, "Checksum error for package #{name} in files #{files}"
   end
 
+  def resource_name
+    if @resource[:name].match(/^https?:\/\//)
+      @resource[:name]
+    else
+      @resource[:name].downcase
+    end
+  end
+
   def install_name
-    resource_name = @resource[:name].downcase
     should = @resource[:ensure].downcase
 
     case should
@@ -83,24 +90,22 @@ Puppet::Type.type(:package).provide(:homebrew, :parent => Puppet::Provider::Pack
   end
 
   def latest
-    package = self.class.package_list(:justme => resource[:name].downcase)
+    package = self.class.package_list(:justme => resource_name)
     package[:ensure]
   end
 
   def query
-    self.class.package_list(:justme => resource[:name].downcase)
+    self.class.package_list(:justme => resource_name)
   end
 
   def install
-    resource_name = install_name
-
     begin
       begin
-        Puppet.debug "Looking for #{resource_name} package on brew..."
-        output = execute([command(:brew), :info, resource_name], :failonfail => true)
+        Puppet.debug "Looking for #{install_name} package on brew..."
+        output = execute([command(:brew), :info, install_name], :failonfail => true)
 
         Puppet.debug "Package found, installing..."
-        output = execute([command(:brew), :install, resource_name, *install_options], :failonfail => true)
+        output = execute([command(:brew), :install, install_name, *install_options], :failonfail => true)
 
         if output =~ /sha256 checksum/
           Puppet.debug "Fixing checksum error..."
@@ -108,11 +113,11 @@ Puppet::Type.type(:package).provide(:homebrew, :parent => Puppet::Provider::Pack
           fix_checksum(mismatched)
         end
       rescue Puppet::ExecutionFailure
-        Puppet.debug "Package #{resource_name} not found on Brew. Trying BrewCask..."
-        execute([command(:brew), :cask, :info, resource_name], :failonfail => true)
+        Puppet.debug "Package #{install_name} not found on Brew. Trying BrewCask..."
+        execute([command(:brew), :cask, :info, install_name], :failonfail => true)
 
         Puppet.debug "Package found on brewcask, installing..."
-        output = execute([command(:brew), :cask, :install, resource_name, *install_options], :failonfail => true)
+        output = execute([command(:brew), :cask, :install, install_name, *install_options], :failonfail => true)
 
         if output =~ /sha256 checksum/
           Puppet.debug "Fixing checksum error..."
@@ -126,8 +131,6 @@ Puppet::Type.type(:package).provide(:homebrew, :parent => Puppet::Provider::Pack
   end
 
   def uninstall
-    resource_name = @resource[:name].downcase
-
     begin
       Puppet.debug "Uninstalling #{resource_name}"
       execute([command(:brew), :uninstall, resource_name], :failonfail => true)
@@ -141,8 +144,6 @@ Puppet::Type.type(:package).provide(:homebrew, :parent => Puppet::Provider::Pack
   end
 
   def update
-    resource_name = @resource[:name].downcase
-
     Puppet.debug "Updating #{resource_name}"
     install
   end

@@ -66,8 +66,15 @@ Puppet::Type.type(:package).provide(:brewcask, :parent => Puppet::Provider::Pack
     raise Puppet::ExecutionFailure, "Checksum error for package #{name} in files #{files}"
   end
 
+  def resource_name
+    if @resource[:name].match(/^https?:\/\//)
+      @resource[:name]
+    else
+      @resource[:name].downcase
+    end
+  end
+
   def install_name
-    resource_name = @resource[:name].downcase
     should = @resource[:ensure].downcase
 
     case should
@@ -83,27 +90,25 @@ Puppet::Type.type(:package).provide(:brewcask, :parent => Puppet::Provider::Pack
   end
 
   def latest
-    package = self.class.package_list(:justme => resource[:name].downcase)
+    package = self.class.package_list(:justme => resource_name)
     package[:ensure]
   end
 
   def query
-    self.class.package_list(:justme => resource[:name].downcase)
+    self.class.package_list(:justme => resource_name)
   end
 
   def install
-    resource_name = install_name
-
     begin
-      Puppet.debug "Looking for #{resource_name} package..."
-      execute([command(:brew), :cask, :info, resource_name], :failonfail => true)
+      Puppet.debug "Looking for #{install_name} package..."
+      execute([command(:brew), :cask, :info, install_name], :failonfail => true)
     rescue Puppet::ExecutionFailure => detail
-      raise Puppet::Error, "Could not find package: #{resource_name}"
+      raise Puppet::Error, "Could not find package: #{install_name}"
     end
 
     begin
       Puppet.debug "Package found, installing..."
-      output = execute([command(:brew), :cask, :install, resource_name, *install_options], :failonfail => true)
+      output = execute([command(:brew), :cask, :install, install_name, *install_options], :failonfail => true)
 
       if output =~ /sha256 checksum/
         Puppet.debug "Fixing checksum error..."
@@ -116,8 +121,6 @@ Puppet::Type.type(:package).provide(:brewcask, :parent => Puppet::Provider::Pack
   end
 
   def uninstall
-    resource_name = @resource[:name].downcase
-
     begin
       Puppet.debug "Uninstalling #{resource_name}"
       execute([command(:brew), :cask, :uninstall, resource_name], :failonfail => true)
@@ -127,8 +130,6 @@ Puppet::Type.type(:package).provide(:brewcask, :parent => Puppet::Provider::Pack
   end
 
   def update
-    resource_name = @resource[:name].downcase
-
     Puppet.debug "Updating #{resource_name}"
     install
   end
