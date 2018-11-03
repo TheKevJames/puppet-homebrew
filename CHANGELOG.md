@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 1.8.3
+- fix: avoid mangling names when resource target is a url (#110)
+
 ## 1.8.2
 - compatibility: first release to officially support Puppet 5 (previous versions worked unofficially)
 

@@ -1,6 +1,6 @@
 {
   "name": "thekevjames-homebrew",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "author": "thekevjames",
   "summary": "Homebrew (+brewcask! +taps!) package installer and provider",
   "license": "Apache-2.0",
