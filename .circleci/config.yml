@@ -3,20 +3,20 @@ version: 2
 jobs:
   lint:
     docker:
-      - image: python:3.6.4
-    environment:
-      STRICT_VARIABLES: "yes"
+      - image: python:3.7.1-alpine3.8
     steps:
+      - run: apk add -U git
       - checkout
       - run: pip install pre-commit
       - restore_cache:
           keys:
             - cache-pre-commit-{{ checksum ".pre-commit-config.yaml" }}
-      - run: pre-commit run --all-files
+      - run: pre-commit install-hooks
       - save_cache:
           key: cache-pre-commit-{{ checksum ".pre-commit-config.yaml" }}
           paths:
             - ~/.cache/pre-commit
+      - run: pre-commit run --all-files
 
   # build-ruby-1.9.3-puppet-3:
   #   docker:
