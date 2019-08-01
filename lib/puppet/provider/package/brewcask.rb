@@ -81,7 +81,7 @@ Puppet::Type.type(:package).provide(:brewcask, :parent => Puppet::Provider::Pack
     when true, false, Symbol
       resource_name
     else
-      "#{resource_name}-#{should}"
+      "#{resource_name}@#{should}"
     end
   end
 
