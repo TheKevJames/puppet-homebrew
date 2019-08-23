@@ -137,7 +137,3 @@ repos:
     rev: "4.1"
     hooks:
     -   id: beautysh
--   repo: https://github.com/detailyang/pre-commit-shell
-    rev: v1.0.6
-    hooks:
-    -   id: shell-lint
