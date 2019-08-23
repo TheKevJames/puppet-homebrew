@@ -1,23 +1,9 @@
-version: 2
+version: 2.1
+
+orbs:
+  linter: thekevjames/linter@0
 
 jobs:
-  lint:
-    docker:
-      - image: python:3.7.1-alpine3.8
-    steps:
-      - run: apk add -U git
-      - checkout
-      - run: pip install pre-commit
-      - restore_cache:
-          keys:
-            - cache-pre-commit-{{ checksum ".pre-commit-config.yaml" }}
-      - run: pre-commit install-hooks
-      - save_cache:
-          key: cache-pre-commit-{{ checksum ".pre-commit-config.yaml" }}
-          paths:
-            - ~/.cache/pre-commit
-      - run: pre-commit run --all-files
-
   # build-ruby-1.9.3-puppet-3:
   #   docker:
   #     - image: aptible/ruby:1.9.3
@@ -314,7 +300,8 @@ workflows:
   version: 2
   run-jobs:
     jobs:
-      - lint
+      - linter/pre-commit:
+          python_version: 3.7.4
 
       # - build-ruby-1.9.3-puppet-3
       - build-ruby-1.9.3-puppet-4
