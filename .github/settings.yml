@@ -2,6 +2,7 @@ repository:
   name: puppet-homebrew
   description: homebrew (+brewcask! +taps!) package installer and provider
   homepage: https://forge.puppet.com/thekevjames/homebrew
+  topics: brew, homebrew, puppet, tap
   private: false
 
   has_issues: true
@@ -9,27 +10,36 @@ repository:
   has_wiki: false
   has_downloads: false
 
+  default_branch: master
+
   allow_merge_commit: false
   allow_rebase_merge: true
   allow_squash_merge: true
 
 labels:
   - name: bug
-    color: fc2929
+    color: '#fc2929'
   - name: feature
-    color: 84b6eb
+    color: '#84b6eb'
     oldname: enhancement
-  - name: help wanted
-    color: 159818
-  - name: low-priority
-    color: fbca04
   - name: task
-    color: d93f0b
+    color: '#d93f0b'
+
+  - name: help wanted
+    color: '#159818'
+  - name: low-priority
+    color: '#fbca04'
   - name: question
-    color: cc317c
+    color: '#cc317c'
+
+  - name: triage
+    color: '#ededed'
   - name: backlog
-    color: ededed
+    color: '#ededed'
   - name: in-progress
-    color: 0052cc
+    color: '#0052cc'
   - name: in-review
-    color: 5319e7
+    color: '#5319e7'
+
+branches:
+  - name: master
