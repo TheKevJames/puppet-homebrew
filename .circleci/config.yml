@@ -96,23 +96,23 @@ jobs:
       - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
-  build-ruby-2_2_10-puppet-6:
-    docker:
-      - image: ruby:2.2.10
-    environment:
-      STRICT_VARIABLES: "yes"
-    steps:
-      - checkout
-      - run: gem install --no-ri --no-rdoc pdk puppet-lint "puppet:<7.0.0"
-      - run: puppet-lint manifests/init.pp
-      - run: puppet-lint manifests/install.pp
-      - run: puppet-lint manifests/compiler.pp
-      - run: puppet parser validate --noop manifests/init.pp
-      - run: puppet parser validate --noop manifests/install.pp
-      - run: puppet parser validate --noop manifests/compiler.pp
-      - run: pdk build
-      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
-      # - run: ./test.sh
+  # build-ruby-2_2_10-puppet-6:
+  #   docker:
+  #     - image: ruby:2.2.10
+  #   environment:
+  #     STRICT_VARIABLES: "yes"
+  #   steps:
+  #     - checkout
+  #     - run: gem install --no-ri --no-rdoc pdk puppet-lint "puppet:<7.0.0"
+  #     - run: puppet-lint manifests/init.pp
+  #     - run: puppet-lint manifests/install.pp
+  #     - run: puppet-lint manifests/compiler.pp
+  #     - run: puppet parser validate --noop manifests/init.pp
+  #     - run: puppet parser validate --noop manifests/install.pp
+  #     - run: puppet parser validate --noop manifests/compiler.pp
+  #     - run: pdk build
+  #     - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
+  #     # - run: ./test.sh
 
   # build-ruby-2_3_7-puppet-3:
   #   docker:
