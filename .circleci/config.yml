@@ -312,7 +312,7 @@ workflows:
       # - build-ruby-2_2_10-puppet-3
       - build-ruby-2_2_10-puppet-4
       - build-ruby-2_2_10-puppet-5
-      - build-ruby-2_2_10-puppet-6
+      # - build-ruby-2_2_10-puppet-6
 
       # - build-ruby-2_3_7-puppet-3
       - build-ruby-2_3_7-puppet-4
