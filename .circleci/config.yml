@@ -62,7 +62,7 @@ jobs:
 
   build-ruby-2_2_10-puppet-4:
     docker:
-      - image: ruby:2.2.10
+      - image: ruby:2.7.2
     environment:
       STRICT_VARIABLES: "yes"
     steps:
@@ -80,7 +80,7 @@ jobs:
 
   build-ruby-2_2_10-puppet-5:
     docker:
-      - image: ruby:2.2.10
+      - image: ruby:2.7.2
     environment:
       STRICT_VARIABLES: "yes"
     steps:
@@ -136,7 +136,7 @@ jobs:
 
   build-ruby-2_3_7-puppet-4:
     docker:
-      - image: ruby:2.3.7
+      - image: ruby:2.7.2
     environment:
       STRICT_VARIABLES: "yes"
     steps:
@@ -154,7 +154,7 @@ jobs:
 
   build-ruby-2_3_7-puppet-5:
     docker:
-      - image: ruby:2.3.7
+      - image: ruby:2.7.2
     environment:
       STRICT_VARIABLES: "yes"
     steps:
@@ -172,7 +172,7 @@ jobs:
 
   build-ruby-2_3_7-puppet-6:
     docker:
-      - image: ruby:2.3.7
+      - image: ruby:2.7.2
     environment:
       STRICT_VARIABLES: "yes"
     steps:
@@ -190,7 +190,7 @@ jobs:
 
   build-ruby-2_4_4-puppet-4:
     docker:
-      - image: ruby:2.4.4
+      - image: ruby:2.7.2
     environment:
       STRICT_VARIABLES: "yes"
     steps:
@@ -208,7 +208,7 @@ jobs:
 
   build-ruby-2_4_4-puppet-5:
     docker:
-      - image: ruby:2.4.4
+      - image: ruby:2.7.2
     environment:
       STRICT_VARIABLES: "yes"
     steps:
@@ -226,7 +226,7 @@ jobs:
 
   build-ruby-2_4_4-puppet-6:
     docker:
-      - image: ruby:2.4.4
+      - image: ruby:2.7.2
     environment:
       STRICT_VARIABLES: "yes"
     steps:
@@ -244,7 +244,7 @@ jobs:
 
   build-ruby-2_5_1-puppet-4:
     docker:
-      - image: ruby:2.5.1
+      - image: ruby:2.7.2
     environment:
       STRICT_VARIABLES: "yes"
     steps:
@@ -262,7 +262,7 @@ jobs:
 
   build-ruby-2_5_1-puppet-5:
     docker:
-      - image: ruby:2.5.1
+      - image: ruby:2.7.2
     environment:
       STRICT_VARIABLES: "yes"
     steps:
@@ -280,7 +280,7 @@ jobs:
 
   build-ruby-2_5_1-puppet-6:
     docker:
-      - image: ruby:2.5.1
+      - image: ruby:2.7.2
     environment:
       STRICT_VARIABLES: "yes"
     steps:
