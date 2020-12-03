@@ -2,7 +2,8 @@
 FAILURES=0
 
 apply() {
-    sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec puppet apply --detailed-exitcodes --debug "$@" || [ $? -eq 2 ]
+    sudo BUNDLE_GEMFILE="$GEMFILE" FUTURE_PARSER="$FUTURE_PARSER" bundle exec \
+        puppet apply --detailed-exitcodes --debug "$@" || [ $? -eq 2 ]
     FAILURES=$((FAILURES + $?))
 }
 check() {
@@ -39,4 +40,6 @@ else
     check brew list ncl
 fi
 
-if [ "$FAILURES" -ne "0" ]; then exit 1; fi
+if [ "$FAILURES" -ne "0" ]; then
+    exit 1
+fi
