@@ -36,7 +36,3 @@ repos:
     hooks:
     -   id: bashate
         args: [--max-line-length=80]
--   repo: https://github.com/detailyang/pre-commit-shell
-    rev: v1.0.6
-    hooks:
-    -   id: shell-lint
