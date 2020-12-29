@@ -101,14 +101,14 @@ Puppet::Type.type(:package).provide(:brewcask, :parent => Puppet::Provider::Pack
   def install
     begin
       Puppet.debug "Looking for #{install_name} package..."
-      execute([command(:brew), :cask, :info, install_name], :failonfail => true)
+      execute([command(:brew), :info, '--cask', install_name], :failonfail => true)
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not find package: #{install_name}"
     end
 
     begin
       Puppet.debug "Package found, installing..."
-      output = execute([command(:brew), :cask, :install, install_name, *install_options], :failonfail => true)
+      output = execute([command(:brew), :install, '--cask', install_name, *install_options], :failonfail => true)
 
       if output =~ /sha256 checksum/
         Puppet.debug "Fixing checksum error..."
@@ -123,7 +123,7 @@ Puppet::Type.type(:package).provide(:brewcask, :parent => Puppet::Provider::Pack
   def uninstall
     begin
       Puppet.debug "Uninstalling #{resource_name}"
-      execute([command(:brew), :cask, :uninstall, resource_name], :failonfail => true)
+      execute([command(:brew), :uninstall, '--cask', resource_name], :failonfail => true)
     rescue Puppet::ExecutionFailure => detail
       raise Puppet::Error, "Could not uninstall package: #{detail}"
     end
@@ -138,14 +138,14 @@ Puppet::Type.type(:package).provide(:brewcask, :parent => Puppet::Provider::Pack
     Puppet.debug "Listing installed packages"
     begin
       if resource_name = options[:justme]
-        result = execute([command(:brew), :cask, :list, '--versions', resource_name])
+        result = execute([command(:brew), :list, '--cask', '--versions', resource_name])
         if result.empty?
           Puppet.debug "Package #{resource_name} not installed"
         else
           Puppet.debug "Found package #{result}"
         end
       else
-        result = execute([command(:brew), :cask, :list, '--versions'])
+        result = execute([command(:brew), :list, '--cask', '--versions'])
       end
       list = result.lines.map {|line| name_version_split(line)}
     rescue Puppet::ExecutionFailure => detail
