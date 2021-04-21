@@ -4,71 +4,43 @@ orbs:
   linter: thekevjames/linter@0
 
 jobs:
-  test-pup4:
+  test:
     docker:
       - image: ruby:<< parameters.ruby_version >>
     environment:
       STRICT_VARIABLES: "yes"
     parameters:
+      pdk:
+        type: boolean
+      puppet_version:
+        type: string
       ruby_version:
         type: string
     steps:
       - checkout
-      - run: gem install --no-ri --no-rdoc puppet-lint "puppet:<5.0.0"
+      - run: gem install --no-ri --no-rdoc puppet-lint "puppet:<< parameters.puppet_version >>"
+      - when:
+          condition: << parameters.pdk >>
+          steps:
+            - run: gem install --no-ri --no-rdoc pdk
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
       - run: puppet parser validate --noop manifests/init.pp
       - run: puppet parser validate --noop manifests/install.pp
       - run: puppet parser validate --noop manifests/compiler.pp
-      - run: puppet module build
-      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
-      # - run: ./test.sh
-
-  test-pup5:
-    docker:
-      - image: ruby:<< parameters.ruby_version >>
-    environment:
-      STRICT_VARIABLES: "yes"
-    parameters:
-      ruby_version:
-        type: string
-    steps:
-      - checkout
-      - run: gem install --no-ri --no-rdoc puppet-lint "puppet:<6.0.0"
-      - run: puppet-lint manifests/init.pp
-      - run: puppet-lint manifests/install.pp
-      - run: puppet-lint manifests/compiler.pp
-      - run: puppet parser validate --noop manifests/init.pp
-      - run: puppet parser validate --noop manifests/install.pp
-      - run: puppet parser validate --noop manifests/compiler.pp
-      - run: puppet module build
-      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
-      # - run: ./test.sh
-
-  test-pup6:
-    docker:
-      - image: ruby:<< parameters.ruby_version >>
-    environment:
-      STRICT_VARIABLES: "yes"
-    parameters:
-      ruby_version:
-        type: string
-    steps:
-      - checkout
-      - run: gem install --no-ri --no-rdoc pdk puppet-lint "puppet:<7.0.0"
-      - run: puppet-lint manifests/init.pp
-      - run: puppet-lint manifests/install.pp
-      - run: puppet-lint manifests/compiler.pp
-      - run: puppet parser validate --noop manifests/init.pp
-      - run: puppet parser validate --noop manifests/install.pp
-      - run: puppet parser validate --noop manifests/compiler.pp
-      - run: pdk build
+      - when:
+          condition: << parameters.pdk >>
+          steps:
+            - run: pdk build
+      - unless:
+          condition: << parameters.pdk >>
+          steps:
+            - run: puppet module build
       - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test.sh
 
 workflows:
-  version: 2
   run-jobs:
     jobs:
       - linter/pre-commit:
@@ -77,27 +49,25 @@ workflows:
             - run: apt-get update
             - run: apt-get install -qy shellcheck
 
-      - test-pup4:
-          name: test-pup4-ruby<<matrix.ruby_version>>
+      - test:
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          pdk: false
           matrix:
             parameters:
+              puppet_version:
+                - '<5.0.0'
+                - '<6.0.0'
               ruby_version:
                 - '2.2.10'
                 - '2.3.7'
                 - '2.4.4'
                 - '2.5.1'
-      - test-pup5:
-          name: test-pup5-ruby<<matrix.ruby_version>>
+      - test:
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          pdk: true
           matrix:
             parameters:
-              ruby_version:
-                - '2.2.10'
-                - '2.3.7'
-                - '2.4.4'
-                - '2.5.1'
-      - test-pup6:
-          name: test-pup6-ruby<<matrix.ruby_version>>
-          matrix:
-            parameters:
+              puppet_version:
+                - '<7.0.0'
               ruby_version:
                 - '2.5.1'
