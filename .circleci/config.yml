@@ -18,11 +18,11 @@ jobs:
         type: string
     steps:
       - checkout
-      - run: gem install --no-ri --no-rdoc puppet-lint "puppet:<< parameters.puppet_version >>"
+      - run: gem install -N puppet-lint "puppet:<< parameters.puppet_version >>"
       - when:
           condition: << parameters.pdk >>
           steps:
-            - run: gem install --no-ri --no-rdoc pdk
+            - run: gem install -N pdk
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
@@ -59,9 +59,10 @@ workflows:
                 - '<6.0.0'
               ruby_version:
                 - '2.2.10'
-                - '2.3.7'
-                - '2.4.4'
-                - '2.5.1'
+                - '2.3.8'
+                - '2.4.10'
+                - '2.5.9'
+                - '2.6.7'
       - test:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           pdk: true
@@ -70,4 +71,6 @@ workflows:
               puppet_version:
                 - '<7.0.0'
               ruby_version:
-                - '2.5.1'
+                - '2.5.9'
+                - '2.6.7'
+                - '2.7.3'
