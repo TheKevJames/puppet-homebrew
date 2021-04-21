@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.9.0 (2021-04-21)
+- fix: update cask syntax for brew changes (#144) ([6a273ca4](6a273ca4))
+- fix: fixup "ensure" for specific version pins (#114) ([defc03f3](defc03f3))
+- internal: build via pdk (#122) ([07607a68](07607a68))
+- internal: fixup linters and test matrix for newer ruby versions
+
 ## 1.8.3
 - fix: avoid mangling names when resource target is a url (#110)
 
