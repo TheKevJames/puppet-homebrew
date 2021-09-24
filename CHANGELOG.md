@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 1.9.1 (2021-09-23)
+- internal: fixup overly-narrow stdlib version pin
+
 ## 1.9.0 (2021-04-21)
 - fix: update cask syntax for brew changes (#144) ([6a273ca4](6a273ca4))
 - fix: fixup "ensure" for specific version pins (#114) ([defc03f3](defc03f3))
