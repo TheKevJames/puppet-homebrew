@@ -12,16 +12,17 @@ Puppet::Type.type(:package).provide(:homebrew, :parent => Puppet::Provider::Pack
 
   has_feature :install_options
 
-  commands :brew => '/usr/local/bin/brew'
+  commands :brew => ENV.fetch('PUPPET_HOMEBREW_COMMAND', 'brew')
   commands :stat => '/usr/bin/stat'
 
   def self.execute(cmd, failonfail = false, combine = false)
-    owner = stat('-nf', '%Uu', '/usr/local/bin/brew').to_i
-    group = stat('-nf', '%Ug', '/usr/local/bin/brew').to_i
+    brew_cmd = command(:brew)
+    owner = stat('-nf', '%Uu', brew_cmd).to_i
+    group = stat('-nf', '%Ug', brew_cmd).to_i
     home  = Etc.getpwuid(owner).dir
 
     if owner == 0
-      raise Puppet::ExecutionFailure, 'Homebrew does not support installations owned by the "root" user. Please check the permissions of /usr/local/bin/brew'
+      raise Puppet::ExecutionFailure, "Homebrew does not support installations owned by the \"root\" user. Please check the permissions of #{brew_cmd}"
     end
 
     # the uid and gid can only be set if running as root
@@ -33,14 +34,17 @@ Puppet::Type.type(:package).provide(:homebrew, :parent => Puppet::Provider::Pack
       gid = nil
     end
 
+    custom_env = {'HOME' => home}
+    custom_env['HOMEBREW_CHANGE_ARCH_TO_ARM'] = '1' if Facter.value(:has_arm64)
+
     if Puppet.features.bundled_environment?
       Bundler.with_clean_env do
         super(cmd, :uid => uid, :gid => gid, :combine => combine,
-              :custom_environment => { 'HOME' => home }, :failonfail => failonfail)
+              :custom_environment => custom_env, :failonfail => failonfail)
       end
     else
       super(cmd, :uid => uid, :gid => gid, :combine => combine,
-            :custom_environment => { 'HOME' => home }, :failonfail => failonfail)
+            :custom_environment => custom_env, :failonfail => failonfail)
     end
   end
 

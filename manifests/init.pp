@@ -16,11 +16,17 @@ class homebrew (
   }
 
   class { '::homebrew::compiler': }
-  -> class { '::homebrew::install': }
-
   contain '::homebrew::compiler'
-  contain '::homebrew::install'
 
+  if !$::has_arm64 {
+    Class['::homebrew::compiler']
+    -> class { '::homebrew::install': }
+    contain '::homebrew::install'
+  } else {
+    Class['::homebrew::compiler']
+    -> class { '::homebrew::installarm': }
+    contain '::homebrew::installarm'
+  }
   if $homebrew::github_token {
     file { '/etc/environment': ensure => present }
     -> file_line { 'homebrew-github-api-token':
