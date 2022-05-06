@@ -12,12 +12,19 @@ Puppet::Type.type(:package).provide(:brewcask, :parent => Puppet::Provider::Pack
 
   has_feature :install_options
 
-  commands :brew => '/usr/local/bin/brew'
+  if (File.exist?('/usr/local/bin/brew')) then
+    @brewbin = '/usr/local/bin/brew'
+    true
+  elsif (File.exist?('/opt/homebrew/bin/brew')) then
+    @brewbin = '/opt/homebrew/bin/brew'
+  end
+
+  commands :brew => @brewbin
   commands :stat => '/usr/bin/stat'
 
   def self.execute(cmd, failonfail = false, combine = false)
-    owner = stat('-nf', '%Uu', '/usr/local/bin/brew').to_i
-    group = stat('-nf', '%Ug', '/usr/local/bin/brew').to_i
+    owner = stat('-nf', '%Uu', "#{@brewbin}").to_i
+    group = stat('-nf', '%Ug', "#{@brewbin}").to_i
     home  = Etc.getpwuid(owner).dir
 
     if owner == 0
