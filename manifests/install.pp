@@ -1,31 +1,48 @@
 class homebrew::install {
 
+  case $::facts[processors][models][0] {
+    # brew complains if it finds its bin in /usr/local/bin on Apple Silicon
+    # so we should put brew where it expects to be
+    /^Apple*/: {
+      $brew_root          = '/opt/homebrew'
+      $inst_dir           = $brew_root
+      $link_bin           = false
+      $brew_folders_extra = []
+    }
+    /^Intel*/: {
+      $brew_root          = '/usr/local'
+      $inst_dir           = "${brew_root}/Homebrew"
+      $link_bin           = true
+      $brew_folders_extra = ["${brew_root}/Homebrew",]
+    }
+    default:   { fail("unknown arch for processor ${::facts[processors][models][0]}") }
+  }
   $brew_sys_folders = [
-    '/usr/local/bin',
-    '/usr/local/etc',
-    '/usr/local/Frameworks',
-    '/usr/local/include',
-    '/usr/local/lib',
-    '/usr/local/lib/pkgconfig',
-    '/usr/local/var',
+    "${brew_root}/bin",
+    "${brew_root}/etc",
+    "${brew_root}/Frameworks",
+    "${brew_root}/include",
+    "${brew_root}/lib",
+    "${brew_root}/lib/pkgconfig",
+    "${brew_root}/var",
   ]
   $brew_sys_folders.each | String $brew_sys_folder | {
     if !defined(File[$brew_sys_folder]) {
       file { $brew_sys_folder:
         ensure => directory,
+        owner  => $homebrew::user,
         group  => $homebrew::group,
       }
     }
   }
 
   $brew_sys_chmod_folders = [
-    '/usr/local/bin',
-    '/usr/local/include',
-    '/usr/local/lib',
-    '/usr/local/etc',
-    '/usr/local/Frameworks',
-    '/usr/local/var',
-
+    "${brew_root}/bin",
+    "${brew_root}/include",
+    "${brew_root}/lib",
+    "${brew_root}/etc",
+    "${brew_root}/Frameworks",
+    "${brew_root}/var",
   ]
   $brew_sys_chmod_folders.each | String $brew_sys_chmod_folder | {
     exec { "brew-chmod-sys-${brew_sys_chmod_folder}":
@@ -39,25 +56,26 @@ class homebrew::install {
     }
   }
 
-  $brew_folders = [
-    '/usr/local/opt',
-    '/usr/local/Homebrew',
-    '/usr/local/Caskroom',
-    '/usr/local/Cellar',
-    '/usr/local/var/homebrew',
-    '/usr/local/share',
-    '/usr/local/share/doc',
-    '/usr/local/share/info',
-    '/usr/local/share/man',
-    '/usr/local/share/man1',
-    '/usr/local/share/man2',
-    '/usr/local/share/man3',
-    '/usr/local/share/man4',
-    '/usr/local/share/man5',
-    '/usr/local/share/man6',
-    '/usr/local/share/man7',
-    '/usr/local/share/man8',
-  ]
+  $brew_folders = flatten(
+    $brew_folders_extra,
+    [
+    "${brew_root}/opt",
+    "${brew_root}/Caskroom",
+    "${brew_root}/Cellar",
+    "${brew_root}/var/homebrew",
+    "${brew_root}/share",
+    "${brew_root}/share/doc",
+    "${brew_root}/share/info",
+    "${brew_root}/share/man",
+    "${brew_root}/share/man1",
+    "${brew_root}/share/man2",
+    "${brew_root}/share/man3",
+    "${brew_root}/share/man4",
+    "${brew_root}/share/man5",
+    "${brew_root}/share/man6",
+    "${brew_root}/share/man7",
+    "${brew_root}/share/man8",
+  ])
 
   file { $brew_folders:
     ensure => directory,
@@ -84,17 +102,19 @@ class homebrew::install {
   }
 
   exec { 'install-homebrew':
-    cwd       => '/usr/local/Homebrew',
+    cwd       => $inst_dir,
     command   => "/usr/bin/su ${homebrew::user} -c '/bin/bash -o pipefail -c \"/usr/bin/curl -skSfL https://github.com/homebrew/brew/tarball/master | /usr/bin/tar xz -m --strip 1\"'",
-    creates   => '/usr/local/Homebrew/bin/brew',
+    creates   => "${inst_dir}/bin/brew",
     logoutput => on_failure,
     timeout   => 0,
   }
-  ~> file { '/usr/local/bin/brew':
-    ensure => 'link',
-    target => '/usr/local/Homebrew/bin/brew',
-    owner  => $homebrew::user,
-    group  => $homebrew::group,
+  if $link_bin {
+    file { "${brew_root}/bin/brew":
+      ensure => 'link',
+      target => "${inst_dir}/bin/brew",
+      owner  => $homebrew::user,
+      group  => $homebrew::group,
+    }
   }
 
 }
