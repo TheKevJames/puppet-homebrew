@@ -1,6 +1,6 @@
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.2.0
     hooks:
     -   id: check-case-conflict
     -   id: check-executables-have-shebangs
@@ -29,7 +29,7 @@ repos:
 
 # shell
 -   repo: https://github.com/lovesegfault/beautysh
-    rev: v6.1.0
+    rev: v6.2.1
     hooks:
     -   id: beautysh
 -   repo: https://github.com/openstack/bashate
