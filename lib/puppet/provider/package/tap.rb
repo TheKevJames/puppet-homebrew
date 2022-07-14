@@ -41,11 +41,15 @@ Puppet::Type.type(:package).provide(:tap, :parent => Puppet::Provider::Package) 
     if Puppet.features.bundled_environment?
       Bundler.with_clean_env do
         super(cmd, :uid => uid, :gid => gid, :combine => combine,
-              :custom_environment => { 'HOME' => home }, :failonfail => failonfail)
+              :custom_environment => { 'HOME' => home },
+              :cwd => '/tmp',
+              :failonfail => failonfail)
       end
     else
       super(cmd, :uid => uid, :gid => gid, :combine => combine,
-            :custom_environment => { 'HOME' => home }, :failonfail => failonfail)
+            :custom_environment => { 'HOME' => home },
+            :cwd => '/tmp',
+            :failonfail => failonfail)
     end
   end
 
