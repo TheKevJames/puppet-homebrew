@@ -12,23 +12,18 @@ Puppet::Type.type(:package).provide(:homebrew, :parent => Puppet::Provider::Pack
 
   has_feature :install_options
 
-  if (File.exist?('/usr/local/bin/brew')) then
-    @brewbin = '/usr/local/bin/brew'
-    true
-  elsif (File.exist?('/opt/homebrew/bin/brew')) then
-    @brewbin = '/opt/homebrew/bin/brew'
-  end
+  $brew_binary = (Facter.value(:os)['architecture'] == 'arm64' ? '/opt/homebrew' : '/usr/local') + "/bin/brew"
 
-  commands :brew => @brewbin
+  commands :brew => $brew_binary
   commands :stat => '/usr/bin/stat'
 
   def self.execute(cmd, failonfail = false, combine = false)
-    owner = stat('-nf', '%Uu', "#{@brewbin}").to_i
-    group = stat('-nf', '%Ug', "#{@brewbin}").to_i
+    owner = stat('-nf', '%Uu', $brew_binary).to_i
+    group = stat('-nf', '%Ug', $brew_binary).to_i
     home  = Etc.getpwuid(owner).dir
 
     if owner == 0
-      raise Puppet::ExecutionFailure, 'Homebrew does not support installations owned by the "root" user. Please check the permissions of /usr/local/bin/brew'
+      raise Puppet::ExecutionFailure, "Homebrew does not support installations owned by the 'root' user. Please check the permissions of #$brew_binary"
     end
 
     # the uid and gid can only be set if running as root
