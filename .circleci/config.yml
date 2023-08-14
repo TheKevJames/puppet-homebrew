@@ -38,7 +38,7 @@ jobs:
           steps:
             - run: puppet module build
       - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
-      # - run: ./test.sh
+      # - run: ./test
       - store_artifacts:
           path: pkg/
 
