@@ -2,6 +2,9 @@ ci:
     autofix_commit_msg: 'refactor(lint): apply automatic lint fixes'
     autoupdate_commit_msg: 'chore(deps): bump pre-commit linter versions'
 
+default_language_version:
+    python: python3.11
+
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -31,6 +34,15 @@ repos:
     -   id: rst-directive-colons
     -   id: rst-inline-touching-normal
 
+# json
+- repo: https://github.com/python-jsonschema/check-jsonschema
+  rev: 0.24.1
+  hooks:
+    - id: check-github-workflows
+    - id: check-renovate
+      additional_dependencies:
+      - pyjson5
+
 # shell
 -   repo: https://github.com/lovesegfault/beautysh
     rev: v6.2.1
@@ -41,3 +53,11 @@ repos:
     hooks:
     -   id: bashate
         args: [--max-line-length=80]
+-   repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.9.0.5
+    hooks:
+    -   id: shellcheck
+-   repo: https://github.com/jumanjihouse/pre-commit-hooks
+    rev: 3.0.0
+    hooks:
+    -   id: script-must-not-have-extension
