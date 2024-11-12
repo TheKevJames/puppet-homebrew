@@ -1,63 +1,70 @@
 ci:
     autofix_commit_msg: 'refactor(lint): apply automatic lint fixes'
     autoupdate_commit_msg: 'chore(deps): bump pre-commit linter versions'
+    skip: [terraform_fmt, terraform_validate]
+
+default_install_hook_types:
+  - commit-msg
+  - pre-commit
 
 default_language_version:
-    python: python3.11
+    python: python3.13
 
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.6.0
     hooks:
-    -   id: check-case-conflict
-    -   id: check-executables-have-shebangs
-    -   id: check-json
-    -   id: check-merge-conflict
-    -   id: check-shebang-scripts-are-executable
-    -   id: check-symlinks
-    -   id: check-toml
-    -   id: check-vcs-permalinks
-    -   id: check-xml
-    -   id: check-yaml
+      - id: conventional-pre-commit
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-shebang-scripts-are-executable
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-vcs-permalinks
+      - id: check-xml
+      - id: check-yaml
         args: [--allow-multiple-documents]
-    -   id: detect-private-key
-    -   id: end-of-file-fixer
-    -   id: mixed-line-ending
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
         args: [--fix=lf]
-    -   id: trailing-whitespace
+      - id: trailing-whitespace
 
 # rst
--   repo: https://github.com/pre-commit/pygrep-hooks
+  - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.10.0
     hooks:
-    -   id: rst-backticks
-    -   id: rst-directive-colons
-    -   id: rst-inline-touching-normal
+      - id: rst-backticks
+      - id: rst-directive-colons
+      - id: rst-inline-touching-normal
 
 # json
-- repo: https://github.com/python-jsonschema/check-jsonschema
-  rev: 0.24.1
-  hooks:
-    - id: check-github-workflows
-    - id: check-renovate
-      additional_dependencies:
-      - pyjson5
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.29.4
+    hooks:
+      - id: check-circle-ci
+      - id: check-github-workflows
+      - id: check-renovate
+        additional_dependencies:
+          # renovate: datasource=pypi depName=pyjson5
+          - pyjson5==1.6.7
 
 # shell
--   repo: https://github.com/lovesegfault/beautysh
-    rev: v6.2.1
-    hooks:
-    -   id: beautysh
--   repo: https://github.com/openstack/bashate
+  - repo: https://github.com/openstack/bashate
     rev: 2.1.1
     hooks:
-    -   id: bashate
+      - id: bashate
         args: [--max-line-length=80]
--   repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.9.0.5
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
     hooks:
-    -   id: shellcheck
--   repo: https://github.com/jumanjihouse/pre-commit-hooks
+      - id: shellcheck
+  - repo: https://github.com/jumanjihouse/pre-commit-hooks
     rev: 3.0.0
     hooks:
-    -   id: script-must-not-have-extension
+      - id: script-must-not-have-extension

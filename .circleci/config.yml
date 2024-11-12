@@ -1,7 +1,13 @@
 version: 2.1
 
 orbs:
-  linter: thekevjames/linter@0
+  linter: talkiq/linter@4
+
+executors:
+  python:
+    docker:
+      - image: python:3.13.0
+    resource_class: medium
 
 jobs:
   test:
@@ -46,11 +52,7 @@ workflows:
   run-jobs:
     jobs:
       - linter/pre-commit:
-          python_version: 3.7.10
-          pre-steps:
-            - run: apt-get update
-            - run: apt-get install -qy shellcheck
-
+          executor: python
       - test:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           pdk: false
