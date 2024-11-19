@@ -67,14 +67,6 @@ class homebrew::install {
     "${brew_root}/share/doc",
     "${brew_root}/share/info",
     "${brew_root}/share/man",
-    "${brew_root}/share/man1",
-    "${brew_root}/share/man2",
-    "${brew_root}/share/man3",
-    "${brew_root}/share/man4",
-    "${brew_root}/share/man5",
-    "${brew_root}/share/man6",
-    "${brew_root}/share/man7",
-    "${brew_root}/share/man8",
   ])
 
   file { $brew_folders:
