@@ -6,7 +6,7 @@ orbs:
 executors:
   python:
     docker:
-      - image: python:3.13.0
+      - image: python:3.13.3
     resource_class: medium
 
 jobs:
