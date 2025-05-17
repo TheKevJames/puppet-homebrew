@@ -50,8 +50,8 @@ repos:
       - id: check-circle-ci
       - id: check-github-workflows
       - id: check-renovate
+        language: python
         additional_dependencies:
-          # renovate: datasource=pypi depName=pyjson5
           - pyjson5==1.6.7
 
 # shell
