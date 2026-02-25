@@ -1,4 +1,5 @@
 require 'etc'
+require 'tmpdir'
 
 module Puppet
   class Provider
@@ -25,6 +26,12 @@ module Puppet
             end
           end
 
+          def execution_cwd(home)
+            [Dir.tmpdir, '/tmp', home].find do |path|
+              path && File.directory?(path) && File.executable?(path) && File.writable?(path)
+            end || '/tmp'
+          end
+
           def execute(cmd, failonfail = false, combine = false)
             owner = stat('-nf', '%Uu', brewbin).to_i
             group = stat('-nf', '%Ug', brewbin).to_i
@@ -45,6 +52,7 @@ module Puppet
               super(cmd,
                     uid: uid,
                     gid: gid,
+                    cwd: execution_cwd(home),
                     combine: combine,
                     custom_environment: { 'HOME' => home },
                     failonfail: failonfail)
