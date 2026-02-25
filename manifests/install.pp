@@ -1,23 +1,16 @@
 class homebrew::install {
 
-  case $facts['processors']['models'][0] {
-    # brew complains if it finds its bin in /usr/local/bin on Apple Silicon
-    # so we should put brew where it expects to be
-    /^Apple/: {
-      $brew_root          = '/opt/homebrew'
-      $inst_dir           = $brew_root
-      $link_bin           = false
-      $brew_folders_extra = []
-    }
-    /^Intel/: {
-      $brew_root          = '/usr/local'
-      $inst_dir           = "${brew_root}/Homebrew"
-      $link_bin           = true
-      $brew_folders_extra = ["${brew_root}/Homebrew"]
-    }
-    default: {
-      fail("unknown arch for processor ${facts['processors']['models'][0]}")
-    }
+  # Homebrew install target depends on architecture.
+  if $facts['is_arm64'] {
+    $brew_root          = '/opt/homebrew'
+    $inst_dir           = $brew_root
+    $link_bin           = false
+    $brew_folders_extra = []
+  } else {
+    $brew_root          = '/usr/local'
+    $inst_dir           = "${brew_root}/Homebrew"
+    $link_bin           = true
+    $brew_folders_extra = ["${brew_root}/Homebrew"]
   }
 
   $brew_sys_folders = [
@@ -102,10 +95,21 @@ class homebrew::install {
     }
   }
 
+  $homebrew_install_script = '/tmp/homebrew-install.sh'
+  $homebrew_install_url = 'https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh'
+  $homebrew_install_cmd = join([
+    '/usr/bin/curl -fsSL -o',
+    $homebrew_install_script,
+    $homebrew_install_url,
+    '&&',
+    '/usr/bin/env NONINTERACTIVE=1 /bin/bash',
+    $homebrew_install_script,
+  ], ' ')
+
   exec { 'install-homebrew':
-    cwd       => $inst_dir,
-    command   => "/usr/bin/su ${homebrew::user} -c '/bin/bash -o pipefail -c \"/usr/bin/curl -skSfL https://github.com/homebrew/brew/tarball/master | /usr/bin/tar xz -m --strip 1\"'",
-    creates   => "${inst_dir}/bin/brew",
+    cwd       => '/tmp',
+    command   => "/usr/bin/su ${homebrew::user} -c '${homebrew_install_cmd}'",
+    creates   => "${brew_root}/bin/brew",
     logoutput => on_failure,
     timeout   => 0,
   }

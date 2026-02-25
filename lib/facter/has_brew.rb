@@ -5,12 +5,6 @@
 # Resolution:
 #   Tests for presence of brew, returns boolean
 #   No value set if not on Darwin
-#
-# Caveats:
-#   none
-#
-# Notes:
-#   None
 
 Facter.add(:has_brew) do
   confine kernel: 'Darwin'

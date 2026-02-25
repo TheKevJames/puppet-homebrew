@@ -5,12 +5,6 @@
 # Resolution:
 #   Tests for presence of cc, returns boolean
 #   No value set if not on Darwin
-#
-# Caveats:
-#   none
-#
-# Notes:
-#   None
 
 Facter.add(:has_compiler) do
   confine kernel: 'Darwin'
