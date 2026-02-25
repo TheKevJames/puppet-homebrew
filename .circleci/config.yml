@@ -62,11 +62,8 @@ workflows:
                 - '<5.0.0'
                 - '<6.0.0'
               ruby_version:
-                - '2.2.10'
-                - '2.3.8'
-                - '2.4.10'
-                - '2.5.9'
-                - '2.6.7'
+                - '3.4.8'
+                - '4.0.1'
       - test:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           pdk: true
@@ -75,6 +72,5 @@ workflows:
               puppet_version:
                 - '<7.0.0'
               ruby_version:
-                - '2.5.9'
-                - '2.6.7'
-                - '2.7.3'
+                - '3.4.8'
+                - '4.0.1'
