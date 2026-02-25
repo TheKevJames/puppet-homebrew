@@ -6,7 +6,7 @@ orbs:
 executors:
   ruby:
     docker:
-      - image: ruby:3.4.8
+      - image: ruby:4.0.1
     resource_class: medium
   python:
     docker:
