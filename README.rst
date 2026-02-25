@@ -11,6 +11,39 @@ supported by Homebrew. For Puppet 3 support, please pin to version 1.7.1.
 
 puppet-homebrew is available on the `Puppet Forge`_.
 
+.. warning::
+
+    As of v2+ of this project, development is AI-assisted.
+
+Development
+-----------
+
+This repository uses `rbenv`_ for local Ruby version management when running
+the CI-style test matrix.
+
+1. Install rbenv and the Rubies used by CI:
+
+.. code-block:: bash
+
+    rbenv install 2.2.10
+    rbenv install 2.3.8
+    rbenv install 2.4.10
+    rbenv install 2.5.9
+    rbenv install 2.6.7
+    rbenv install 2.7.3
+
+2. Run the local matrix:
+
+.. code-block:: bash
+
+    ./bin/test-matrix
+
+You can also run one matrix entry at a time:
+
+.. code-block:: bash
+
+     ./bin/test-matrix --ruby 2.7.3 --puppet '<7.0.0' --pdk true
+
 Usage
 -----
 
@@ -167,4 +200,5 @@ Credit for logic involved in tapping repositories goes to `gildas`_.
 .. _gildas: https://github.com/gildas/puppet-homebrew
 .. _kelseyhightower: https://github.com/kelseyhightower
 .. _Puppet Forge: https://forge.puppetlabs.com/thekevjames/homebrew
+.. _rbenv: https://github.com/rbenv/rbenv
 .. _Resource Collectors: https://docs.puppet.com/puppet/latest/reference/lang_collectors.html
