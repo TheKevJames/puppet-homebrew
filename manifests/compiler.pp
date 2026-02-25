@@ -1,10 +1,8 @@
 class homebrew::compiler {
 
-  if str2bool($facts['has_compiler']) {
-  } elsif versioncmp($facts['os']['release']['full'], '10.7') < 0 {
-    warning('Please install the Command Line Tools bundled with XCode manually!')
-  } elsif ($homebrew::command_line_tools_package and $homebrew::command_line_tools_source) {
-
+  if $facts['has_compiler'] {
+    notice('Compiler already present; skipping command line tools installation.')
+  } elsif $homebrew::command_line_tools_package and $homebrew::command_line_tools_source {
     notice('Installing Command Line Tools.')
 
     package { $homebrew::command_line_tools_package:
@@ -15,5 +13,4 @@ class homebrew::compiler {
   } else {
     warning('No Command Line Tools detected and no download source set. Please set download sources or install manually.')
   }
-
 }
