@@ -67,9 +67,7 @@ if [ "$#" -eq 0 ]; then
         exit 1
     fi
 
-    for ruby_version in '3.4.8' '4.0.1'; do
-        run_job '>=8.0.0' "${ruby_version}"
-    done
+    run_job '>=8.0.0' '3.4.8'
     exit 0
 fi
 

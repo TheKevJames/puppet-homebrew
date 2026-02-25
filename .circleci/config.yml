@@ -4,6 +4,10 @@ orbs:
   linter: talkiq/linter@4
 
 executors:
+  ruby:
+    docker:
+      - image: ruby:3.4.8
+    resource_class: medium
   python:
     docker:
       - image: python:3.13.0
@@ -11,18 +15,15 @@ executors:
 
 jobs:
   test:
-    docker:
-      - image: ruby:<< parameters.ruby_version >>
+    executor: ruby
     environment:
       STRICT_VARIABLES: "yes"
     parameters:
-      puppet_version:
-        type: string
-      ruby_version:
+      version:
         type: string
     steps:
       - checkout
-      - run: ./bin/build --puppet "<< parameters.puppet_version >>"
+      - run: ./bin/build --puppet "<< parameters.version >>"
       - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test
       - store_artifacts:
@@ -34,11 +35,5 @@ workflows:
       - linter/pre-commit:
           executor: python
       - test:
-          name: test-ruby<< matrix.ruby_version >>-pup<< matrix.puppet_version >>
-          matrix:
-            parameters:
-              puppet_version:
-                - '<9.0.0'
-              ruby_version:
-                - '3.4.8'
-                - '4.0.1'
+          # renovate: datasource=rubygems depName=puppet
+          version: 8.10.0

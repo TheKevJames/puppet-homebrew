@@ -5,9 +5,7 @@ A Puppet Module to install Homebrew and manage Homebrew packages on Mac OSX.
 This module can install using either homebrew or brewcask, along with a
 fallback mode which attempts both.
 
-This module supports Puppet version 8 and greater running on Ruby version 3.2.0
-and greater.
-
+This module supports Puppet version 8 and greater running on Ruby v3.x (>=3.2).
 puppet-homebrew is available on the `Puppet Forge`_.
 
 .. warning::
@@ -18,14 +16,14 @@ Development
 -----------
 
 This repository uses `rbenv`_ for local Ruby version management when running
-the CI-style test matrix.
+the CI-style test matrix. Ruby 4.x is intentionally unsupported because current
+Puppet 8 dependencies are not compatible with Ruby 4.x.
 
 1. Install rbenv and the Rubies used by CI:
 
 .. code-block:: bash
 
     rbenv install 3.4.8
-    rbenv install 4.0.1
 
 2. Run the local matrix:
 
@@ -37,13 +35,13 @@ You can also run one matrix entry at a time:
 
 .. code-block:: bash
 
-     ./bin/build --ruby 4.0.1
+     ./bin/build --ruby 3.4.8
 
 Optionally, provide a Puppet requirement constraint:
 
 .. code-block:: bash
 
-     ./bin/build --ruby 4.0.1 --puppet '>=8.0.0'
+     ./bin/build --ruby 3.4.8 --puppet '>=8.0.0'
 
 Usage
 -----
