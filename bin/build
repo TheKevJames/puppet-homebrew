@@ -31,26 +31,30 @@ run_job() {
         fi
         run_with_ruby "${ruby_version}" gem install -N puppet-lint "puppet:${puppet_requirement}"
         run_with_ruby "${ruby_version}" gem install -N pdk
-        run_with_ruby "${ruby_version}" puppet-lint manifests/init.pp
-        run_with_ruby "${ruby_version}" puppet-lint manifests/install.pp
-        run_with_ruby "${ruby_version}" puppet-lint manifests/compiler.pp
-        run_with_ruby "${ruby_version}" puppet parser validate --noop manifests/init.pp
-        run_with_ruby "${ruby_version}" puppet parser validate --noop manifests/install.pp
-        run_with_ruby "${ruby_version}" puppet parser validate --noop manifests/compiler.pp
-        run_with_ruby "${ruby_version}" pdk build
+        local gem_bindir
+        gem_bindir="$(run_with_ruby "${ruby_version}" ruby -e 'require "rubygems"; print Gem.bindir')"
+        "${gem_bindir}/puppet-lint" manifests/init.pp
+        "${gem_bindir}/puppet-lint" manifests/install.pp
+        "${gem_bindir}/puppet-lint" manifests/compiler.pp
+        "${gem_bindir}/puppet" parser validate --noop manifests/init.pp
+        "${gem_bindir}/puppet" parser validate --noop manifests/install.pp
+        "${gem_bindir}/puppet" parser validate --noop manifests/compiler.pp
+        "${gem_bindir}/pdk" build
         return 0
     fi
 
     echo "==> ruby=$(ruby -e 'print RUBY_VERSION') puppet=${puppet_requirement}"
     gem install -N puppet-lint "puppet:${puppet_requirement}"
     gem install -N pdk
-    puppet-lint manifests/init.pp
-    puppet-lint manifests/install.pp
-    puppet-lint manifests/compiler.pp
-    puppet parser validate --noop manifests/init.pp
-    puppet parser validate --noop manifests/install.pp
-    puppet parser validate --noop manifests/compiler.pp
-    pdk build
+    local gem_bindir
+    gem_bindir="$(ruby -e 'require "rubygems"; print Gem.bindir')"
+    "${gem_bindir}/puppet-lint" manifests/init.pp
+    "${gem_bindir}/puppet-lint" manifests/install.pp
+    "${gem_bindir}/puppet-lint" manifests/compiler.pp
+    "${gem_bindir}/puppet" parser validate --noop manifests/init.pp
+    "${gem_bindir}/puppet" parser validate --noop manifests/install.pp
+    "${gem_bindir}/puppet" parser validate --noop manifests/compiler.pp
+    "${gem_bindir}/pdk" build
 }
 
 cd "$(dirname "$0")/.."
