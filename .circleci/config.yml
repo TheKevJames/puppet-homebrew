@@ -16,8 +16,6 @@ jobs:
     environment:
       STRICT_VARIABLES: "yes"
     parameters:
-      pdk:
-        type: boolean
       puppet_version:
         type: string
       ruby_version:
@@ -25,24 +23,14 @@ jobs:
     steps:
       - checkout
       - run: gem install -N puppet-lint "puppet:<< parameters.puppet_version >>"
-      - when:
-          condition: << parameters.pdk >>
-          steps:
-            - run: gem install -N pdk
+      - run: gem install -N pdk
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
       - run: puppet parser validate --noop manifests/init.pp
       - run: puppet parser validate --noop manifests/install.pp
       - run: puppet parser validate --noop manifests/compiler.pp
-      - when:
-          condition: << parameters.pdk >>
-          steps:
-            - run: pdk build
-      - unless:
-          condition: << parameters.pdk >>
-          steps:
-            - run: puppet module build
+      - run: pdk build
       - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test
       - store_artifacts:
@@ -55,21 +43,11 @@ workflows:
           executor: python
       - test:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          pdk: false
           matrix:
             parameters:
               puppet_version:
                 - '<5.0.0'
                 - '<6.0.0'
-              ruby_version:
-                - '3.4.8'
-                - '4.0.1'
-      - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          pdk: true
-          matrix:
-            parameters:
-              puppet_version:
                 - '<7.0.0'
               ruby_version:
                 - '3.4.8'

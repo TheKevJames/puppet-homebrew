@@ -3,7 +3,7 @@ set -euo pipefail
 
 usage() {
     cat <<'EOF'
-Usage: ./bin/test-matrix [--ruby VERSION --puppet REQUIREMENT --pdk true|false]
+Usage: ./bin/test-matrix [--ruby VERSION --puppet REQUIREMENT]
 
 Without options, runs the full local matrix.
 With options, runs only one matrix entry.
@@ -13,9 +13,8 @@ EOF
 run_job() {
     local ruby_version="$1"
     local puppet_requirement="$2"
-    local use_pdk="$3"
 
-    echo "==> ruby=${ruby_version} puppet=${puppet_requirement} pdk=${use_pdk}"
+    echo "==> ruby=${ruby_version} puppet=${puppet_requirement}"
 
     if ! RBENV_VERSION="${ruby_version}" rbenv exec ruby -v >/dev/null 2>&1; then
         echo "Missing Ruby ${ruby_version}. Install it with: rbenv install ${ruby_version}" >&2
@@ -23,10 +22,7 @@ run_job() {
     fi
 
     RBENV_VERSION="${ruby_version}" rbenv exec gem install -N puppet-lint "puppet:${puppet_requirement}"
-
-    if [ "${use_pdk}" = "true" ]; then
-        RBENV_VERSION="${ruby_version}" rbenv exec gem install -N pdk
-    fi
+    RBENV_VERSION="${ruby_version}" rbenv exec gem install -N pdk
 
     RBENV_VERSION="${ruby_version}" rbenv exec puppet-lint manifests/init.pp
     RBENV_VERSION="${ruby_version}" rbenv exec puppet-lint manifests/install.pp
@@ -36,11 +32,7 @@ run_job() {
     RBENV_VERSION="${ruby_version}" rbenv exec puppet parser validate --noop manifests/install.pp
     RBENV_VERSION="${ruby_version}" rbenv exec puppet parser validate --noop manifests/compiler.pp
 
-    if [ "${use_pdk}" = "true" ]; then
-        RBENV_VERSION="${ruby_version}" rbenv exec pdk build
-    else
-        RBENV_VERSION="${ruby_version}" rbenv exec puppet module build
-    fi
+    RBENV_VERSION="${ruby_version}" rbenv exec pdk build
 }
 
 if ! command -v rbenv >/dev/null 2>&1; then
@@ -52,16 +44,16 @@ cd "$(dirname "$0")/.."
 
 if [ "$#" -eq 0 ]; then
     for ruby_version in '3.4.8' '4.0.1'; do
-        run_job "${ruby_version}" '<5.0.0' false
-        run_job "${ruby_version}" '<6.0.0' false
-        run_job "${ruby_version}" '<7.0.0' true
+        run_job "${ruby_version}" '<5.0.0'
+        run_job "${ruby_version}" '<6.0.0'
+        run_job "${ruby_version}" '<7.0.0'
     done
     exit 0
 fi
 
-if [ "$#" -ne 6 ] || [ "$1" != "--ruby" ] || [ "$3" != "--puppet" ] || [ "$5" != "--pdk" ]; then
+if [ "$#" -ne 4 ] || [ "$1" != "--ruby" ] || [ "$3" != "--puppet" ]; then
     usage
     exit 1
 fi
 
-run_job "$2" "$4" "$6"
+run_job "$2" "$4"
