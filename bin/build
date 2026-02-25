@@ -5,11 +5,11 @@ usage() {
     cat <<'EOF'
 Usage:
   ./bin/build
-  ./bin/build --ruby VERSION --puppet REQUIREMENT
-  ./bin/build --puppet REQUIREMENT
+  ./bin/build --ruby VERSION [--puppet REQUIREMENT]
+  ./bin/build [--puppet REQUIREMENT]
 
 No arguments runs the full local matrix with rbenv.
---puppet only uses the currently active Ruby (CI-friendly mode).
+When --puppet is omitted, the latest supported Puppet version is installed.
 EOF
 }
 
@@ -20,7 +20,7 @@ run_with_ruby() {
 }
 
 run_job() {
-    local puppet_requirement="$1"
+    local puppet_requirement="${1:->=8.0.0}"
     local ruby_version="${2:-}"
 
     if [ -n "${ruby_version}" ]; then
@@ -29,8 +29,10 @@ run_job() {
             echo "Missing Ruby ${ruby_version}. Install it with: rbenv install ${ruby_version}" >&2
             return 1
         fi
+
         run_with_ruby "${ruby_version}" gem install -N puppet-lint "puppet:${puppet_requirement}"
         run_with_ruby "${ruby_version}" gem install -N pdk
+
         local gem_bindir
         gem_bindir="$(run_with_ruby "${ruby_version}" ruby -e 'require "rubygems"; print Gem.bindir')"
         "${gem_bindir}/puppet-lint" manifests/init.pp
@@ -44,8 +46,8 @@ run_job() {
     fi
 
     echo "==> ruby=$(ruby -e 'print RUBY_VERSION') puppet=${puppet_requirement}"
-    gem install -N puppet-lint "puppet:${puppet_requirement}"
-    gem install -N pdk
+    gem install -N pdk puppet-lint "puppet:${puppet_requirement}"
+
     local gem_bindir
     gem_bindir="$(ruby -e 'require "rubygems"; print Gem.bindir')"
     "${gem_bindir}/puppet-lint" manifests/init.pp
@@ -64,25 +66,48 @@ if [ "$#" -eq 0 ]; then
         echo "rbenv is required for full local matrix runs." >&2
         exit 1
     fi
+
     for ruby_version in '3.4.8' '4.0.1'; do
-        run_job '<9.0.0' "${ruby_version}"
+        run_job '>=8.0.0' "${ruby_version}"
     done
     exit 0
 fi
 
-if [ "$#" -eq 2 ] && [ "$1" = "--puppet" ]; then
-    run_job "$2"
-    exit 0
-fi
+ruby_version=''
+puppet_requirement=''
 
-if [ "$#" -eq 4 ] && [ "$1" = "--ruby" ] && [ "$3" = "--puppet" ]; then
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        --ruby)
+            if [ "$#" -lt 2 ]; then
+                usage
+                exit 1
+            fi
+            ruby_version="$2"
+            shift 2
+            ;;
+        --puppet)
+            if [ "$#" -lt 2 ]; then
+                usage
+                exit 1
+            fi
+            puppet_requirement="$2"
+            shift 2
+            ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac
+done
+
+if [ -n "${ruby_version}" ]; then
     if ! command -v rbenv >/dev/null 2>&1; then
         echo "rbenv is required when --ruby is provided." >&2
         exit 1
     fi
-    run_job "$4" "$2"
+    run_job "${puppet_requirement}" "${ruby_version}"
     exit 0
 fi
 
-usage
-exit 1
+run_job "${puppet_requirement}"

@@ -37,7 +37,13 @@ You can also run one matrix entry at a time:
 
 .. code-block:: bash
 
-     ./bin/build --ruby 4.0.1 --puppet '<9.0.0'
+     ./bin/build --ruby 4.0.1
+
+Optionally, provide a Puppet requirement constraint:
+
+.. code-block:: bash
+
+     ./bin/build --ruby 4.0.1 --puppet '>=8.0.0'
 
 Usage
 -----
