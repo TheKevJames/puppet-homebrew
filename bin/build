@@ -4,52 +4,34 @@ set -euo pipefail
 usage() {
     cat <<'EOF'
 Usage:
-  ./bin/build
-  ./bin/build --ruby VERSION [--puppet REQUIREMENT]
   ./bin/build [--puppet REQUIREMENT]
 
-No arguments runs the full local matrix with rbenv.
-When --puppet is omitted, the latest supported Puppet version is installed.
+Uses the rbenv local Ruby version when rbenv is available.
+When rbenv is not available (for example in CI), uses the current ruby.
+When --puppet is omitted, installs Puppet >=8.0.0.
 EOF
 }
 
-run_with_ruby() {
-    local ruby_version="$1"
-    shift
-    RBENV_VERSION="${ruby_version}" rbenv exec "$@"
+run_cmd() {
+    if [ "${USE_RBENV}" = "true" ]; then
+        rbenv exec "$@"
+        return
+    fi
+    "$@"
 }
 
 run_job() {
-    local puppet_requirement="${1:->=8.0.0}"
-    local ruby_version="${2:-}"
-
-    if [ -n "${ruby_version}" ]; then
-        echo "==> ruby=${ruby_version} puppet=${puppet_requirement}"
-        if ! run_with_ruby "${ruby_version}" ruby -v >/dev/null 2>&1; then
-            echo "Missing Ruby ${ruby_version}. Install it with: rbenv install ${ruby_version}" >&2
-            return 1
-        fi
-
-        run_with_ruby "${ruby_version}" gem install -N puppet-lint "puppet:${puppet_requirement}"
-        run_with_ruby "${ruby_version}" gem install -N pdk
-
-        local gem_bindir
-        gem_bindir="$(run_with_ruby "${ruby_version}" ruby -e 'require "rubygems"; print Gem.bindir')"
-        "${gem_bindir}/puppet-lint" manifests/init.pp
-        "${gem_bindir}/puppet-lint" manifests/install.pp
-        "${gem_bindir}/puppet-lint" manifests/compiler.pp
-        "${gem_bindir}/puppet" parser validate --noop manifests/init.pp
-        "${gem_bindir}/puppet" parser validate --noop manifests/install.pp
-        "${gem_bindir}/puppet" parser validate --noop manifests/compiler.pp
-        "${gem_bindir}/pdk" build
-        return 0
-    fi
-
-    echo "==> ruby=$(ruby -e 'print RUBY_VERSION') puppet=${puppet_requirement}"
-    gem install -N pdk puppet-lint "puppet:${puppet_requirement}"
-
+    local puppet_requirement="$1"
+    local ruby_version
     local gem_bindir
-    gem_bindir="$(ruby -e 'require "rubygems"; print Gem.bindir')"
+
+    ruby_version="$(run_cmd ruby -e 'print RUBY_VERSION')"
+    echo "==> ruby=${ruby_version} puppet=${puppet_requirement}"
+
+    run_cmd gem install -N puppet-lint "puppet:${puppet_requirement}"
+    run_cmd gem install -N pdk
+
+    gem_bindir="$(run_cmd ruby -e 'require "rubygems"; print Gem.bindir')"
     "${gem_bindir}/puppet-lint" manifests/init.pp
     "${gem_bindir}/puppet-lint" manifests/install.pp
     "${gem_bindir}/puppet-lint" manifests/compiler.pp
@@ -61,51 +43,22 @@ run_job() {
 
 cd "$(dirname "$0")/.."
 
+USE_RBENV=false
+if command -v rbenv >/dev/null 2>&1; then
+    USE_RBENV=true
+fi
+
+puppet_requirement='>=8.0.0'
+
 if [ "$#" -eq 0 ]; then
-    if ! command -v rbenv >/dev/null 2>&1; then
-        echo "rbenv is required for full local matrix runs." >&2
-        exit 1
-    fi
-
-    run_job '>=8.0.0' '3.4.8'
+    run_job "${puppet_requirement}"
     exit 0
 fi
 
-ruby_version=''
-puppet_requirement=''
-
-while [ "$#" -gt 0 ]; do
-    case "$1" in
-        --ruby)
-            if [ "$#" -lt 2 ]; then
-                usage
-                exit 1
-            fi
-            ruby_version="$2"
-            shift 2
-            ;;
-        --puppet)
-            if [ "$#" -lt 2 ]; then
-                usage
-                exit 1
-            fi
-            puppet_requirement="$2"
-            shift 2
-            ;;
-        *)
-            usage
-            exit 1
-            ;;
-    esac
-done
-
-if [ -n "${ruby_version}" ]; then
-    if ! command -v rbenv >/dev/null 2>&1; then
-        echo "rbenv is required when --ruby is provided." >&2
-        exit 1
-    fi
-    run_job "${puppet_requirement}" "${ruby_version}"
+if [ "$#" -eq 2 ] && [ "$1" = "--puppet" ]; then
+    run_job "$2"
     exit 0
 fi
 
-run_job "${puppet_requirement}"
+usage
+exit 1

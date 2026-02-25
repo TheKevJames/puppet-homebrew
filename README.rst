@@ -15,33 +15,25 @@ puppet-homebrew is available on the `Puppet Forge`_.
 Development
 -----------
 
-This repository uses `rbenv`_ for local Ruby version management when running
-the CI-style test matrix. Ruby 4.x is intentionally unsupported because current
-Puppet 8 dependencies are not compatible with Ruby 4.x.
+This repository uses `rbenv`_ for local Ruby version management. If rbenv is
+installed, ``./bin/build`` uses the ``rbenv local`` Ruby version from
+``.ruby-version``. If rbenv is not available (for example in CI), it uses the
+current ``ruby`` on ``PATH``.
 
-1. Install rbenv and the Rubies used by CI:
+Ruby 4.x is intentionally unsupported because current Puppet 8 dependencies are
+not compatible with Ruby 4.x.
 
-.. code-block:: bash
-
-    rbenv install 3.4.8
-
-2. Run the local matrix:
+Run the build and validation steps:
 
 .. code-block:: bash
 
     ./bin/build
 
-You can also run one matrix entry at a time:
-
-.. code-block:: bash
-
-     ./bin/build --ruby 3.4.8
-
 Optionally, provide a Puppet requirement constraint:
 
 .. code-block:: bash
 
-     ./bin/build --ruby 3.4.8 --puppet '>=8.0.0'
+    ./bin/build --puppet '>=8.0.0'
 
 Usage
 -----
