@@ -12,29 +12,6 @@ puppet-homebrew is available on the `Puppet Forge`_.
 
     As of v2+ of this project, development is AI-assisted.
 
-Development
------------
-
-This repository uses `rbenv`_ for local Ruby version management. If rbenv is
-installed, ``./bin/build`` uses the ``rbenv local`` Ruby version from
-``.ruby-version``. If rbenv is not available (for example in CI), it uses the
-current ``ruby`` on ``PATH``.
-
-Ruby 4.x is intentionally unsupported because current Puppet 8 dependencies are
-not compatible with Ruby 4.x.
-
-Run the build and validation steps:
-
-.. code-block:: bash
-
-    ./bin/build
-
-Optionally, provide a Puppet requirement constraint:
-
-.. code-block:: bash
-
-    ./bin/build --puppet '>=8.0.0'
-
 Usage
 -----
 
@@ -178,6 +155,45 @@ To enable this feature, you can include:
     }
 
 Here's a link to `create a personal access token`_ for Github.
+
+Installing Casks with Elevated Permission Requirements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sometimes, casks require elevated permissions at installation time. Handling
+the proper elevated permissions is currently out of scope of this module, but
+if you trust your homebrew operations enough you can grant your puppet user
+permissions to use sudo without requiring your password by adding the relevant
+lines in ``/etc/sudoers.d/homebrew`` or similar, along the lines of the
+following:
+
+.. code-block::
+
+    puppet ALL=(root) NOPASSWD:SETENV: /usr/bin/env
+
+See #116 for more information.
+
+Development
+-----------
+
+This repository uses `rbenv`_ for local Ruby version management. If rbenv is
+installed, ``./bin/build`` uses the ``rbenv local`` Ruby version from
+``.ruby-version``. If rbenv is not available (for example in CI), it uses the
+current ``ruby`` on ``PATH``.
+
+Ruby 4.x is intentionally unsupported because current Puppet 8 dependencies are
+not compatible with Ruby 4.x.
+
+Run the build and validation steps:
+
+.. code-block:: bash
+
+    ./bin/build
+
+Optionally, provide a Puppet requirement constraint:
+
+.. code-block:: bash
+
+    ./bin/build --puppet '>=8.0.0'
 
 Original Author
 ---------------
