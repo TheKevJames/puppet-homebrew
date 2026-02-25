@@ -22,15 +22,7 @@ jobs:
         type: string
     steps:
       - checkout
-      - run: gem install -N puppet-lint "puppet:<< parameters.puppet_version >>"
-      - run: gem install -N pdk
-      - run: puppet-lint manifests/init.pp
-      - run: puppet-lint manifests/install.pp
-      - run: puppet-lint manifests/compiler.pp
-      - run: puppet parser validate --noop manifests/init.pp
-      - run: puppet parser validate --noop manifests/install.pp
-      - run: puppet parser validate --noop manifests/compiler.pp
-      - run: pdk build
+      - run: ./bin/build --puppet "<< parameters.puppet_version >>"
       - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test
       - store_artifacts:
@@ -42,7 +34,7 @@ workflows:
       - linter/pre-commit:
           executor: python
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          name: test-ruby<< matrix.ruby_version >>-pup<< matrix.puppet_version >>
           matrix:
             parameters:
               puppet_version:

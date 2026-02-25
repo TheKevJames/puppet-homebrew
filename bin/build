@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+Usage:
+  ./bin/build
+  ./bin/build --ruby VERSION --puppet REQUIREMENT
+  ./bin/build --puppet REQUIREMENT
+
+No arguments runs the full local matrix with rbenv.
+--puppet only uses the currently active Ruby (CI-friendly mode).
+EOF
+}
+
+run_with_ruby() {
+    local ruby_version="$1"
+    shift
+    RBENV_VERSION="${ruby_version}" rbenv exec "$@"
+}
+
+run_job() {
+    local puppet_requirement="$1"
+    local ruby_version="${2:-}"
+
+    if [ -n "${ruby_version}" ]; then
+        echo "==> ruby=${ruby_version} puppet=${puppet_requirement}"
+        if ! run_with_ruby "${ruby_version}" ruby -v >/dev/null 2>&1; then
+            echo "Missing Ruby ${ruby_version}. Install it with: rbenv install ${ruby_version}" >&2
+            return 1
+        fi
+        run_with_ruby "${ruby_version}" gem install -N puppet-lint "puppet:${puppet_requirement}"
+        run_with_ruby "${ruby_version}" gem install -N pdk
+        run_with_ruby "${ruby_version}" puppet-lint manifests/init.pp
+        run_with_ruby "${ruby_version}" puppet-lint manifests/install.pp
+        run_with_ruby "${ruby_version}" puppet-lint manifests/compiler.pp
+        run_with_ruby "${ruby_version}" puppet parser validate --noop manifests/init.pp
+        run_with_ruby "${ruby_version}" puppet parser validate --noop manifests/install.pp
+        run_with_ruby "${ruby_version}" puppet parser validate --noop manifests/compiler.pp
+        run_with_ruby "${ruby_version}" pdk build
+        return 0
+    fi
+
+    echo "==> ruby=$(ruby -e 'print RUBY_VERSION') puppet=${puppet_requirement}"
+    gem install -N puppet-lint "puppet:${puppet_requirement}"
+    gem install -N pdk
+    puppet-lint manifests/init.pp
+    puppet-lint manifests/install.pp
+    puppet-lint manifests/compiler.pp
+    puppet parser validate --noop manifests/init.pp
+    puppet parser validate --noop manifests/install.pp
+    puppet parser validate --noop manifests/compiler.pp
+    pdk build
+}
+
+cd "$(dirname "$0")/.."
+
+if [ "$#" -eq 0 ]; then
+    if ! command -v rbenv >/dev/null 2>&1; then
+        echo "rbenv is required for full local matrix runs." >&2
+        exit 1
+    fi
+    for ruby_version in '3.4.8' '4.0.1'; do
+        run_job '<5.0.0' "${ruby_version}"
+        run_job '<6.0.0' "${ruby_version}"
+        run_job '<7.0.0' "${ruby_version}"
+    done
+    exit 0
+fi
+
+if [ "$#" -eq 2 ] && [ "$1" = "--puppet" ]; then
+    run_job "$2"
+    exit 0
+fi
+
+if [ "$#" -eq 4 ] && [ "$1" = "--ruby" ] && [ "$3" = "--puppet" ]; then
+    if ! command -v rbenv >/dev/null 2>&1; then
+        echo "rbenv is required when --ruby is provided." >&2
+        exit 1
+    fi
+    run_job "$4" "$2"
+    exit 0
+fi
+
+usage
+exit 1

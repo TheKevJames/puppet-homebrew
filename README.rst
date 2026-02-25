@@ -31,13 +31,13 @@ the CI-style test matrix.
 
 .. code-block:: bash
 
-    ./bin/test-matrix
+    ./bin/build
 
 You can also run one matrix entry at a time:
 
 .. code-block:: bash
 
-     ./bin/test-matrix --ruby 4.0.1 --puppet '<7.0.0'
+     ./bin/build --ruby 4.0.1 --puppet '<7.0.0'
 
 Usage
 -----
