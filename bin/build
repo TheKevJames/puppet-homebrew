@@ -38,7 +38,7 @@ run_job() {
     "${gem_bindir}/puppet" parser validate --noop manifests/init.pp
     "${gem_bindir}/puppet" parser validate --noop manifests/install.pp
     "${gem_bindir}/puppet" parser validate --noop manifests/compiler.pp
-    "${gem_bindir}/pdk" build
+    "${gem_bindir}/pdk" build --force
 }
 
 cd "$(dirname "$0")/.."
