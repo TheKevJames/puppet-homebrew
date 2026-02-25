@@ -3,4 +3,11 @@
         "github>thekevjames/tools:personal",
         "github>thekevjames/tools//renovate/version-as-lib.json5",
     ],
+    "packageRules": [
+        {
+            // TODO: bump this once facter/etc supports v4+
+            "matchDepNames": ["ruby"],
+            "allowedVersions": "< 4.0.0",
+        },
+    ],
 }
