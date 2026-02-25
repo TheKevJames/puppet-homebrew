@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## 2.0.0 (2026-02-25)
+Full re-write and update to support Puppet v8!
+
+As of this version, heavy AI assistance is used to develop the module, since I
+no longer use Puppet to manage my homebrew myself. With this release, we
+upgrade everything to the latest requirements:
+
+- Puppet v8+
+- Ruby v3+
+
+This release also includes a litany of fixes:
+
+- Updated all code to support the new requirements (eg. Puppet v8, Ruby v3,
+  recent OSX versions, etc)
+- Support for Apple Silicon / arm64 machines
+- Fix running puppet in daemonless mode from non-writeable folders
+- Fixed support for oddly named user groups
+- Avoid creating unnecessary manpage folders
+
+And a bunch of internal changes:
+
+- Better handling of dependabot, renovate, pre-commit, etc
+- rbenv support for proper (local) testing of varying Ruby versions
+
 ## 1.9.1 (2021-09-23)
 - internal: fixup overly-narrow stdlib version pin
 
