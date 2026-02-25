@@ -4,6 +4,10 @@ orbs:
   linter: talkiq/linter@4
 
 executors:
+  ruby:
+    docker:
+      - image: ruby:3.4.8
+    resource_class: medium
   python:
     docker:
       - image: python:3.13.0
@@ -11,38 +15,15 @@ executors:
 
 jobs:
   test:
-    docker:
-      - image: ruby:<< parameters.ruby_version >>
+    executor: ruby
     environment:
       STRICT_VARIABLES: "yes"
     parameters:
-      pdk:
-        type: boolean
-      puppet_version:
-        type: string
-      ruby_version:
+      version:
         type: string
     steps:
       - checkout
-      - run: gem install -N puppet-lint "puppet:<< parameters.puppet_version >>"
-      - when:
-          condition: << parameters.pdk >>
-          steps:
-            - run: gem install -N pdk
-      - run: puppet-lint manifests/init.pp
-      - run: puppet-lint manifests/install.pp
-      - run: puppet-lint manifests/compiler.pp
-      - run: puppet parser validate --noop manifests/init.pp
-      - run: puppet parser validate --noop manifests/install.pp
-      - run: puppet parser validate --noop manifests/compiler.pp
-      - when:
-          condition: << parameters.pdk >>
-          steps:
-            - run: pdk build
-      - unless:
-          condition: << parameters.pdk >>
-          steps:
-            - run: puppet module build
+      - run: ./bin/build --puppet "<< parameters.version >>"
       - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test
       - store_artifacts:
@@ -54,27 +35,5 @@ workflows:
       - linter/pre-commit:
           executor: python
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          pdk: false
-          matrix:
-            parameters:
-              puppet_version:
-                - '<5.0.0'
-                - '<6.0.0'
-              ruby_version:
-                - '2.2.10'
-                - '2.3.8'
-                - '2.4.10'
-                - '2.5.9'
-                - '2.6.7'
-      - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          pdk: true
-          matrix:
-            parameters:
-              puppet_version:
-                - '<7.0.0'
-              ruby_version:
-                - '2.5.9'
-                - '2.6.7'
-                - '2.7.3'
+          # renovate: datasource=rubygems depName=puppet
+          version: 8.10.0

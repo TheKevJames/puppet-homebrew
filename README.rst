@@ -5,11 +5,35 @@ A Puppet Module to install Homebrew and manage Homebrew packages on Mac OSX.
 This module can install using either homebrew or brewcask, along with a
 fallback mode which attempts both.
 
-This module supports Puppet version 4 and greater running on Ruby version 1.8.3
-and greater. Note that versions of Ruby from 2.0.x to 2.2.x may no longer be
-supported by Homebrew. For Puppet 3 support, please pin to version 1.7.1.
-
+This module supports Puppet version 8 and greater running on Ruby v3.x (>=3.2).
 puppet-homebrew is available on the `Puppet Forge`_.
+
+.. warning::
+
+    As of v2+ of this project, development is AI-assisted.
+
+Development
+-----------
+
+This repository uses `rbenv`_ for local Ruby version management. If rbenv is
+installed, ``./bin/build`` uses the ``rbenv local`` Ruby version from
+``.ruby-version``. If rbenv is not available (for example in CI), it uses the
+current ``ruby`` on ``PATH``.
+
+Ruby 4.x is intentionally unsupported because current Puppet 8 dependencies are
+not compatible with Ruby 4.x.
+
+Run the build and validation steps:
+
+.. code-block:: bash
+
+    ./bin/build
+
+Optionally, provide a Puppet requirement constraint:
+
+.. code-block:: bash
+
+    ./bin/build --puppet '>=8.0.0'
 
 Usage
 -----
@@ -167,4 +191,5 @@ Credit for logic involved in tapping repositories goes to `gildas`_.
 .. _gildas: https://github.com/gildas/puppet-homebrew
 .. _kelseyhightower: https://github.com/kelseyhightower
 .. _Puppet Forge: https://forge.puppetlabs.com/thekevjames/homebrew
+.. _rbenv: https://github.com/rbenv/rbenv
 .. _Resource Collectors: https://docs.puppet.com/puppet/latest/reference/lang_collectors.html

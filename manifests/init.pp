@@ -1,33 +1,35 @@
 class homebrew (
-  $user,
-  $command_line_tools_package = undef,
-  $command_line_tools_source  = undef,
-  $github_token               = undef,
-  $group                      = 'admin',
-  $multiuser                  = false,
+  String[1] $user,
+  Optional[String[1]] $command_line_tools_package = undef,
+  Optional[String[1]] $command_line_tools_source  = undef,
+  Optional[String[1]] $github_token               = undef,
+  String[1] $group                                = 'admin',
+  Boolean $multiuser                              = false,
 ) {
 
-  if $::operatingsystem != 'Darwin' {
-    fail('This Module works on Mac OSX only!')
+  if $facts['os']['name'] != 'Darwin' {
+    fail('This module works on macOS only.')
   }
 
-  if $homebrew::user == 'root' {
+  if $user == 'root' {
     fail('Homebrew does not support installation as the "root" user.')
   }
 
-  class { '::homebrew::compiler': }
-  -> class { '::homebrew::install': }
+  contain 'homebrew::compiler'
+  contain 'homebrew::install'
 
-  contain '::homebrew::compiler'
-  contain '::homebrew::install'
+  Class['homebrew::compiler']
+    -> Class['homebrew::install']
 
-  if $homebrew::github_token {
-    file { '/etc/environment': ensure => present }
-    -> file_line { 'homebrew-github-api-token':
+  if $github_token {
+    file { '/etc/environment':
+      ensure => file,
+    }
+
+    file_line { 'homebrew-github-api-token':
       path  => '/etc/environment',
-      line  => "HOMEBREW_GITHUB_API_TOKEN=${homebrew::github_token}",
+      line  => "HOMEBREW_GITHUB_API_TOKEN=${github_token}",
       match => '^HOMEBREW_GITHUB_API_TOKEN',
     }
   }
-
 }

@@ -13,14 +13,14 @@
 #   None
 
 Facter.add(:has_compiler) do
-  confine :operatingsystem => 'Darwin'
+  confine kernel: 'Darwin'
+
   setcode do
-    # /usr/bin/cc exists in Mavericks, but it's not real
-    if Gem::Version.new(Facter.value(:macosx_productversion_major)) >= Gem::Version.new('10.9')
-      (File.exists?('/Applications/Xcode.app') or File.exists?('/Library/Developer/CommandLineTools/')) and
-          (File.exists?('/usr/bin/cc') or system('/usr/bin/xcrun -find cc >/dev/null 2>&1'))
-    else
-      File.exists?('/usr/bin/cc') or system('/usr/bin/xcrun -find cc >/dev/null 2>&1')
-    end
+    has_xcode = File.exist?('/Applications/Xcode.app') ||
+      File.exist?('/Library/Developer/CommandLineTools/')
+    has_cc = File.exist?('/usr/bin/cc') ||
+      system('/usr/bin/xcrun -find cc >/dev/null 2>&1')
+
+    has_xcode && has_cc
   end
 end
