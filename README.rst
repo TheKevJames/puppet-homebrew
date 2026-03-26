@@ -120,7 +120,18 @@ multi-user flag, eg.:
       multiuser => true,
     }
 
-To install homebrew and a compiler (on Lion or later), eg.:
+If no compiler is detected, this module will automatically install the Xcode
+Command Line Tools via ``softwareupdate``. No additional configuration is
+required:
+
+.. code-block:: puppet
+
+    class { 'homebrew':
+      user => 'kevin',
+    }
+
+Alternatively, you can install the Command Line Tools from a DMG by providing
+both a package name and source URL:
 
 .. code-block:: puppet
 
@@ -129,11 +140,6 @@ To install homebrew and a compiler (on Lion or later), eg.:
       command_line_tools_package => 'command_line_tools_for_xcode_os_x_lion_april_2013.dmg',
       command_line_tools_source  => 'http://devimages.apple.com/downloads/xcode/command_line_tools_for_xcode_os_x_lion_april_2013.dmg',
     }
-
-N.B. the author of this module does not maintain a mirror to command_line_tools.
-You may need to search for a copy if you use this method. At the time of this
-writing, downloading the command line tools sometimes requires an Apple ID.
-Sorry, dude!
 
 Adding a Github Token
 ~~~~~~~~~~~~~~~~~~~~~
