@@ -32,7 +32,40 @@ module Puppet
             end || '/tmp'
           end
 
-          def execute(cmd, failonfail = false, combine = false)
+          def brew_shellenv(owner, home)
+            return @brew_shellenv if defined?(@brew_shellenv)
+
+            begin
+              uid, gid = if Process.uid.zero?
+                           [owner, stat('-nf', '%Ug', brewbin).to_i]
+                         else
+                           [nil, nil]
+                         end
+
+              output = with_unbundled_env do
+                super([brewbin, 'shellenv'],
+                      uid: uid,
+                      gid: gid,
+                      cwd: execution_cwd(home),
+                      combine: false,
+                      custom_environment: { 'HOME' => home },
+                      failonfail: true)
+              end
+
+              env = {}
+              output.each_line do |line|
+                if line =~ /export\s+(\w+)=["']?([^"']*)["']?;?$/
+                  env[Regexp.last_match(1)] = Regexp.last_match(2)
+                end
+              end
+              @brew_shellenv = env
+            rescue Puppet::ExecutionFailure => e
+              Puppet.debug("Failed to run brew shellenv: #{e.message}; falling back to minimal environment")
+              @brew_shellenv = {}
+            end
+          end
+
+          def execute(cmd, failonfail: false, combine: true)
             owner = stat('-nf', '%Uu', brewbin).to_i
             group = stat('-nf', '%Ug', brewbin).to_i
             home = Etc.getpwuid(owner).dir
@@ -48,20 +81,22 @@ module Puppet
                          [nil, nil]
                        end
 
+            env = { 'HOME' => home }.merge(brew_shellenv(owner, home))
+
             with_unbundled_env do
               super(cmd,
                     uid: uid,
                     gid: gid,
                     cwd: execution_cwd(home),
                     combine: combine,
-                    custom_environment: { 'HOME' => home },
+                    custom_environment: env,
                     failonfail: failonfail)
             end
           end
         end
 
-        def execute(*args)
-          self.class.execute(*args)
+        def execute(*args, **kwargs)
+          self.class.execute(*args, **kwargs)
         end
 
         def install_options

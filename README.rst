@@ -96,18 +96,25 @@ To install homebrew on a node (with a compiler already present!):
     }
 
 Installing homebrew as the root user is no longer supported (as of late 2016).
-Please ensure you install brew as a standard (non-root) user.
+The ``homebrew::user`` must always be a non-root user (generally, the system's
+main user account).
 
-Note that some users have reported confusion between the *puppet* user and the
-*homebrew* user -- it is perfectly fine to run puppet as root, in fact this is
-encouraged, but the homebrew user must be non-root (generally, the system's main
-user account).
+This module supports two configurations:
 
-If you run puppet as a non-root user and set the ``homebrew::user`` to a
-*different* non-root user, you may run into issues; namely, since this module
-requires the puppet user act as the homebrew user, you may get a password
-prompt on each run. This can be fixed by allowing the puppet user passwordless
-sudo privileges to the homebrew user.
+1. **Puppet running as root** (recommended): Set ``homebrew::user`` to the
+   desired non-root user. Puppet will use ``su`` to run the homebrew installer
+   and will manage directory ownership and permissions on behalf of that user.
+
+2. **Puppet running as the homebrew user**: Set ``homebrew::user`` to the same
+   user that is running puppet. Puppet will run the homebrew installer directly
+   and skip directory ownership management (the homebrew installer handles this
+   itself).
+
+.. warning::
+
+    Running puppet as non-root user X with ``homebrew::user`` set to a
+    different user Y is **unsupported** and will produce an explicit error.
+    Either run puppet as root or as the homebrew user directly.
 
 If you are looking for a multi-user installation, please be sure to set the
 multi-user flag, eg.:

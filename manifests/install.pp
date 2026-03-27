@@ -23,35 +23,45 @@ class homebrew::install {
     "${brew_root}/var",
   ]
 
-  $brew_sys_folders.each |String $brew_sys_folder| {
-    unless defined(File[$brew_sys_folder]) {
-      file { $brew_sys_folder:
-        ensure => directory,
-        owner  => $homebrew::user,
-        group  => $homebrew::group,
+  if $facts['identity']['privileged'] {
+    $brew_sys_folders.each |String $brew_sys_folder| {
+      unless defined(File[$brew_sys_folder]) {
+        file { $brew_sys_folder:
+          ensure => directory,
+          owner  => $homebrew::user,
+          group  => $homebrew::group,
+        }
       }
     }
-  }
 
-  $brew_sys_chmod_folders = [
-    "${brew_root}/bin",
-    "${brew_root}/include",
-    "${brew_root}/lib",
-    "${brew_root}/etc",
-    "${brew_root}/Frameworks",
-    "${brew_root}/var",
-  ]
+    $brew_sys_chmod_folders = [
+      "${brew_root}/bin",
+      "${brew_root}/include",
+      "${brew_root}/lib",
+      "${brew_root}/etc",
+      "${brew_root}/Frameworks",
+      "${brew_root}/var",
+    ]
 
-  $brew_sys_chmod_folders.each |String $brew_sys_chmod_folder| {
-    exec { "brew-chmod-sys-${brew_sys_chmod_folder}":
-      command => "/bin/chmod -R 775 ${brew_sys_chmod_folder}",
-      unless  => "/usr/bin/stat -f '%OLp' ${brew_sys_chmod_folder} | /usr/bin/grep -w '775'",
-      notify  => Exec["set-${brew_sys_chmod_folder}-directory-inherit"],
+    $brew_sys_chmod_folders.each |String $brew_sys_chmod_folder| {
+      exec { "brew-chmod-sys-${brew_sys_chmod_folder}":
+        command => "/bin/chmod -R 775 ${brew_sys_chmod_folder}",
+        unless  => "/usr/bin/stat -f '%OLp' ${brew_sys_chmod_folder} | /usr/bin/grep -w '775'",
+        notify  => Exec["set-${brew_sys_chmod_folder}-directory-inherit"],
+      }
+
+      exec { "set-${brew_sys_chmod_folder}-directory-inherit":
+        command     => "/bin/chmod -R +a 'group:${homebrew::group}:allow list,add_file,search,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,readsecurity,file_inherit,directory_inherit' ${brew_sys_chmod_folder}", # lint:ignore:140chars
+        refreshonly => true,
+      }
     }
-
-    exec { "set-${brew_sys_chmod_folder}-directory-inherit":
-      command     => "/bin/chmod -R +a 'group:${homebrew::group}:allow list,add_file,search,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,readsecurity,file_inherit,directory_inherit' ${brew_sys_chmod_folder}", # lint:ignore:140chars
-      refreshonly => true,
+  } else {
+    $brew_sys_folders.each |String $brew_sys_folder| {
+      unless defined(File[$brew_sys_folder]) {
+        file { $brew_sys_folder:
+          ensure => directory,
+        }
+      }
     }
   }
 
@@ -69,29 +79,35 @@ class homebrew::install {
     ],
   )
 
-  file { $brew_folders:
-    ensure => directory,
-    owner  => $homebrew::user,
-    group  => $homebrew::group,
-  }
+  if $facts['identity']['privileged'] {
+    file { $brew_folders:
+      ensure => directory,
+      owner  => $homebrew::user,
+      group  => $homebrew::group,
+    }
 
-  if $homebrew::multiuser {
-    $brew_folders.each |String $brew_folder| {
-      exec { "chmod-${brew_folder}":
-        command => "/bin/chmod -R 775 ${brew_folder}",
-        unless  => "/usr/bin/stat -f '%OLp' '${brew_folder}' | /usr/bin/grep -w '775'",
-        notify  => Exec["set-${brew_folder}-directory-inherit"],
-      }
+    if $homebrew::multiuser {
+      $brew_folders.each |String $brew_folder| {
+        exec { "chmod-${brew_folder}":
+          command => "/bin/chmod -R 775 ${brew_folder}",
+          unless  => "/usr/bin/stat -f '%OLp' '${brew_folder}' | /usr/bin/grep -w '775'",
+          notify  => Exec["set-${brew_folder}-directory-inherit"],
+        }
 
-      exec { "chown-${brew_folder}":
-        command => "/usr/sbin/chown -R :${homebrew::group} ${brew_folder}",
-        unless  => "/usr/bin/stat -f '%Sg' '${brew_folder}' | /usr/bin/grep -w '${homebrew::group}'",
-      }
+        exec { "chown-${brew_folder}":
+          command => "/usr/sbin/chown -R :${homebrew::group} ${brew_folder}",
+          unless  => "/usr/bin/stat -f '%Sg' '${brew_folder}' | /usr/bin/grep -w '${homebrew::group}'",
+        }
 
-      exec { "set-${brew_folder}-directory-inherit":
-        command     => "/bin/chmod -R +a 'group:${homebrew::group}:allow list,add_file,search,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,readsecurity,file_inherit,directory_inherit' ${brew_folder}", # lint:ignore:140chars
-        refreshonly => true,
+        exec { "set-${brew_folder}-directory-inherit":
+          command     => "/bin/chmod -R +a 'group:${homebrew::group}:allow list,add_file,search,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,readsecurity,file_inherit,directory_inherit' ${brew_folder}", # lint:ignore:140chars
+          refreshonly => true,
+        }
       }
+    }
+  } else {
+    file { $brew_folders:
+      ensure => directory,
     }
   }
 
@@ -106,20 +122,37 @@ class homebrew::install {
     $homebrew_install_script,
   ], ' ')
 
-  exec { 'install-homebrew':
-    cwd       => '/tmp',
-    command   => "/usr/bin/su ${homebrew::user} -c '${homebrew_install_cmd}'",
-    creates   => "${brew_root}/bin/brew",
-    logoutput => on_failure,
-    timeout   => 0,
+  if $facts['identity']['privileged'] {
+    exec { 'install-homebrew':
+      cwd       => '/tmp',
+      command   => "/usr/bin/su ${homebrew::user} -c '${homebrew_install_cmd}'",
+      creates   => "${brew_root}/bin/brew",
+      logoutput => on_failure,
+      timeout   => 0,
+    }
+  } else {
+    exec { 'install-homebrew':
+      cwd       => '/tmp',
+      command   => $homebrew_install_cmd,
+      creates   => "${brew_root}/bin/brew",
+      logoutput => on_failure,
+      timeout   => 0,
+    }
   }
 
   if $link_bin {
-    file { "${brew_root}/bin/brew":
-      ensure => link,
-      target => "${inst_dir}/bin/brew",
-      owner  => $homebrew::user,
-      group  => $homebrew::group,
+    if $facts['identity']['privileged'] {
+      file { "${brew_root}/bin/brew":
+        ensure => link,
+        target => "${inst_dir}/bin/brew",
+        owner  => $homebrew::user,
+        group  => $homebrew::group,
+      }
+    } else {
+      file { "${brew_root}/bin/brew":
+        ensure => link,
+        target => "${inst_dir}/bin/brew",
+      }
     }
   }
 }

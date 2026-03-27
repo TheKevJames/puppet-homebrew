@@ -15,6 +15,10 @@ class homebrew (
     fail('Homebrew does not support installation as the "root" user.')
   }
 
+  if !$facts['identity']['privileged'] and $facts['identity']['user'] != $user {
+    fail("Puppet is running as non-root user \"${facts['identity']['user']}\" but homebrew::user is set to \"${user}\". Either run puppet as root or as the homebrew user \"${user}\" directly.") # lint:ignore:140chars
+  }
+
   contain 'homebrew::compiler'
   contain 'homebrew::install'
 
