@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.1.0 (2026-03-27)
+- feature: install cli tools via softwareupdate rather than requiring a DMG
+- fix: support root puppet execution
+
 ## 2.0.0 (2026-02-25)
 Full re-write and update to support Puppet v8!
 
