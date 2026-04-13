@@ -5,7 +5,7 @@ module Puppet
   class Provider
     class Package
       module HomebrewCommon
-        BREW_PATHS = ['/opt/homebrew/bin/brew', '/usr/local/bin/brew'].freeze
+        BREW_PATHS = ['/opt/homebrew/bin/brew', '/usr/local/bin/brew'].freeze unless defined?(BREW_PATHS)
 
         def self.included(base)
           base.extend(ClassMethods)
