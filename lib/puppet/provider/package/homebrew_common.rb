@@ -32,7 +32,7 @@ class HomebrewProvider < Puppet::Provider::Package
     env = {}
     begin
       output = execute(
-        [binary[:path], 'shellenv'],
+        [brew_binary_config[:path], 'shellenv'],
         combine: false,
         merge_brew_env: false,
         failonfail: true
@@ -72,6 +72,8 @@ class HomebrewProvider < Puppet::Provider::Package
     end
   end
 
+  # Shadow instance method with class method to prevent derived classes from skipping this class's
+  # implementation.
   def execute(*args, **kwargs)
     self.class.execute(*args, **kwargs)
   end
