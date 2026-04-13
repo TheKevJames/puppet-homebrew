@@ -43,13 +43,13 @@ module Puppet
                          end
 
               output = with_unbundled_env do
-                super([brewbin, 'shellenv'],
-                      uid: uid,
-                      gid: gid,
-                      cwd: execution_cwd(home),
-                      combine: false,
-                      custom_environment: { 'HOME' => home },
-                      failonfail: true)
+                Puppet::Util::Execution.execute([brewbin, 'shellenv'],
+                                                uid: uid,
+                                                gid: gid,
+                                                cwd: execution_cwd(home),
+                                                combine: false,
+                                                custom_environment: { 'HOME' => home },
+                                                failonfail: true)
               end
 
               env = {}
