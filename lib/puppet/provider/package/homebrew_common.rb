@@ -9,7 +9,7 @@ class HomebrewProvider < Puppet::Provider::Package
       if stat.executable_real?
         if stat.uid.zero?
           raise Puppet::ExecutionFailure,
-            "Homebrew does not support installations owned by the 'root' user. Please check the permissions of #{bin}"
+            "Homebrew does not support installations owned by the 'root' user. Please check the permissions of #{path}"
         end
         return @@brew_binary_config = { path: path, uid: stat.uid, gid: stat.gid, home: Etc.getpwuid(stat.uid).dir }
       end
