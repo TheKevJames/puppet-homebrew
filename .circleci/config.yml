@@ -10,7 +10,7 @@ executors:
     resource_class: medium
   python:
     docker:
-      - image: python:3.14.5
+      - image: python:3.14.6
     resource_class: medium
 
 jobs:
