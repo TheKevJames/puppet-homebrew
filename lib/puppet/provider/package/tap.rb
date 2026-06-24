@@ -1,19 +1,16 @@
 require 'puppet/provider/package'
 require 'puppet/provider/package/homebrew_common'
 
-Puppet::Type.type(:package).provide(:tap, parent: Puppet::Provider::Package) do
+Puppet::Type.type(:package).provide(:tap, parent: HomebrewProvider) do
   desc 'Tap management using HomeBrew on OSX'
 
   confine operatingsystem: :darwin
-
-  include Puppet::Provider::Package::HomebrewCommon
 
   has_feature :installable
   has_feature :uninstallable
   has_feature :install_options
 
-  commands brew: brewbin
-  commands stat: '/usr/bin/stat'
+  commands brew: brew_binary_config[:path]
 
   def install
     Puppet.debug("Tapping #{resource_name}")
