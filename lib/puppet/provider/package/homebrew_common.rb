@@ -4,8 +4,13 @@ require 'puppet/provider/package'
 class HomebrewProvider < Puppet::Provider::Package
   def self.brew_binary_config
     return @@brew_binary_config if defined?(@@brew_binary_config)
-    ['/opt/homebrew/bin/brew', '/usr/local/bin/brew'].each do |path|
-      stat = File.stat(path)
+    paths = ['/opt/homebrew/bin/brew', '/usr/local/bin/brew']
+    paths.each do |path|
+      begin
+        stat = File.stat(path)
+      rescue Errno::ENOENT
+        next
+      end
       if stat.executable_real?
         if stat.uid.zero?
           raise Puppet::ExecutionFailure,
@@ -15,7 +20,7 @@ class HomebrewProvider < Puppet::Provider::Package
       end
     end
     raise Puppet::ExecutionFailure,
-            "Could not find a Homebrew binary"
+            "Could not find a Homebrew binary in any of #{paths}"
   end
 
   def self.with_unbundled_env
