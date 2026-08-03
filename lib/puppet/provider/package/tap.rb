@@ -27,17 +27,13 @@ Puppet::Type.type(:package).provide(:tap, parent: HomebrewProvider) do
   end
 
   def query
-    Puppet.debug("Querying tap #{resource_name}")
-    output = execute([command(:brew), :tap])
-    output.each_line do |line|
-      line = line.chomp
-      next unless [resource_name, resource_name.gsub('homebrew-', '')].include?(line.downcase)
-
-      return { name: line, ensure: 'present', provider: 'tap' }
+    # Homebrew does (or did in supported older versions) alias tap names with a 'homebrew-' prefix, such that
+    # commands like 'brew tap foo/bar' would result 'brew tap' reporting *either* 'foo/bar' or 'foo/homebrew-bar'.
+    # This provider supports the same semantics:
+    self.class.instances.each do |inst|
+      normalized = inst.name.gsub(/^([^\/]+)\/(?:homebrew-)?(.+)/, "\1/\2")
+      return inst.properties if [inst.name, normalized].include?(resource_name)
     end
-  rescue Puppet::ExecutionFailure => detail
-    Puppet.err("Could not query tap: #{detail}")
-
     nil
   end
 
@@ -49,7 +45,7 @@ Puppet::Type.type(:package).provide(:tap, parent: HomebrewProvider) do
     output.each_line do |line|
       line = line.chomp
       next if line.empty?
-
+      Puppet.debug("Found tap #{line}")
       taps << new({ name: line, ensure: 'present', provider: 'tap' })
     end
     taps
