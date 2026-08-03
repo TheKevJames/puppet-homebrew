@@ -12,28 +12,26 @@ Puppet::Type.type(:package).provide(:homebrew, parent: HomebrewProvider) do
   has_feature :versionable
   has_feature :install_options
 
-  commands brew: brew_binary_config[:path]
-
   def self.instances
     package_list.map { |hash| new(hash) }
   end
 
   def latest
-    package = self.class.package_list(justme: resource_name)
+    package = self.class.package_list(resource_name)
     package[:ensure]
   end
 
   def query
-    self.class.package_list(justme: resource_name)
+    self.class.package_list(resource_name)
   end
 
   def install
     begin
       Puppet.debug("Looking for #{install_name} package on brew...")
-      execute([command(:brew), :info, install_name], failonfail: true)
+      brew(:info, install_name)
 
       Puppet.debug('Package found, installing...')
-      output = execute([command(:brew), :install, install_name, *install_options], failonfail: true)
+      output = brew(:install, install_name, *install_options)
 
       return unless output.match?(/sha256 checksum/)
 
@@ -49,10 +47,10 @@ Puppet::Type.type(:package).provide(:homebrew, parent: HomebrewProvider) do
   end
 
   def install_cask
-    execute([command(:brew), :info, '--cask', install_name], failonfail: true)
+    brew(:info, '--cask', install_name)
 
     Puppet.debug('Package found on brewcask, installing...')
-    output = execute([command(:brew), :install, '--cask', install_name, *install_options], failonfail: true)
+    output = brew(:install, '--cask', install_name, *install_options)
 
     return unless output.match?(/sha256 checksum/)
 
@@ -63,9 +61,9 @@ Puppet::Type.type(:package).provide(:homebrew, parent: HomebrewProvider) do
 
   def uninstall
     Puppet.debug("Uninstalling #{resource_name}")
-    execute([command(:brew), :uninstall, resource_name], failonfail: true)
+    brew(:uninstall, resource_name)
   rescue Puppet::ExecutionFailure
-    execute([command(:brew), :uninstall, '--cask', resource_name], failonfail: true)
+    brew(:uninstall, '--cask', resource_name)
   rescue Puppet::ExecutionFailure => detail
     raise Puppet::Error, "Could not uninstall package: #{detail}"
   end
@@ -75,23 +73,23 @@ Puppet::Type.type(:package).provide(:homebrew, parent: HomebrewProvider) do
     install
   end
 
-  def self.package_list(options = {})
-    Puppet.debug('Listing installed packages')
-
-    if options[:justme]
-      result = execute([command(:brew), :list, '--versions', options[:justme]])
-      unless result.include?(options[:justme])
-        result += execute([command(:brew), :list, '--cask', '--versions', options[:justme]])
+  def self.package_list(*args)
+    # TODO we should eagerly fetch cask and formula versions and error if a requested package occurs more than once.
+    # Be fail-soft if we're looking for a specific package, but fail hard if we're listing all of them (if that errors,
+    # something is wrong with Homebrew):
+    result = brew(:list, '--versions', *args, failonfail: args.size == 0, combine: false)
+    if args.size > 0
+      unless result.include?(args[0])
+        result += brew(:list, '--cask', '--versions', *args, failonfail: false, combine: false)
       end
-      Puppet.debug("Package #{options[:justme]} not installed") if result.empty?
+      Puppet.debug("Package #{args[0]} not installed") if result.empty?
       Puppet.debug("Found package #{result}") unless result.empty?
     else
-      result = execute([command(:brew), :list, '--versions'])
-      result += execute([command(:brew), :list, '--cask', '--versions'])
+      result += brew(:list, '--cask', '--versions', combine: false)
     end
 
     list = result.lines.map { |line| name_version_split(line) }
-    options[:justme] ? list.shift : list
+    args.size > 0 ? list.shift : list
   rescue Puppet::ExecutionFailure => detail
     raise Puppet::Error, "Could not list packages: #{detail}"
   end

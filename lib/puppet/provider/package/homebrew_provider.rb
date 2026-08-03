@@ -36,11 +36,10 @@ class HomebrewProvider < Puppet::Provider::Package
   def self.brew_shellenv
     env = {}
     begin
-      output = execute(
-        [brew_binary_config[:path], 'shellenv'],
+      output = brew(
+        :shellenv,
         combine: false,
         merge_brew_env: false,
-        failonfail: true
       )
 
       output.each_line do |line|
@@ -54,7 +53,7 @@ class HomebrewProvider < Puppet::Provider::Package
     env
   end
 
-  def self.execute(cmd, failonfail: false, combine: true, merge_brew_env: true)
+  def self.brew(cmd, *args, failonfail: true, combine: true, merge_brew_env: true)
     env = { 'HOME' => brew_binary_config[:home] }
 
     if merge_brew_env
@@ -62,7 +61,7 @@ class HomebrewProvider < Puppet::Provider::Package
     end
 
     with_unbundled_env do
-      super(cmd,
+      execute([brew_binary_config[:path], cmd, *args],
             uid: brew_binary_config[:uid],
             gid: brew_binary_config[:gid],
             # Dir.tmpdir doesn't work on MacOS because its parent isn't readable on MacOS, and Homebrew fails in that
@@ -79,8 +78,8 @@ class HomebrewProvider < Puppet::Provider::Package
 
   # Shadow instance method with class method to prevent derived classes from skipping this class's
   # implementation.
-  def execute(*args, **kwargs)
-    self.class.execute(*args, **kwargs)
+  def brew(*args, **kwargs)
+    self.class.brew(*args, **kwargs)
   end
 
   def install_options

@@ -10,18 +10,16 @@ Puppet::Type.type(:package).provide(:tap, parent: HomebrewProvider) do
   has_feature :uninstallable
   has_feature :install_options
 
-  commands brew: brew_binary_config[:path]
-
   def install
     Puppet.debug("Tapping #{resource_name}")
-    execute([command(:brew), :tap, resource_name, *install_options], failonfail: true)
+    brew(:tap, resource_name, *install_options)
   rescue Puppet::ExecutionFailure => detail
     raise Puppet::Error, "Could not tap resource: #{detail}"
   end
 
   def uninstall
     Puppet.debug("Untapping #{resource_name}")
-    execute([command(:brew), :untap, resource_name], failonfail: true)
+    brew(:untap, resource_name)
   rescue Puppet::ExecutionFailure => detail
     raise Puppet::Error, "Could not untap resource: #{detail}"
   end
@@ -41,7 +39,7 @@ Puppet::Type.type(:package).provide(:tap, parent: HomebrewProvider) do
     taps = []
 
     Puppet.debug('Listing currently tapped repositories')
-    output = execute([command(:brew), :tap])
+    output = brew(:tap)
     output.each_line do |line|
       line = line.chomp
       next if line.empty?
@@ -50,7 +48,6 @@ Puppet::Type.type(:package).provide(:tap, parent: HomebrewProvider) do
     end
     taps
   rescue Puppet::ExecutionFailure => detail
-    Puppet.err("Could not list taps: #{detail}")
-    nil
+    raise Puppet::Error, "Could not list taps: #{detail}"
   end
 end
