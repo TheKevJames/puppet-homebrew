@@ -62,8 +62,8 @@ class HomebrewProvider < Puppet::Provider::Package
 
     with_unbundled_env do
       execute([brew_binary_config[:path], cmd, *args],
-            uid: brew_binary_config[:uid],
-            gid: brew_binary_config[:gid],
+            uid: Process.uid.zero? ? brew_binary_config[:uid] : nil,
+            gid: Process.uid.zero? ? brew_binary_config[:gid] : nil,
             # Dir.tmpdir doesn't work on MacOS because its parent isn't readable on MacOS, and Homebrew fails in that
             # situation.
             # /tmp works, and is guaranteed to exist on POSIX OSes:
