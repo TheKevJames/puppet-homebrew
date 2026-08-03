@@ -1,16 +1,16 @@
 version: 2.1
 
 orbs:
-  linter: talkiq/linter@4.0.1
+  pre-commit: https://raw.githubusercontent.com/TheKevJames/tools/refs/heads/master/circleci-orbs/pre-commit.yml
 
 executors:
   ruby:
     docker:
-      - image: ruby:3.4.9
+      - image: ruby:3.4.10
     resource_class: medium
   python:
     docker:
-      - image: python:3.14.4
+      - image: python:3.14.6
     resource_class: medium
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
 workflows:
   run-jobs:
     jobs:
-      - linter/pre-commit:
+      - pre-commit/pre-commit:
           executor: python
       - test:
           # renovate: datasource=rubygems depName=puppet
