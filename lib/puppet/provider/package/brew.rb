@@ -1,5 +1,5 @@
 require 'puppet/provider/package'
-require 'puppet/provider/package/homebrew_common'
+require 'puppet/provider/package/homebrew_provider'
 
 Puppet::Type.type(:package).provide(:brew, parent: HomebrewProvider) do
   desc 'Package management using HomeBrew on OSX'

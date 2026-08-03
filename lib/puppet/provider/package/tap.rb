@@ -1,5 +1,5 @@
 require 'puppet/provider/package'
-require 'puppet/provider/package/homebrew_common'
+require 'puppet/provider/package/homebrew_provider'
 
 Puppet::Type.type(:package).provide(:tap, parent: HomebrewProvider) do
   desc 'Tap management using HomeBrew on OSX'
