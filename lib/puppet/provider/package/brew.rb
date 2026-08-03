@@ -77,7 +77,7 @@ Puppet::Type.type(:package).provide(:brew, parent: HomebrewProvider) do
         return nil
       end
 
-      Puppet.warning("Multiple matches for package #{options[:justme]} (#{lines}) - using first one found") if lines.length > 1
+      Puppet.warning("Multiple matches for package #{options[:justme]} (#{lines.map(&:strip).join(', ')}) - using first one found") if lines.length > 1
       line = lines.shift
       Puppet.debug("Found package #{line}")
       return name_version_split(line)
