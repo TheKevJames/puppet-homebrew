@@ -1,12 +1,10 @@
 require 'puppet/provider/package'
-require 'puppet/provider/package/homebrew_common'
+require 'puppet/provider/package/homebrew_provider'
 
-Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
+Puppet::Type.type(:package).provide(:brew, parent: HomebrewProvider) do
   desc 'Package management using HomeBrew on OSX'
 
   confine operatingsystem: :darwin
-
-  include Puppet::Provider::Package::HomebrewCommon
 
   has_feature :installable
   has_feature :uninstallable
@@ -14,28 +12,25 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
   has_feature :versionable
   has_feature :install_options
 
-  commands brew: brewbin
-  commands stat: '/usr/bin/stat'
-
   def self.instances
     package_list.map { |hash| new(hash) }
   end
 
   def latest
-    package = self.class.package_list(justme: resource_name)
+    package = self.class.package_list(resource_name)
     package[:ensure]
   end
 
   def query
-    self.class.package_list(justme: resource_name)
+    self.class.package_list(resource_name)
   end
 
   def install
     Puppet.debug("Looking for #{install_name} package...")
-    execute([command(:brew), :info, install_name], failonfail: true)
+    brew(:info, install_name)
 
     Puppet.debug('Package found, installing...')
-    output = execute([command(:brew), :install, install_name, *install_options], failonfail: true)
+    output = brew(:install, install_name, *install_options)
 
     return unless output.match?(/sha256 checksum/)
 
@@ -48,25 +43,22 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
 
   def uninstall
     Puppet.debug("Uninstalling #{resource_name}")
-    execute([command(:brew), :uninstall, resource_name], failonfail: true)
+    brew(:uninstall, resource_name)
   rescue Puppet::ExecutionFailure => detail
     raise Puppet::Error, "Could not uninstall package: #{detail}"
   end
 
   def update
     Puppet.debug("Upgrading #{resource_name}")
-    execute([command(:brew), :upgrade, resource_name], failonfail: true)
+    brew(:upgrade, resource_name)
   rescue Puppet::ExecutionFailure => detail
     raise Puppet::Error, "Could not upgrade package: #{detail}"
   end
 
-  def self.package_list(options = {})
-    Puppet.debug('Listing installed packages')
-
-    cmd_line = [command(:brew), :list, '--versions']
-    cmd_line << options[:justme] if options[:justme]
-
-    cmd_output = execute(cmd_line)
+  def self.package_list(*args)
+    # Be fail-soft if we're looking for a specific package, but fail hard if we're listing all of them (if that errors,
+    # something is wrong with Homebrew):
+    cmd_output = brew(:list, '--versions', *args, failonfail: args.size == 0, combine: false)
 
     re_excludes = Regexp.union([
       /^==>.*/,
@@ -74,13 +66,13 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
     ])
     lines = cmd_output.lines.delete_if { |line| line.match(re_excludes) }
 
-    if options[:justme]
+    if args.size > 0
       if lines.empty?
-        Puppet.debug("Package #{options[:justme]} not installed")
+        Puppet.debug("Package #{args[0]} not installed")
         return nil
       end
 
-      Puppet.warning("Multiple matches for package #{options[:justme]} - using first one found") if lines.length > 1
+      Puppet.warning("Multiple matches for package #{args[0]} (#{lines.map(&:strip).join(', ')}) - using first one found") if lines.length > 1
       line = lines.shift
       Puppet.debug("Found package #{line}")
       return name_version_split(line)
