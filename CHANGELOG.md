@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.1.1 (2026-09-17)
+- fix: use /tmp for all brew invocations (#203)
+- fix: make brew configuration discovery lazy so other providers run on hosts without a working Homebrew
+- fix: only use brew's owner UID/GID when running as root
+- fix: avoid overwriting already-defined BREW_PATHS
+- fix: correct tap provider casing and regex substitution
+- internal: simplify provider inheritance and reset global caches on transaction end
+
 ## 2.1.0 (2026-03-27)
 - feature: install cli tools via softwareupdate rather than requiring a DMG
 - fix: support root puppet execution
