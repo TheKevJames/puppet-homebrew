@@ -67,7 +67,7 @@ repos:
           - -d ungrouped-imports  # conflicts with ruff isort
           - -d wrong-import-order  # conflicts with ruff isort
   - repo: https://github.com/PyCQA/flake8
-    rev: 7.3.0
+    rev: 7.4.1
     hooks:
       - id: flake8
         language: python
