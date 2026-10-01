@@ -4,9 +4,17 @@ on: [pull_request, push]
 
 jobs:
   lint:
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          enable-cache: false
+          # renovate: datasource=github-releases depName=astral-sh/uv
+          version: 0.12.19
+          # renovate: datasource=docker depName=python
+          python-version: 3.14.7
       - uses: j178/prek-action@v3.0.0
         with:
           # renovate: datasource=pypi depName=prek
