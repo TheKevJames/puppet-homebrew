@@ -20,3 +20,20 @@ jobs:
           # renovate: datasource=pypi depName=prek
           prek-version: v0.5.5
           extra-args: --all-files
+
+  test:
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-26.04
+    env:
+      STRICT_VARIABLES: 'yes'
+      # renovate: datasource=rubygems depName=puppet
+      puppet_version: 8.10.0
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: ruby/setup-ruby@v1.328.0
+      - run: ./bin/build --puppet "${puppet_version}"
+      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: pkg
+          path: pkg/
