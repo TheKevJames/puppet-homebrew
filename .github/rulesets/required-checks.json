@@ -22,10 +22,9 @@
         "strict_required_status_checks_policy": false,
         "do_not_enforce_on_create": false,
         "required_status_checks": [
-          {"context": "ci/circleci: pre-commit"},
-          {"context": "ci/circleci: test"},
           {"context": "dependency-review"},
           {"context": "lint"},
+          {"context": "test"},
           {"context": "wip"}
         ]
       }
