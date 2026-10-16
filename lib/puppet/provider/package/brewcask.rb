@@ -61,23 +61,38 @@ Puppet::Type.type(:package).provide(:brewcask, :parent => Puppet::Provider::Pack
     package_list.collect { |hash| new(hash) }
   end
 
+  # brew decides what is outdated. Otherwise -- or when from an untrusted
+  # tap -- the installed value is returned, so Puppet sees no change.
   def latest
-    begin
-      Puppet.debug "Querying latest for #{resource_name}"
-      output = run_brew('info', '--cask', resource_name)
-
-      output.each_line do |line|
-        line.chomp!
-        next if line.empty?
-        next if line !~ /^#{resource_name}:\s([.\d]+)/i
-        Puppet.debug "  Latest versions for #{resource_name}: #{$1}"
-        return $1
-      end
-      nil
-    rescue Puppet::ExecutionFailure
-      Puppet.err "Package #{resource_name} Query Latest failed: #{$!}"
-      nil
+    entry = self.class.outdated_entry(resource_name)
+    if entry.nil?
+      Puppet.debug "#{resource_name} is up to date according to brew"
+      return properties[:ensure]
     end
+
+    if self.class.untrusted_tap?(entry['tap'])
+      current = properties[:ensure]
+      @resource.warning self.class.untrusted_tap_message(current, entry)
+      return current
+    end
+
+    Puppet.debug "Latest version for #{resource_name}: #{entry['version']}"
+    entry['version']
+  rescue Puppet::ExecutionFailure => detail
+    raise Puppet::Error, "Could not query latest version of package: #{detail}"
+  end
+
+  def self.prefetch(packages)
+    forget_brew_state
+    super
+  end
+
+  def self.outdated
+    @outdated ||= outdated_casks
+  end
+
+  def self.outdated_entry(name)
+    outdated_lookup(outdated, name)
   end
 
   def query
@@ -197,10 +212,7 @@ Puppet::Type.type(:package).provide(:brewcask, :parent => Puppet::Provider::Pack
   def self.package_hash(name, versions)
     return nil if name.nil? || name.empty?
 
-    # Truncated like name_version_split and `latest`, which both parse a version
-    # with /[.\d]+/: brew reports "<version>,<revision>" (4.89.0,238018), and
-    # reporting the full string here would make `ensure => latest` upgrade on
-    # every run.
+    # Truncated like name_version_split. `latest` returns it unchanged.
     version = Array(versions).first.to_s[/\A[.\d]+/]
     return nil if version.nil?
 

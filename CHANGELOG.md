@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+- fix: `ensure => latest` no longer upgrades on every run, nor fails, with the `homebrew` and `brewcask` providers: `latest` relied on parsing `brew info`'s text output
+- change: brew now decides which packages are outdated (`brew info` / `brew outdated` JSON, one set of calls per run); an up-to-date or pinned package keeps its installed value
+- change: packages from an untrusted tap are no longer upgraded; a warning is logged instead
+- fix: a failed `latest` query reports brew's error; `brewcask` raises instead of triggering an upgrade
+
 ## 3.2.0 (2026-09-15)
 - fix: installing on Intel failed with `Homebrew on macOS is only supported on Apple Silicon processors!` — Homebrew/install dropped x86_64 on 2026-09-11 (`e078684`), with no opt-out and no `/usr/local` prefix. The installer is now pinned **on Intel only** to `0f5b7666`, the last commit that supports it (it knows macOS 27 and checks out the latest brew tag); Apple Silicon keeps `HEAD`. `brew` itself still runs on Intel, as a Tier 3 platform
 - fix: `homebrew::install` decides everything architecture-dependent from a single `if $facts['is_arm64']`. The installer URL came from a separate `true =>` selector, which a stringified fact (cached `facts.yaml`, ENC or PuppetDB) made disagree with the prefix test: `/opt/homebrew` together with the x86_64-pinned installer

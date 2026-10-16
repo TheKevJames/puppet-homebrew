@@ -101,6 +101,9 @@ Additional options are available for third-party taps:
   A tap containing casks therefore cannot be tapped at all without
   ``trust => true``.
 
+  ``ensure => latest`` does not upgrade packages from an untrusted tap; it
+  logs a warning instead.
+
   When ``url`` is set, trust is recorded against the **URL**: Homebrew matches a
   ``user/repo`` entry only against a tap on its canonical
   ``github.com/user/homebrew-repo`` remote, and cannot resolve the real remote

@@ -61,27 +61,45 @@ Puppet::Type.type(:package).provide(:homebrew, :parent => Puppet::Provider::Pack
     package_list.collect { |hash| new(hash) }
   end
 
+  # brew decides what is outdated. Otherwise -- or when pinned or from an
+  # untrusted tap -- the installed value is returned, so Puppet sees no change.
   def latest
-    begin
-      Puppet.debug "Querying latest for #{resource_name} package..."
-      output = run_brew('info', resource_name)
+    current = properties[:ensure]
+    entry   = self.class.outdated_entry(resource_name)
 
-      output.each_line do |line|
-        line.chomp!
-        next if line.empty?
-        next if line !~ /#{@resource[:name]}:\s(.*)/i
-        Puppet.debug "  Latest versions for #{resource_name}: #{$1}"
-        versions = $1
-        return $1 if versions =~ /stable (\d+[^\s]*)\s+\(bottled\)/
-        return $1 if versions =~ /stable (\d+.*), HEAD/
-        return $1 if versions =~ /stable (\d+.*)/
-        return $1 if versions =~ /(\d+.*)\s+\(auto_updates\)/
-        return $1 if versions =~ /(\d+.*)/
-      end
-      nil
-    rescue Puppet::ExecutionFailure => detail
-      raise Puppet::Error, "Could not query latest version of package: #{detail}"
+    if entry.nil?
+      Puppet.debug "#{resource_name} is up to date according to brew"
+      current
+    elsif entry['pinned']
+      Puppet.debug "#{resource_name} is pinned, not upgrading it"
+      current
+    elsif self.class.untrusted_tap?(entry['tap'])
+      @resource.warning self.class.untrusted_tap_message(current, entry)
+      current
+    else
+      Puppet.debug "Latest version for #{resource_name}: #{entry['version']}"
+      entry['version']
     end
+  rescue Puppet::ExecutionFailure => detail
+    raise Puppet::Error, "Could not query latest version of package: #{detail}"
+  end
+
+  def self.prefetch(packages)
+    forget_brew_state
+    super
+  end
+
+  def self.outdated
+    @outdated ||= [outdated_formulae, outdated_casks]
+  end
+
+  # Formulae first, as brew resolves names.
+  def self.outdated_entry(name)
+    outdated.each do |list|
+      entry = outdated_lookup(list, name)
+      return entry if entry
+    end
+    nil
   end
 
   def query

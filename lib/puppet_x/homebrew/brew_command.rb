@@ -72,6 +72,94 @@ module PuppetX
         nil
       end
 
+      # Outdated installed packages, keyed by name => { 'version', 'tap',
+      # 'pinned' }, as brew itself compares versions. Whole-installation
+      # queries only: named ones fail on ambiguous tokens.
+      #
+      # `brew info`, unlike `brew outdated`, includes untrusted taps.
+      def outdated_formulae
+        list = {}
+        Array(brew_json('info', '--json=v2', '--installed', '--formula')['formulae']).each do |formula|
+          next unless formula['outdated']
+
+          stable   = formula.dig('versions', 'stable').to_s
+          revision = formula['revision'].to_i
+          list[formula['full_name'].to_s] = {
+            'version' => revision > 0 ? "#{stable}_#{revision}" : stable,
+            'tap'     => formula['tap'],
+            'pinned'  => formula['pinned'] ? true : false,
+          }
+        end
+        list
+      end
+
+      # `brew info` omits auto_updates casks, `brew outdated` untrusted taps:
+      # both are needed. --greedy would add `version :latest` casks, which are
+      # always outdated.
+      def outdated_casks
+        list = {}
+        taps = {}
+        Array(brew_json('info', '--json=v2', '--installed', '--cask')['casks']).each do |cask|
+          taps[cask['token'].to_s] = cask['tap']
+          next unless cask['outdated']
+
+          list[cask['full_token'].to_s] = { 'version' => cask['version'].to_s, 'tap' => cask['tap'] }
+        end
+        Array(brew_json('outdated', '--json=v2', '--greedy-auto-updates', '--cask')['casks']).each do |cask|
+          name = cask['name'].to_s
+          list[name] = { 'version' => cask['current_version'].to_s, 'tap' => taps[name.split('/').last] }
+        end
+        list
+      end
+
+      # Whether the brew owner has not trusted `tap` (trust is per user).
+      # Packages from such taps are not upgraded. Unknown taps and brew
+      # without tap trust count as trusted.
+      def untrusted_tap?(tap)
+        @untrusted_taps ||= Array(brew_json('tap-info', '--json', '--installed'))
+                            .select { |info| info['trusted'] == false }
+                            .map { |info| info['name'] }
+        @untrusted_taps.include?(tap)
+      end
+
+      def untrusted_tap_message(current, entry)
+        "#{entry['version']} is available (installed: #{current}) but will not be installed: " \
+          "tap #{entry['tap']} is not trusted by the brew owner. " \
+          "Trust it with homebrew_tap { '#{entry['tap']}': trust => true }"
+      end
+
+      # Called from prefetch: a daemon keeps provider classes between runs.
+      def forget_brew_state
+        @outdated       = nil
+        @untrusted_taps = nil
+      end
+
+      # Exact name first, then short name (tapped packages are keyed in full).
+      def outdated_lookup(list, name)
+        return list[name] if list.key?(name)
+
+        short = name.split('/').last
+        list.each { |key, entry| return entry if key.split('/').last == short }
+        nil
+      end
+
+      # Parsed JSON output of a brew command. stderr is kept out of the parse,
+      # and fetched again on failure for the error message.
+      def brew_json(*cmd)
+        output = run_brew(*cmd, failonfail: false, combine: false)
+        if !output.respond_to?(:exitstatus) || output.exitstatus.zero?
+          begin
+            parsed = JSON.parse(output.to_s)
+            return parsed if parsed.is_a?(Hash) || parsed.is_a?(Array)
+          rescue JSON::ParserError
+            nil
+          end
+        end
+
+        detail = run_brew(*cmd, failonfail: false).to_s.strip
+        raise Puppet::ExecutionFailure, "brew #{cmd.join(' ')} failed: #{detail}"
+      end
+
       # Run an arbitrary command as the brew owner, using the same privilege
       # drop as run_brew. Useful for tap-adjacent commands that are not `brew`
       # itself (e.g. `git config` on a tap's clone, which is owned by the brew
