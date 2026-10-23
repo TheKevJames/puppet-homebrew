@@ -30,7 +30,7 @@ jobs:
       puppet_version: 8.10.0
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: ruby/setup-ruby@v1.331.0
+      - uses: ruby/setup-ruby@v1.334.0
       - run: ./bin/build --puppet "${puppet_version}"
       - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       - uses: actions/upload-artifact@v7.0.2
