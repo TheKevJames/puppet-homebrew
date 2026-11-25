@@ -42,6 +42,7 @@ class HomebrewProvider < Puppet::Provider::Package
     begin
       output = brew(
         :shellenv,
+        'sh',
         combine: false,
         merge_brew_env: false,
       )
@@ -54,6 +55,12 @@ class HomebrewProvider < Puppet::Provider::Package
     rescue Puppet::ExecutionFailure => e
       Puppet.debug("Failed to run brew shellenv: #{e.message}; falling back to minimal environment")
     end
+
+    # `brew shellenv` emits PATH as shell code, but Puppet passes custom environment values directly without shell
+    # expansion. Construct PATH from the known brew binary location and the environment inherited by Puppet instead.
+    brew_prefix = File.dirname(File.dirname(brew_binary_config[:path]))
+    @@brew_shellenv['PATH'] = ["#{brew_prefix}/bin", "#{brew_prefix}/sbin", ENV['PATH']].compact.reject(&:empty?).join(':')
+
     @@brew_shellenv
   end
 
