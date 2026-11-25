@@ -27,9 +27,10 @@ class homebrew::install {
     $brew_sys_folders.each |String $brew_sys_folder| {
       unless defined(File[$brew_sys_folder]) {
         file { $brew_sys_folder:
-          ensure => directory,
-          owner  => $homebrew::user,
-          group  => $homebrew::group,
+          ensure  => directory,
+          owner   => $homebrew::user,
+          group   => $homebrew::group,
+          require => Exec['install-homebrew'],
         }
       }
     }
@@ -47,6 +48,7 @@ class homebrew::install {
       exec { "brew-chmod-sys-${brew_sys_chmod_folder}":
         command => "/bin/chmod -R 775 ${brew_sys_chmod_folder}",
         unless  => "/usr/bin/stat -f '%OLp' ${brew_sys_chmod_folder} | /usr/bin/grep -w '775'",
+        require => File[$brew_sys_chmod_folder],
         notify  => Exec["set-${brew_sys_chmod_folder}-directory-inherit"],
       }
 
@@ -59,7 +61,8 @@ class homebrew::install {
     $brew_sys_folders.each |String $brew_sys_folder| {
       unless defined(File[$brew_sys_folder]) {
         file { $brew_sys_folder:
-          ensure => directory,
+          ensure  => directory,
+          require => Exec['install-homebrew'],
         }
       }
     }
@@ -81,9 +84,10 @@ class homebrew::install {
 
   if $facts['identity']['privileged'] {
     file { $brew_folders:
-      ensure => directory,
-      owner  => $homebrew::user,
-      group  => $homebrew::group,
+      ensure  => directory,
+      owner   => $homebrew::user,
+      group   => $homebrew::group,
+      require => Exec['install-homebrew'],
     }
 
     if $homebrew::multiuser {
@@ -91,12 +95,14 @@ class homebrew::install {
         exec { "chmod-${brew_folder}":
           command => "/bin/chmod -R 775 ${brew_folder}",
           unless  => "/usr/bin/stat -f '%OLp' '${brew_folder}' | /usr/bin/grep -w '775'",
+          require => File[$brew_folder],
           notify  => Exec["set-${brew_folder}-directory-inherit"],
         }
 
         exec { "chown-${brew_folder}":
           command => "/usr/sbin/chown -R :${homebrew::group} ${brew_folder}",
           unless  => "/usr/bin/stat -f '%Sg' '${brew_folder}' | /usr/bin/grep -w '${homebrew::group}'",
+          require => File[$brew_folder],
         }
 
         exec { "set-${brew_folder}-directory-inherit":
@@ -107,7 +113,8 @@ class homebrew::install {
     }
   } else {
     file { $brew_folders:
-      ensure => directory,
+      ensure  => directory,
+      require => Exec['install-homebrew'],
     }
   }
 
